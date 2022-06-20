@@ -1,4 +1,7 @@
 api_platform:
+    title: 'Renovads REST API'
+    description: 'A symfony api for comparator'
+    version: '1.0.0'
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
     patch_formats:

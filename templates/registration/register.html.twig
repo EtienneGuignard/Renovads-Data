@@ -8,9 +8,11 @@
     {% endfor %}
 
     <h1>Register</h1>
-
+    <div class="container">
     {{ form_start(registrationForm) }}
+    <div class="row">
         {{ form_row(registrationForm.email) }}
+    </div>
         {{ form_row(registrationForm.plainPassword, {
             label: 'Password'
         }) }}
@@ -18,4 +20,6 @@
 
         <button type="submit" class="btn">Register</button>
     {{ form_end(registrationForm) }}
+    </div>
+
 {% endblock %}

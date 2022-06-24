@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\LeadsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LeadsRepository::class)]
@@ -23,6 +25,14 @@ class Leads
 
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $dob;
+
+    #[ORM\ManyToMany(targetEntity: Campaign::class, mappedBy: 'idLead')]
+    private $campaigns;
+
+    public function __construct()
+    {
+        $this->campaigns = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -61,6 +71,33 @@ class Leads
     public function setDob(?\DateTimeInterface $dob): self
     {
         $this->dob = $dob;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Campaign>
+     */
+    public function getCampaigns(): Collection
+    {
+        return $this->campaigns;
+    }
+
+    public function addCampaign(Campaign $campaign): self
+    {
+        if (!$this->campaigns->contains($campaign)) {
+            $this->campaigns[] = $campaign;
+            $campaign->addIdLead($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCampaign(Campaign $campaign): self
+    {
+        if ($this->campaigns->removeElement($campaign)) {
+            $campaign->removeIdLead($this);
+        }
 
         return $this;
     }

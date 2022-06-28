@@ -2,6 +2,7 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\RuleGroup;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -25,7 +26,8 @@ class DashboardController extends AbstractDashboardController
         // if ('jane' === $this->getUser()->getUsername()) {
         //     return $this->redirect('...');
         // }
-
+        
+        // $chart = $chartBuilder->createChart(Chart::TYPE_LINE)
         // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
         // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
         //
@@ -41,6 +43,6 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        // yield MenuItem::linkToCrud('The Label', 'fas fa-list', EntityClass::class);
+        yield MenuItem::linkToCrud('The Label', 'fas fa-list', RuleGroup::class);
     }
 }

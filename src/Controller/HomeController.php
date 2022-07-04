@@ -2,10 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\CampaignLeads;
 use App\Entity\Leads;
+use App\Entity\RuleGroup;
 use App\Form\LeadsType;
 use App\Repository\CampaignRepository;
 use App\Repository\LeadsRepository;
+use App\Repository\RuleGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
@@ -17,7 +20,9 @@ use Symfony\Config\FrameworkConfig;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(EntityManagerInterface $entityManagerInterface, LeadsRepository $leadsRepository, Request $request, CampaignRepository $campaignRepository ): Response
+    public function index(EntityManagerInterface $entityManagerInterface, LeadsRepository $leadsRepository, Request $request, CampaignRepository $campaignRepository,
+    RuleGroupRepository $ruleGroupRepository
+    ): Response
     {
     
         
@@ -29,6 +34,7 @@ class HomeController extends AbstractController
             $campaignId=$campaign->getId();
             echo $campaignId;
         };
+        
 
 
         if ($form->isSubmitted() && $form->isValid()) { 
@@ -38,9 +44,10 @@ class HomeController extends AbstractController
             echo $fisrtname;
             
             // postData($email, $fisrtname);
-
+            
             $entityManagerInterface->persist($lead);
             $entityManagerInterface->flush();
+            rulesFunction($ruleGroupRepository, $lead, $entityManagerInterface, $campaignRepository);
         }
 
         return $this->render('home/index.html.twig', [
@@ -64,3 +71,38 @@ function postData($email, $fisrtname){
         ],
     ]);
 }
+
+function rulesFunction(RuleGroupRepository $ruleGroupRepository, $lead, $entityManagerInterface, $campaignRepository)
+    {
+        $rules=$ruleGroupRepository->findAll();
+        foreach($rules as $rule){
+            $ruleName=$rule->getName();
+            $ruleValueNew=$lead->getFirstname();
+            $ruleOperator=$rule->getOperator();
+            $ruleValue=$rule->getValue();
+            $ruleFkCampaign=$rule->getFkCampaign();
+            echo $ruleName;
+            // $ruleFkCampaignId=$ruleFkCampaign->getId();
+            foreach($ruleFkCampaign as $campaign){
+                $campaignId=$campaign->getId();
+                echo $campaignId;
+                if ($ruleOperator ==">") {
+                    if ($ruleValueNew > $ruleValue) {
+                        $campaignLeads= New CampaignLeads;
+                        $fkCampaign=$campaignRepository->find($campaignId);
+                        $campaignLeads->setCampaignId($fkCampaign);
+                        $campaignLeads->setLeadId($lead);
+                        // $lead->getFkLeads()->add($campaignLeads);
+                        
+                        
+                        $campaignLeads->setStatus("Rejected");
+                        $entityManagerInterface->persist($campaignLeads);
+                        $entityManagerInterface->flush();
+
+                    }
+                    
+                }
+                
+            }
+        }
+    }

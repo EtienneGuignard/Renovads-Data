@@ -26,12 +26,13 @@ class Leads
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $dob;
 
-    #[ORM\ManyToMany(targetEntity: Campaign::class, mappedBy: 'idLead')]
-    private $campaigns;
+    #[ORM\OneToMany(mappedBy: 'leadId', targetEntity: CampaignLeads::class)]
+    private $fkLeads;
 
     public function __construct()
     {
         $this->campaigns = new ArrayCollection();
+        $this->fkLeads = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -76,27 +77,30 @@ class Leads
     }
 
     /**
-     * @return Collection<int, Campaign>
+     * @return Collection<int, CampaignLeads>
      */
-    public function getCampaigns(): Collection
+    public function getFkLeads(): Collection
     {
-        return $this->campaigns;
+        return $this->fkLeads;
     }
 
-    public function addCampaign(Campaign $campaign): self
+    public function addFkLead(CampaignLeads $fkLead): self
     {
-        if (!$this->campaigns->contains($campaign)) {
-            $this->campaigns[] = $campaign;
-            $campaign->addIdLead($this);
+        if (!$this->fkLeads->contains($fkLead)) {
+            $this->fkLeads[] = $fkLead;
+            $fkLead->setLeadId($this);
         }
 
         return $this;
     }
 
-    public function removeCampaign(Campaign $campaign): self
+    public function removeFkLead(CampaignLeads $fkLead): self
     {
-        if ($this->campaigns->removeElement($campaign)) {
-            $campaign->removeIdLead($this);
+        if ($this->fkLeads->removeElement($fkLead)) {
+            // set the owning side to null (unless already changed)
+            if ($fkLead->getLeadId() === $this) {
+                $fkLead->setLeadId(null);
+            }
         }
 
         return $this;

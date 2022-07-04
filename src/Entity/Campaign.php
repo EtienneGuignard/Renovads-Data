@@ -38,12 +38,17 @@ class Campaign
     #[ORM\Column(type: 'string', length: 255)]
     private $currency;
 
-    #[ORM\ManyToMany(targetEntity: Leads::class, inversedBy: 'campaigns')]
-    private $idLead;
+    #[ORM\ManyToMany(targetEntity: RuleGroup::class, mappedBy: 'fkCampaign')]
+    private $ruleGroups;
+
+    #[ORM\OneToMany(mappedBy: 'campaignId', targetEntity: CampaignLeads::class)]
+    private $fkLeads;
 
     public function __construct()
     {
         $this->idLead = new ArrayCollection();
+        $this->ruleGroups = new ArrayCollection();
+        $this->fkLeads = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -136,25 +141,58 @@ class Campaign
     }
 
     /**
-     * @return Collection<int, Leads>
+     * @return Collection<int, RuleGroup>
      */
-    public function getIdLead(): Collection
+    public function getRuleGroups(): Collection
     {
-        return $this->idLead;
+        return $this->ruleGroups;
     }
 
-    public function addIdLead(Leads $idLead): self
+    public function addRuleGroup(RuleGroup $ruleGroup): self
     {
-        if (!$this->idLead->contains($idLead)) {
-            $this->idLead[] = $idLead;
+        if (!$this->ruleGroups->contains($ruleGroup)) {
+            $this->ruleGroups[] = $ruleGroup;
+            $ruleGroup->addFkCampaign($this);
         }
 
         return $this;
     }
 
-    public function removeIdLead(Leads $idLead): self
+    public function removeRuleGroup(RuleGroup $ruleGroup): self
     {
-        $this->idLead->removeElement($idLead);
+        if ($this->ruleGroups->removeElement($ruleGroup)) {
+            $ruleGroup->removeFkCampaign($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, CampaignLeads>
+     */
+    public function getFkLeads(): Collection
+    {
+        return $this->fkLeads;
+    }
+
+    public function addFkLead(CampaignLeads $fkLead): self
+    {
+        if (!$this->fkLeads->contains($fkLead)) {
+            $this->fkLeads[] = $fkLead;
+            $fkLead->setCampaignId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFkLead(CampaignLeads $fkLead): self
+    {
+        if ($this->fkLeads->removeElement($fkLead)) {
+            // set the owning side to null (unless already changed)
+            if ($fkLead->getCampaignId() === $this) {
+                $fkLead->setCampaignId(null);
+            }
+        }
 
         return $this;
     }

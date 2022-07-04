@@ -97,6 +97,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Rule group', 'fas fa-list', RuleGroup::class);
         yield MenuItem::linkToCrud('Campaign', 'fas fa-bullhorn', Campaign::class);
-        yield MenuItem::linkToCrud('Leads', 'fas fa-account', Leads::class);
+        yield MenuItem::linkToCrud('Leads', 'fas fa-user', Leads::class);
     }
 }

@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\RuleGroupRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: RuleGroupRepository::class)]
@@ -29,6 +31,14 @@ class RuleGroup
 
     #[ORM\Column(type: 'string', length: 1000, nullable: true)]
     private $description;
+
+    #[ORM\ManyToMany(targetEntity: Campaign::class, inversedBy: 'ruleGroups')]
+    private $fkCampaign;
+
+    public function __construct()
+    {
+        $this->fkCampaign = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -91,6 +101,30 @@ class RuleGroup
     public function setDescription(?string $description): self
     {
         $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Campaign>
+     */
+    public function getFkCampaign(): Collection
+    {
+        return $this->fkCampaign;
+    }
+
+    public function addFkCampaign(Campaign $fkCampaign): self
+    {
+        if (!$this->fkCampaign->contains($fkCampaign)) {
+            $this->fkCampaign[] = $fkCampaign;
+        }
+
+        return $this;
+    }
+
+    public function removeFkCampaign(Campaign $fkCampaign): self
+    {
+        $this->fkCampaign->removeElement($fkCampaign);
 
         return $this;
     }

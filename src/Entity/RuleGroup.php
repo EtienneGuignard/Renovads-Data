@@ -26,7 +26,7 @@ class RuleGroup
     #[ORM\Column(type: 'string', length: 5)]
     private $operator;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $value;
 
     #[ORM\Column(type: 'string', length: 1000, nullable: true)]
@@ -34,6 +34,9 @@ class RuleGroup
 
     #[ORM\ManyToMany(targetEntity: Campaign::class, inversedBy: 'ruleGroups')]
     private $fkCampaign;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $valueDate;
 
     public function __construct()
     {
@@ -125,6 +128,18 @@ class RuleGroup
     public function removeFkCampaign(Campaign $fkCampaign): self
     {
         $this->fkCampaign->removeElement($fkCampaign);
+
+        return $this;
+    }
+
+    public function getValueDate(): ?\DateTimeInterface
+    {
+        return $this->valueDate;
+    }
+
+    public function setValueDate(?\DateTimeInterface $valueDate): self
+    {
+        $this->valueDate = $valueDate;
 
         return $this;
     }

@@ -77,7 +77,7 @@ function rulesFunction(RuleGroupRepository $ruleGroupRepository, $lead, $entityM
         $rules=$ruleGroupRepository->findAll();
         foreach($rules as $rule){
             $ruleName=$rule->getName();
-            $ruleValueNew=$lead->getFirstname();
+            $ruleField=$lead->getDob();
             $ruleOperator=$rule->getOperator();
             $ruleValue=$rule->getValue();
             $ruleFkCampaign=$rule->getFkCampaign();
@@ -87,22 +87,25 @@ function rulesFunction(RuleGroupRepository $ruleGroupRepository, $lead, $entityM
                 $campaignId=$campaign->getId();
                 echo $campaignId;
                 if ($ruleOperator ==">") {
-                    if ($ruleValueNew > $ruleValue) {
-                        $campaignLeads= New CampaignLeads;
-                        $fkCampaign=$campaignRepository->find($campaignId);
-                        $campaignLeads->setCampaignId($fkCampaign);
-                        $campaignLeads->setLeadId($lead);
-                        // $lead->getFkLeads()->add($campaignLeads);
-                        
-                        
-                        $campaignLeads->setStatus("Rejected");
-                        $entityManagerInterface->persist($campaignLeads);
-                        $entityManagerInterface->flush();
-
+                    if ($ruleField> $ruleValue) {
+                        addStatus($campaignRepository, $campaignId, $lead, $entityManagerInterface);
                     }
                     
                 }
                 
             }
         }
+    }
+
+    function addStatus($campaignRepository, $campaignId, $lead, $entityManagerInterface){
+        $campaignLeads= New CampaignLeads;
+        $fkCampaign=$campaignRepository->find($campaignId);
+        $campaignLeads->setCampaignId($fkCampaign);
+        $campaignLeads->setLeadId($lead);
+        // $lead->getFkLeads()->add($campaignLeads);
+        
+        
+        $campaignLeads->setStatus("Rejected");
+        $entityManagerInterface->persist($campaignLeads);
+        $entityManagerInterface->flush();
     }

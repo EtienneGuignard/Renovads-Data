@@ -34,9 +34,14 @@ class ChartController extends AbstractController
                 ],
             ],
         ]);
-        return $this->render('chart/index.html.twig', [
+        return $this->render('admin/chart.html.twig', [
             'controller_name' => 'ChartController',
             'chart' => $chart,
         ]);
+    }
+    #[Route('/chart/test', name: 'test_chart')]
+    public function FunctionName(): Response
+    {
+        return $this->render('chart/testChart.html.twig', []);
     }
 }

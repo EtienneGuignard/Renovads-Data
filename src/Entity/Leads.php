@@ -59,6 +59,12 @@ class Leads
     #[ORM\Column(type: 'string', length: 3, nullable: true)]
     private $children;
 
+    #[ORM\Column(type: 'datetime_immutable',  nullable: true)]
+    private $createdAt;
+
+    #[ORM\Column(type: 'datetime', nullable: true)]
+    private $lastUpdated;
+
     public function __construct()
     {
         $this->campaigns = new ArrayCollection();
@@ -252,6 +258,30 @@ class Leads
     public function setChildren(?string $children): self
     {
         $this->children = $children;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getLastUpdated(): ?\DateTimeInterface
+    {
+        return $this->lastUpdated;
+    }
+
+    public function setLastUpdated(?\DateTimeInterface $lastUpdated): self
+    {
+        $this->lastUpdated = $lastUpdated;
 
         return $this;
     }

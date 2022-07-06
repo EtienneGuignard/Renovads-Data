@@ -1,14 +1,10 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
-{% block title %}Hello SelectRuleGroupController!{% endblock %}
+{% block content_title %}The Title of the Page{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-primary" href="...">Some Action</a>
+{% endblock %}
 
-{% block body %}
-<select action="POST" class="form-select" aria-label="Default select example">
-  <option selected>Open this select menu</option>
-  {% for rule  in rules %}
-     <option value={{rule.name}}>{{rule.name}}</option>
-  {% endfor %}
- 
- 
-</select>
+{% block main %}
+ {% include "select_rule_group/formSelect.html.twig" %}
 {% endblock %}

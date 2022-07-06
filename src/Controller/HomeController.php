@@ -9,6 +9,7 @@ use App\Form\LeadsType;
 use App\Repository\CampaignRepository;
 use App\Repository\LeadsRepository;
 use App\Repository\RuleGroupRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
@@ -34,8 +35,6 @@ class HomeController extends AbstractController
             $campaignId=$campaign->getId();
             echo $campaignId;
         };
-        
-
 
         if ($form->isSubmitted() && $form->isValid()) { 
 

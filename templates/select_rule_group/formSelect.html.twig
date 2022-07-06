@@ -1,0 +1,12 @@
+<form>
+    <div class="mb-3">
+      <label for="" class="form-label">Disabled select menu</label>
+        <select id="" class="form-select">
+        {% for rule in rules %}
+    <option value={{ rule.id }}>{{ rule.name }}</option>
+        {% endfor %}
+    </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </fieldset>
+</form>

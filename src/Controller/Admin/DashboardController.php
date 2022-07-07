@@ -64,21 +64,10 @@ class DashboardController extends AbstractDashboardController
         // return $this->render('some/path/my-dashboard.html.twig');
     }
 
-
-    #[Route('/admin/test', name: 'adminTest')]
-    public function FunctionName(): Response
-    {
-
-        return $this->render('admin/index.html.twig', [
-            'chart' => $this->chart()
-        ]);
-    }
-
     private function chart(): Chart
     {
         $timeArr=hoursRange();
-        // var_dump($timeArr);
-        echo $timeArr['01:00'];
+
         $hour01=count($this->leadsRepository->selectLeadChart($timeArr['00:00'],$timeArr['01:00'], $this->entityManagerInterface ));
         $hour02=count($this->leadsRepository->selectLeadChart($timeArr['01:00'],$timeArr['02:00'], $this->entityManagerInterface ));
         $hour03=count($this->leadsRepository->selectLeadChart($timeArr['02:00'],$timeArr['03:00'], $this->entityManagerInterface ));
@@ -103,9 +92,6 @@ class DashboardController extends AbstractDashboardController
         $hour22=count($this->leadsRepository->selectLeadChart($timeArr['21:00'],$timeArr['22:00'], $this->entityManagerInterface ));
         $hour23=count($this->leadsRepository->selectLeadChart($timeArr['22:00'],$timeArr['23:00'], $this->entityManagerInterface ));
         $hour24=count($this->leadsRepository->selectLeadChartLastHour($timeArr['23:00'], $this->entityManagerInterface ));
-        echo $hour12;
-        echo $hour17;
-        echo $hour18;
         $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
         $chart->setData([
             'labels' => ['00h', '01h', '03h', '04h', '05h', '06h', '07h', '8h', '9h', '10h','11h','12h','13h','14h','15h','16h','17h','18h','19h','20h','21h','22h', '23h', '00h'],
@@ -136,10 +122,6 @@ class DashboardController extends AbstractDashboardController
             ->setTitle('Renovads Data');
     }
     
-
-
-
-
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');

@@ -9,6 +9,7 @@ use App\Form\LeadsType;
 use App\Repository\CampaignRepository;
 use App\Repository\LeadsRepository;
 use App\Repository\RuleGroupRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
@@ -34,8 +35,6 @@ class HomeController extends AbstractController
             $campaignId=$campaign->getId();
             echo $campaignId;
         };
-        
-
 
         if ($form->isSubmitted() && $form->isValid()) { 
 
@@ -77,32 +76,54 @@ function rulesFunction(RuleGroupRepository $ruleGroupRepository, $lead, $entityM
         $rules=$ruleGroupRepository->findAll();
         foreach($rules as $rule){
             $ruleName=$rule->getName();
-            $ruleValueNew=$lead->getFirstname();
-            $ruleOperator=$rule->getOperator();
+            $ruleFieldEntry=$rule->getField();
             $ruleValue=$rule->getValue();
+            $ruleValueDate=$rule->getValueDate();
             $ruleFkCampaign=$rule->getFkCampaign();
-            echo $ruleName;
-            // $ruleFkCampaignId=$ruleFkCampaign->getId();
+            $ruleOperator=$rule->getOperator();
+            $ruleFieldDeter=deterRuleField($ruleFieldEntry, $lead);
             foreach($ruleFkCampaign as $campaign){
                 $campaignId=$campaign->getId();
                 echo $campaignId;
-                if ($ruleOperator ==">") {
-                    if ($ruleValueNew > $ruleValue) {
-                        $campaignLeads= New CampaignLeads;
-                        $fkCampaign=$campaignRepository->find($campaignId);
-                        $campaignLeads->setCampaignId($fkCampaign);
-                        $campaignLeads->setLeadId($lead);
-                        // $lead->getFkLeads()->add($campaignLeads);
-                        
-                        
-                        $campaignLeads->setStatus("Rejected");
-                        $entityManagerInterface->persist($campaignLeads);
-                        $entityManagerInterface->flush();
-
+                if ($ruleOperator ==">" && isset($ruleValueDate)) {
+                    if ($ruleFieldDeter > $ruleValueDate) {
+                        echo 'echo';
+                        addStatusRejected($campaignRepository, $campaignId, $lead, $entityManagerInterface);
+                    }else {
+                        addStatusAccepted($campaignRepository, $campaignId, $lead, $entityManagerInterface);
                     }
                     
                 }
+
                 
             }
         }
+    }
+
+function deterRuleField($ruleFieldEntry, $lead){
+        if($ruleFieldEntry == "dob"){
+            $ruleField=$lead->getDob();
+            return $ruleField;
+        }
+    }
+
+    function addStatusRejected($campaignRepository, $campaignId, $lead, $entityManagerInterface){
+        $campaignLeads= New CampaignLeads;
+        $fkCampaign=$campaignRepository->find($campaignId);
+        $campaignLeads->setCampaignId($fkCampaign);
+        $campaignLeads->setLeadId($lead);
+        $campaignLeads->setStatus("Rejected");
+        $entityManagerInterface->persist($campaignLeads);
+        $entityManagerInterface->flush();
+    }
+
+    
+    function addStatusAccepted($campaignRepository, $campaignId, $lead, $entityManagerInterface){
+        $campaignLeads= New CampaignLeads;
+        $fkCampaign=$campaignRepository->find($campaignId);
+        $campaignLeads->setCampaignId($fkCampaign);
+        $campaignLeads->setLeadId($lead);
+        $campaignLeads->setStatus("Accepted");
+        $entityManagerInterface->persist($campaignLeads);
+        $entityManagerInterface->flush();
     }

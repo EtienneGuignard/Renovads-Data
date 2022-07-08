@@ -1,0 +1,14 @@
+<form method="post" action="{{path('app_add_rule_group')}}">
+    <div class="mb-3">
+      <label for="" class="form-label">Disabled select menu</label>
+        <select name="ruleId" id="ruleId" class="form-select">
+        {% for rule in rules %}
+    <option value={{ rule.id }}>{{ rule.name }}</option>
+        {% endfor %}
+    </select>
+    <input type="hidden" name="campaignId" value={{campaignId}}>
+    <input type="hidden" name="campaignId" value={{campaignId}}>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </fieldset>
+</form>

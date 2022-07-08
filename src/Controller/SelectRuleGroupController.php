@@ -27,7 +27,7 @@ class SelectRuleGroupController extends AbstractController
         
             $routeParam=$_GET['routeParams'];
             $campaignId=$routeParam['campaignId'];
-            $referUrl='http://127.0.0.1:8000/' . $_GET['referrer']
+            $referUrl='http://127.0.0.1:8000/' . $_GET['referrer'];
         
     
 

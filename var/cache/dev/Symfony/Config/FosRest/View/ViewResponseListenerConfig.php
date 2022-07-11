@@ -14,7 +14,7 @@ class ViewResponseListenerConfig
     private $force;
     private $service;
     private $_usedProperties = [];
-
+    
     /**
      * @default false
      * @param ParamConfigurator|bool $value
@@ -24,10 +24,10 @@ class ViewResponseListenerConfig
     {
         $this->_usedProperties['enabled'] = true;
         $this->enabled = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @default false
      * @param ParamConfigurator|bool $value
@@ -37,10 +37,10 @@ class ViewResponseListenerConfig
     {
         $this->_usedProperties['force'] = true;
         $this->force = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -50,10 +50,10 @@ class ViewResponseListenerConfig
     {
         $this->_usedProperties['service'] = true;
         $this->service = $value;
-
+    
         return $this;
     }
-
+    
     public function __construct(array $value = [])
     {
         if (array_key_exists('enabled', $value)) {
@@ -61,24 +61,24 @@ class ViewResponseListenerConfig
             $this->enabled = $value['enabled'];
             unset($value['enabled']);
         }
-
+    
         if (array_key_exists('force', $value)) {
             $this->_usedProperties['force'] = true;
             $this->force = $value['force'];
             unset($value['force']);
         }
-
+    
         if (array_key_exists('service', $value)) {
             $this->_usedProperties['service'] = true;
             $this->service = $value['service'];
             unset($value['service']);
         }
-
+    
         if ([] !== $value) {
             throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-
+    
     public function toArray(): array
     {
         $output = [];
@@ -91,7 +91,7 @@ class ViewResponseListenerConfig
         if (isset($this->_usedProperties['service'])) {
             $output['service'] = $this->service;
         }
-
+    
         return $output;
     }
 

@@ -13,7 +13,7 @@ class MediaTypeConfig
     private $enabled;
     private $regex;
     private $_usedProperties = [];
-
+    
     /**
      * @default true
      * @param ParamConfigurator|bool $value
@@ -23,10 +23,10 @@ class MediaTypeConfig
     {
         $this->_usedProperties['enabled'] = true;
         $this->enabled = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @default '/(v|version)=(?P<version>[0-9\\.]+)/'
      * @param ParamConfigurator|mixed $value
@@ -36,10 +36,10 @@ class MediaTypeConfig
     {
         $this->_usedProperties['regex'] = true;
         $this->regex = $value;
-
+    
         return $this;
     }
-
+    
     public function __construct(array $value = [])
     {
         if (array_key_exists('enabled', $value)) {
@@ -47,18 +47,18 @@ class MediaTypeConfig
             $this->enabled = $value['enabled'];
             unset($value['enabled']);
         }
-
+    
         if (array_key_exists('regex', $value)) {
             $this->_usedProperties['regex'] = true;
             $this->regex = $value['regex'];
             unset($value['regex']);
         }
-
+    
         if ([] !== $value) {
             throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-
+    
     public function toArray(): array
     {
         $output = [];
@@ -68,7 +68,7 @@ class MediaTypeConfig
         if (isset($this->_usedProperties['regex'])) {
             $output['regex'] = $this->regex;
         }
-
+    
         return $output;
     }
 

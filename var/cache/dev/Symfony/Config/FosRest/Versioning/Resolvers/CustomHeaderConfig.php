@@ -13,7 +13,7 @@ class CustomHeaderConfig
     private $enabled;
     private $headerName;
     private $_usedProperties = [];
-
+    
     /**
      * @default true
      * @param ParamConfigurator|bool $value
@@ -23,10 +23,10 @@ class CustomHeaderConfig
     {
         $this->_usedProperties['enabled'] = true;
         $this->enabled = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @default 'X-Accept-Version'
      * @param ParamConfigurator|mixed $value
@@ -36,10 +36,10 @@ class CustomHeaderConfig
     {
         $this->_usedProperties['headerName'] = true;
         $this->headerName = $value;
-
+    
         return $this;
     }
-
+    
     public function __construct(array $value = [])
     {
         if (array_key_exists('enabled', $value)) {
@@ -47,18 +47,18 @@ class CustomHeaderConfig
             $this->enabled = $value['enabled'];
             unset($value['enabled']);
         }
-
+    
         if (array_key_exists('header_name', $value)) {
             $this->_usedProperties['headerName'] = true;
             $this->headerName = $value['header_name'];
             unset($value['header_name']);
         }
-
+    
         if ([] !== $value) {
             throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-
+    
     public function toArray(): array
     {
         $output = [];
@@ -68,7 +68,7 @@ class CustomHeaderConfig
         if (isset($this->_usedProperties['headerName'])) {
             $output['header_name'] = $this->headerName;
         }
-
+    
         return $output;
     }
 

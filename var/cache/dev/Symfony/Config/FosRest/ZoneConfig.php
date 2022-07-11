@@ -15,7 +15,7 @@ class ZoneConfig
     private $methods;
     private $ips;
     private $_usedProperties = [];
-
+    
     /**
      * use the urldecoded format
      * @example ^/path to resource/
@@ -27,10 +27,10 @@ class ZoneConfig
     {
         $this->_usedProperties['path'] = true;
         $this->path = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -40,10 +40,10 @@ class ZoneConfig
     {
         $this->_usedProperties['host'] = true;
         $this->host = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @param mixed $value
      *
@@ -53,10 +53,10 @@ class ZoneConfig
     {
         $this->_usedProperties['methods'] = true;
         $this->methods = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @param mixed $value
      *
@@ -66,10 +66,10 @@ class ZoneConfig
     {
         $this->_usedProperties['ips'] = true;
         $this->ips = $value;
-
+    
         return $this;
     }
-
+    
     public function __construct(array $value = [])
     {
         if (array_key_exists('path', $value)) {
@@ -77,30 +77,30 @@ class ZoneConfig
             $this->path = $value['path'];
             unset($value['path']);
         }
-
+    
         if (array_key_exists('host', $value)) {
             $this->_usedProperties['host'] = true;
             $this->host = $value['host'];
             unset($value['host']);
         }
-
+    
         if (array_key_exists('methods', $value)) {
             $this->_usedProperties['methods'] = true;
             $this->methods = $value['methods'];
             unset($value['methods']);
         }
-
+    
         if (array_key_exists('ips', $value)) {
             $this->_usedProperties['ips'] = true;
             $this->ips = $value['ips'];
             unset($value['ips']);
         }
-
+    
         if ([] !== $value) {
             throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-
+    
     public function toArray(): array
     {
         $output = [];
@@ -116,7 +116,7 @@ class ZoneConfig
         if (isset($this->_usedProperties['ips'])) {
             $output['ips'] = $this->ips;
         }
-
+    
         return $output;
     }
 

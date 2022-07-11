@@ -13,7 +13,7 @@ class QueryConfig
     private $enabled;
     private $parameterName;
     private $_usedProperties = [];
-
+    
     /**
      * @default true
      * @param ParamConfigurator|bool $value
@@ -23,10 +23,10 @@ class QueryConfig
     {
         $this->_usedProperties['enabled'] = true;
         $this->enabled = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @default 'version'
      * @param ParamConfigurator|mixed $value
@@ -36,10 +36,10 @@ class QueryConfig
     {
         $this->_usedProperties['parameterName'] = true;
         $this->parameterName = $value;
-
+    
         return $this;
     }
-
+    
     public function __construct(array $value = [])
     {
         if (array_key_exists('enabled', $value)) {
@@ -47,18 +47,18 @@ class QueryConfig
             $this->enabled = $value['enabled'];
             unset($value['enabled']);
         }
-
+    
         if (array_key_exists('parameter_name', $value)) {
             $this->_usedProperties['parameterName'] = true;
             $this->parameterName = $value['parameter_name'];
             unset($value['parameter_name']);
         }
-
+    
         if ([] !== $value) {
             throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-
+    
     public function toArray(): array
     {
         $output = [];
@@ -68,7 +68,7 @@ class QueryConfig
         if (isset($this->_usedProperties['parameterName'])) {
             $output['parameter_name'] = $this->parameterName;
         }
-
+    
         return $output;
     }
 

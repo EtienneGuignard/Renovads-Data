@@ -15,7 +15,7 @@ class InvalidationConfig
     private $maxHeaderLength;
     private $requestOptions;
     private $_usedProperties = [];
-
+    
     /**
      * @default false
      * @param ParamConfigurator|bool $value
@@ -25,10 +25,10 @@ class InvalidationConfig
     {
         $this->_usedProperties['enabled'] = true;
         $this->enabled = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @param ParamConfigurator|list<ParamConfigurator|mixed> $value
      *
@@ -38,10 +38,10 @@ class InvalidationConfig
     {
         $this->_usedProperties['varnishUrls'] = true;
         $this->varnishUrls = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * Max header length supported by the server
      * @default 7500
@@ -52,10 +52,10 @@ class InvalidationConfig
     {
         $this->_usedProperties['maxHeaderLength'] = true;
         $this->maxHeaderLength = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * To pass options to the client charged with the request.
      * @default array (
@@ -69,10 +69,10 @@ class InvalidationConfig
     {
         $this->_usedProperties['requestOptions'] = true;
         $this->requestOptions = $value;
-
+    
         return $this;
     }
-
+    
     public function __construct(array $value = [])
     {
         if (array_key_exists('enabled', $value)) {
@@ -80,30 +80,30 @@ class InvalidationConfig
             $this->enabled = $value['enabled'];
             unset($value['enabled']);
         }
-
+    
         if (array_key_exists('varnish_urls', $value)) {
             $this->_usedProperties['varnishUrls'] = true;
             $this->varnishUrls = $value['varnish_urls'];
             unset($value['varnish_urls']);
         }
-
+    
         if (array_key_exists('max_header_length', $value)) {
             $this->_usedProperties['maxHeaderLength'] = true;
             $this->maxHeaderLength = $value['max_header_length'];
             unset($value['max_header_length']);
         }
-
+    
         if (array_key_exists('request_options', $value)) {
             $this->_usedProperties['requestOptions'] = true;
             $this->requestOptions = $value['request_options'];
             unset($value['request_options']);
         }
-
+    
         if ([] !== $value) {
             throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-
+    
     public function toArray(): array
     {
         $output = [];
@@ -119,7 +119,7 @@ class InvalidationConfig
         if (isset($this->_usedProperties['requestOptions'])) {
             $output['request_options'] = $this->requestOptions;
         }
-
+    
         return $output;
     }
 

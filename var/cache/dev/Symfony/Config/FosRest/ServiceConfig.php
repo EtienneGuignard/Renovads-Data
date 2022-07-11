@@ -14,7 +14,7 @@ class ServiceConfig
     private $viewHandler;
     private $validator;
     private $_usedProperties = [];
-
+    
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -24,10 +24,10 @@ class ServiceConfig
     {
         $this->_usedProperties['serializer'] = true;
         $this->serializer = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @default 'fos_rest.view_handler.default'
      * @param ParamConfigurator|mixed $value
@@ -37,10 +37,10 @@ class ServiceConfig
     {
         $this->_usedProperties['viewHandler'] = true;
         $this->viewHandler = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @default 'validator'
      * @param ParamConfigurator|mixed $value
@@ -50,10 +50,10 @@ class ServiceConfig
     {
         $this->_usedProperties['validator'] = true;
         $this->validator = $value;
-
+    
         return $this;
     }
-
+    
     public function __construct(array $value = [])
     {
         if (array_key_exists('serializer', $value)) {
@@ -61,24 +61,24 @@ class ServiceConfig
             $this->serializer = $value['serializer'];
             unset($value['serializer']);
         }
-
+    
         if (array_key_exists('view_handler', $value)) {
             $this->_usedProperties['viewHandler'] = true;
             $this->viewHandler = $value['view_handler'];
             unset($value['view_handler']);
         }
-
+    
         if (array_key_exists('validator', $value)) {
             $this->_usedProperties['validator'] = true;
             $this->validator = $value['validator'];
             unset($value['validator']);
         }
-
+    
         if ([] !== $value) {
             throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-
+    
     public function toArray(): array
     {
         $output = [];
@@ -91,7 +91,7 @@ class ServiceConfig
         if (isset($this->_usedProperties['validator'])) {
             $output['validator'] = $this->validator;
         }
-
+    
         return $output;
     }
 

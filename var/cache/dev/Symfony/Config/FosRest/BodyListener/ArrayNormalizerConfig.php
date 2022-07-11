@@ -13,7 +13,7 @@ class ArrayNormalizerConfig
     private $service;
     private $forms;
     private $_usedProperties = [];
-
+    
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -23,10 +23,10 @@ class ArrayNormalizerConfig
     {
         $this->_usedProperties['service'] = true;
         $this->service = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @default false
      * @param ParamConfigurator|bool $value
@@ -36,10 +36,10 @@ class ArrayNormalizerConfig
     {
         $this->_usedProperties['forms'] = true;
         $this->forms = $value;
-
+    
         return $this;
     }
-
+    
     public function __construct(array $value = [])
     {
         if (array_key_exists('service', $value)) {
@@ -47,18 +47,18 @@ class ArrayNormalizerConfig
             $this->service = $value['service'];
             unset($value['service']);
         }
-
+    
         if (array_key_exists('forms', $value)) {
             $this->_usedProperties['forms'] = true;
             $this->forms = $value['forms'];
             unset($value['forms']);
         }
-
+    
         if ([] !== $value) {
             throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-
+    
     public function toArray(): array
     {
         $output = [];
@@ -68,7 +68,7 @@ class ArrayNormalizerConfig
         if (isset($this->_usedProperties['forms'])) {
             $output['forms'] = $this->forms;
         }
-
+    
         return $output;
     }
 

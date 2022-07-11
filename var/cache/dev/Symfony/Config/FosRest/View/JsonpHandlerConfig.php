@@ -13,7 +13,7 @@ class JsonpHandlerConfig
     private $callbackParam;
     private $mimeType;
     private $_usedProperties = [];
-
+    
     /**
      * @default 'callback'
      * @param ParamConfigurator|mixed $value
@@ -23,10 +23,10 @@ class JsonpHandlerConfig
     {
         $this->_usedProperties['callbackParam'] = true;
         $this->callbackParam = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @default 'application/javascript+jsonp'
      * @param ParamConfigurator|mixed $value
@@ -36,10 +36,10 @@ class JsonpHandlerConfig
     {
         $this->_usedProperties['mimeType'] = true;
         $this->mimeType = $value;
-
+    
         return $this;
     }
-
+    
     public function __construct(array $value = [])
     {
         if (array_key_exists('callback_param', $value)) {
@@ -47,18 +47,18 @@ class JsonpHandlerConfig
             $this->callbackParam = $value['callback_param'];
             unset($value['callback_param']);
         }
-
+    
         if (array_key_exists('mime_type', $value)) {
             $this->_usedProperties['mimeType'] = true;
             $this->mimeType = $value['mime_type'];
             unset($value['mime_type']);
         }
-
+    
         if ([] !== $value) {
             throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-
+    
     public function toArray(): array
     {
         $output = [];
@@ -68,7 +68,7 @@ class JsonpHandlerConfig
         if (isset($this->_usedProperties['mimeType'])) {
             $output['mime_type'] = $this->mimeType;
         }
-
+    
         return $output;
     }
 

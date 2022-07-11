@@ -19,7 +19,7 @@ class RuleConfig
     private $fallbackFormat;
     private $priorities;
     private $_usedProperties = [];
-
+    
     /**
      * URL path info
      * @default null
@@ -30,10 +30,10 @@ class RuleConfig
     {
         $this->_usedProperties['path'] = true;
         $this->path = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * URL host name
      * @default null
@@ -44,10 +44,10 @@ class RuleConfig
     {
         $this->_usedProperties['host'] = true;
         $this->host = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * Method for URL
      * @default null
@@ -59,10 +59,10 @@ class RuleConfig
     {
         $this->_usedProperties['methods'] = true;
         $this->methods = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @return $this
      */
@@ -70,10 +70,10 @@ class RuleConfig
     {
         $this->_usedProperties['attributes'] = true;
         $this->attributes[$name] = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @default false
      * @param ParamConfigurator|bool $value
@@ -83,10 +83,10 @@ class RuleConfig
     {
         $this->_usedProperties['stop'] = true;
         $this->stop = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @default true
      * @param ParamConfigurator|bool $value
@@ -96,10 +96,10 @@ class RuleConfig
     {
         $this->_usedProperties['preferExtension'] = true;
         $this->preferExtension = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @default 'html'
      * @param ParamConfigurator|mixed $value
@@ -109,10 +109,10 @@ class RuleConfig
     {
         $this->_usedProperties['fallbackFormat'] = true;
         $this->fallbackFormat = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @param mixed $value
      *
@@ -122,10 +122,10 @@ class RuleConfig
     {
         $this->_usedProperties['priorities'] = true;
         $this->priorities = $value;
-
+    
         return $this;
     }
-
+    
     public function __construct(array $value = [])
     {
         if (array_key_exists('path', $value)) {
@@ -133,54 +133,54 @@ class RuleConfig
             $this->path = $value['path'];
             unset($value['path']);
         }
-
+    
         if (array_key_exists('host', $value)) {
             $this->_usedProperties['host'] = true;
             $this->host = $value['host'];
             unset($value['host']);
         }
-
+    
         if (array_key_exists('methods', $value)) {
             $this->_usedProperties['methods'] = true;
             $this->methods = $value['methods'];
             unset($value['methods']);
         }
-
+    
         if (array_key_exists('attributes', $value)) {
             $this->_usedProperties['attributes'] = true;
             $this->attributes = $value['attributes'];
             unset($value['attributes']);
         }
-
+    
         if (array_key_exists('stop', $value)) {
             $this->_usedProperties['stop'] = true;
             $this->stop = $value['stop'];
             unset($value['stop']);
         }
-
+    
         if (array_key_exists('prefer_extension', $value)) {
             $this->_usedProperties['preferExtension'] = true;
             $this->preferExtension = $value['prefer_extension'];
             unset($value['prefer_extension']);
         }
-
+    
         if (array_key_exists('fallback_format', $value)) {
             $this->_usedProperties['fallbackFormat'] = true;
             $this->fallbackFormat = $value['fallback_format'];
             unset($value['fallback_format']);
         }
-
+    
         if (array_key_exists('priorities', $value)) {
             $this->_usedProperties['priorities'] = true;
             $this->priorities = $value['priorities'];
             unset($value['priorities']);
         }
-
+    
         if ([] !== $value) {
             throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-
+    
     public function toArray(): array
     {
         $output = [];
@@ -208,7 +208,7 @@ class RuleConfig
         if (isset($this->_usedProperties['priorities'])) {
             $output['priorities'] = $this->priorities;
         }
-
+    
         return $output;
     }
 

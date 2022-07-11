@@ -16,7 +16,7 @@ class FormatListenerConfig
     private $service;
     private $rules;
     private $_usedProperties = [];
-
+    
     /**
      * @default false
      * @param ParamConfigurator|bool $value
@@ -26,10 +26,10 @@ class FormatListenerConfig
     {
         $this->_usedProperties['enabled'] = true;
         $this->enabled = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -39,17 +39,17 @@ class FormatListenerConfig
     {
         $this->_usedProperties['service'] = true;
         $this->service = $value;
-
+    
         return $this;
     }
-
+    
     public function rule(array $value = []): \Symfony\Config\FosRest\FormatListener\RuleConfig
     {
         $this->_usedProperties['rules'] = true;
-
+    
         return $this->rules[] = new \Symfony\Config\FosRest\FormatListener\RuleConfig($value);
     }
-
+    
     public function __construct(array $value = [])
     {
         if (array_key_exists('enabled', $value)) {
@@ -57,24 +57,24 @@ class FormatListenerConfig
             $this->enabled = $value['enabled'];
             unset($value['enabled']);
         }
-
+    
         if (array_key_exists('service', $value)) {
             $this->_usedProperties['service'] = true;
             $this->service = $value['service'];
             unset($value['service']);
         }
-
+    
         if (array_key_exists('rules', $value)) {
             $this->_usedProperties['rules'] = true;
             $this->rules = array_map(function ($v) { return new \Symfony\Config\FosRest\FormatListener\RuleConfig($v); }, $value['rules']);
             unset($value['rules']);
         }
-
+    
         if ([] !== $value) {
             throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-
+    
     public function toArray(): array
     {
         $output = [];
@@ -87,7 +87,7 @@ class FormatListenerConfig
         if (isset($this->_usedProperties['rules'])) {
             $output['rules'] = array_map(function ($v) { return $v->toArray(); }, $this->rules);
         }
-
+    
         return $output;
     }
 

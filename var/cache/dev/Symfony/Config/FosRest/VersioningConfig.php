@@ -17,7 +17,7 @@ class VersioningConfig
     private $resolvers;
     private $guessingOrder;
     private $_usedProperties = [];
-
+    
     /**
      * @default false
      * @param ParamConfigurator|bool $value
@@ -27,10 +27,10 @@ class VersioningConfig
     {
         $this->_usedProperties['enabled'] = true;
         $this->enabled = $value;
-
+    
         return $this;
     }
-
+    
     /**
      * @default null
      * @param ParamConfigurator|mixed $value
@@ -40,10 +40,10 @@ class VersioningConfig
     {
         $this->_usedProperties['defaultVersion'] = true;
         $this->defaultVersion = $value;
-
+    
         return $this;
     }
-
+    
     public function resolvers(array $value = []): \Symfony\Config\FosRest\Versioning\ResolversConfig
     {
         if (null === $this->resolvers) {
@@ -52,10 +52,10 @@ class VersioningConfig
         } elseif (0 < \func_num_args()) {
             throw new InvalidConfigurationException('The node created by "resolvers()" has already been initialized. You cannot pass values the second time you call resolvers().');
         }
-
+    
         return $this->resolvers;
     }
-
+    
     /**
      * @param ParamConfigurator|list<ParamConfigurator|mixed> $value
      *
@@ -65,10 +65,10 @@ class VersioningConfig
     {
         $this->_usedProperties['guessingOrder'] = true;
         $this->guessingOrder = $value;
-
+    
         return $this;
     }
-
+    
     public function __construct(array $value = [])
     {
         if (array_key_exists('enabled', $value)) {
@@ -76,30 +76,30 @@ class VersioningConfig
             $this->enabled = $value['enabled'];
             unset($value['enabled']);
         }
-
+    
         if (array_key_exists('default_version', $value)) {
             $this->_usedProperties['defaultVersion'] = true;
             $this->defaultVersion = $value['default_version'];
             unset($value['default_version']);
         }
-
+    
         if (array_key_exists('resolvers', $value)) {
             $this->_usedProperties['resolvers'] = true;
             $this->resolvers = new \Symfony\Config\FosRest\Versioning\ResolversConfig($value['resolvers']);
             unset($value['resolvers']);
         }
-
+    
         if (array_key_exists('guessing_order', $value)) {
             $this->_usedProperties['guessingOrder'] = true;
             $this->guessingOrder = $value['guessing_order'];
             unset($value['guessing_order']);
         }
-
+    
         if ([] !== $value) {
             throw new InvalidConfigurationException(sprintf('The following keys are not supported by "%s": ', __CLASS__).implode(', ', array_keys($value)));
         }
     }
-
+    
     public function toArray(): array
     {
         $output = [];
@@ -115,7 +115,7 @@ class VersioningConfig
         if (isset($this->_usedProperties['guessingOrder'])) {
             $output['guessing_order'] = $this->guessingOrder;
         }
-
+    
         return $output;
     }
 

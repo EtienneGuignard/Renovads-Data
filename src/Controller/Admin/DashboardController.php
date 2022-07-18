@@ -97,7 +97,7 @@ class DashboardController extends AbstractDashboardController
             'labels' => ['00h', '01h', '03h', '04h', '05h', '06h', '07h', '8h', '9h', '10h','11h','12h','13h','14h','15h','16h','17h','18h','19h','20h','21h','22h', '23h', '00h'],
             'datasets' => [
                 [
-                    'label' => 'Lead Per Day',
+                    'label' => 'New leads',
                     'backgroundColor' => 'rgb(255, 99, 132)',
                     'borderColor' => 'rgb(255, 99, 132)',
                     'data' => [$hour01, $hour02, $hour03, $hour04, $hour05, $hour06, $hour07, $hour08,$hour09,$hour10,$hour11,$hour12,$hour13,$hour14,$hour15,$hour16,$hour17,$hour18,$hour19,$hour20,$hour21,$hour22,$hour23,$hour24],

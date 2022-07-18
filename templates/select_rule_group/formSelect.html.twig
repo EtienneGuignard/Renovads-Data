@@ -1,4 +1,4 @@
-<form method="post" action="{{path('app_add_rule_group')}}">
+<form method="post" action="{{path('app_select_rule_group')}}">
     <div class="mb-3">
       <label for="" class="form-label">Disabled select menu</label>
         <select name="ruleId" id="ruleId" class="form-select">
@@ -7,7 +7,7 @@
         {% endfor %}
     </select>
     <input type="hidden" name="campaignId" value={{campaignId}}>
-    <input type="hidden" name="campaignId" value={{campaignId}}>
+    <input type="hidden" name="refer" value={{refer}}>
     </div>
     <button type="submit" class="btn btn-primary">Submit</button>
   </fieldset>

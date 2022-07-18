@@ -22,7 +22,7 @@ class CampaignCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
 
-        $detailTest= Action::new('viewDetails','show')
+        $detailTest= Action::new('viewDetails','Add new rule group')
             ->linkToRoute('app_select_rule_group', function (Campaign $campaign): array {
                 return [
                     'campaignId' => $campaign->getId(),
@@ -44,18 +44,4 @@ class CampaignCrudController extends AbstractCrudController
         ];
     }
     */
-    // #[Route('/select/rule/group/', name: 'app_add_rule_group')]
-    // public function formSelectRule(RuleGroupRepository $ruleGroupRepository, CampaignRepository $campaignRepository): Response
-    // {
-
-    //     if(isset($_POST['ruleId'])){
-    //         $campaignId=$_POST['campaignId'];
-    //         $ruleGroupId=$_POST['ruleId'];
-    //         $ruleGroup=$ruleGroupRepository->find($ruleGroupId);
-    //         $campaign=$campaignRepository->find($campaignId);
-    //         $campaign->getRuleGroups()->add($ruleGroup);
-    //         $ruleGroup->getFkCampaign()->add($campaign);
-    //     }
-    //     return $this->render('$0.html.twig', []);
-    // }
 }

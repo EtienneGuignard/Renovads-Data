@@ -1,4 +1,0 @@
-d911ed,127.0.0.1,GET,http://127.0.0.1:8000/admin?crudAction=index&crudControllerFqcn=App%5CController%5CAdmin%5CRuleGroupCrudController&menuIndex=3&submenuIndex=-1,1657527728,,200
-7a6040,127.0.0.1,GET,http://127.0.0.1:8000/admin?menuIndex=0&submenuIndex=-1,1657527737,,200
-c25ca1,127.0.0.1,GET,http://127.0.0.1:8000/admin?crudAction=index&crudControllerFqcn=App%5CController%5CAdmin%5CRuleGroupCrudController&menuIndex=3&submenuIndex=-1,1657527744,,200
-5d0596,127.0.0.1,GET,http://127.0.0.1:8000/admin,1657527775,,200

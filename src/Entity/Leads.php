@@ -7,9 +7,29 @@ use App\Repository\LeadsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Controller\LeadPersist;
 
 #[ORM\Entity(repositoryClass: LeadsRepository::class)]
-#[ApiResource]
+#[ApiResource(
+    collectionOperations: [
+        'post' => [
+            'path' => '/lead/v2',
+            'controller' => LeadPersist::class,
+            
+        ],
+    ],
+    
+    itemOperations: [
+    'get',
+    'delete',
+    'put',
+    'put_upadated_at' => [
+        'method' => 'PUT',
+        'path' => '/aricle/{id}/updated-at',
+        'controller' => LeadPersist::class,
+    ],
+    'patch',
+])]
 class Leads
 {
     #[ORM\Id]
@@ -26,7 +46,7 @@ class Leads
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $dob;
 
-    #[ORM\OneToMany(mappedBy: 'leadId', targetEntity: CampaignLeads::class)]
+    #[ORM\OneToMany(mappedBy: 'leadId', targetEntity: CampaignLeads::class, cascade: ['persist'])]
     private $fkLeads;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]

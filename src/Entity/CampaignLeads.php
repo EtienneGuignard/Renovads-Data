@@ -15,10 +15,10 @@ class CampaignLeads
     #[ORM\Column(type: 'integer')]
     private $id;
 
-    #[ORM\ManyToOne(targetEntity: Campaign::class, inversedBy: 'fkLeads')]
+    #[ORM\ManyToOne(targetEntity: Campaign::class, inversedBy: 'fkLeads', cascade: ['persist'])]
     private $campaignId;
 
-    #[ORM\ManyToOne(targetEntity: Leads::class, inversedBy: 'fkLeads')]
+    #[ORM\ManyToOne(targetEntity: Leads::class, inversedBy: 'fkLeads', cascade: ['persist'])]
     private $leadId;
 
     #[ORM\Column(type: 'string', length: 255)]

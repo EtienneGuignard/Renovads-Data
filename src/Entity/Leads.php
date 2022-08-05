@@ -85,6 +85,9 @@ class Leads
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $lastUpdated;
 
+    #[ORM\ManyToOne(inversedBy: 'fk_leadId')]
+    private ?Supplier $supplier = null;
+
     public function __construct()
     {
         $this->campaigns = new ArrayCollection();
@@ -302,6 +305,18 @@ class Leads
     public function setLastUpdated(?\DateTimeInterface $lastUpdated): self
     {
         $this->lastUpdated = $lastUpdated;
+
+        return $this;
+    }
+
+    public function getSupplier(): ?Supplier
+    {
+        return $this->supplier;
+    }
+
+    public function setSupplier(?Supplier $supplier): self
+    {
+        $this->supplier = $supplier;
 
         return $this;
     }

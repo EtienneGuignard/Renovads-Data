@@ -3,6 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\ForwarderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ForwarderRepository::class)]
@@ -18,6 +21,23 @@ class Forwarder
 
     #[ORM\Column(type: 'string', length: 1000)]
     private $url;
+
+    #[ORM\Column(nullable: true)]
+    private array $body = [];
+
+    #[ORM\Column(type: Types::ARRAY, nullable: true)]
+    private array $keyArray = [];
+
+    #[ORM\ManyToOne(inversedBy: 'forwarders')]
+    private ?Campaign $fkCampaign = null;
+
+    #[ORM\OneToMany(mappedBy: 'fkForwarder', targetEntity: BodyForwarder::class)]
+    private Collection $bodyForwarders;
+
+    public function __construct()
+    {
+        $this->bodyForwarders = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -44,6 +64,72 @@ class Forwarder
     public function setUrl(string $url): self
     {
         $this->url = $url;
+
+        return $this;
+    }
+
+    public function getBody(): array
+    {
+        return $this->body;
+    }
+
+    public function setBody(?array $body): self
+    {
+        $this->body = $body;
+
+        return $this;
+    }
+
+    public function getKeyArray(): array
+    {
+        return $this->keyArray;
+    }
+
+    public function setKeyArray(?array $keyArray): self
+    {
+        $this->keyArray = $keyArray;
+
+        return $this;
+    }
+
+    public function getFkCampaign(): ?Campaign
+    {
+        return $this->fkCampaign;
+    }
+
+    public function setFkCampaign(?Campaign $fkCampaign): self
+    {
+        $this->fkCampaign = $fkCampaign;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BodyForwarder>
+     */
+    public function getBodyForwarders(): Collection
+    {
+        return $this->bodyForwarders;
+    }
+
+    public function addBodyForwarder(BodyForwarder $bodyForwarder): self
+    {
+        if (!$this->bodyForwarders->contains($bodyForwarder)) {
+            $this->bodyForwarders->add($bodyForwarder);
+            $bodyForwarder->setFkForwarder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBodyForwarder(BodyForwarder $bodyForwarder): self
+    {
+        if ($this->bodyForwarders->removeElement($bodyForwarder)) {
+            // set the owning side to null (unless already changed)
+            if ($bodyForwarder->getFkForwarder() === $this) {
+                $bodyForwarder->setFkForwarder(null);
+            }
+        }
 
         return $this;
     }

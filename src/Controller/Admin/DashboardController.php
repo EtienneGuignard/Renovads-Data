@@ -5,8 +5,10 @@ namespace App\Controller\Admin;
 use App\Controller\CampaignController;
 use App\Controller\ChartController;
 use App\Entity\Campaign;
+use App\Entity\Forwarder;
 use App\Entity\Leads;
 use App\Entity\RuleGroup;
+use App\Entity\Supplier;
 use App\Repository\LeadsRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -125,12 +127,14 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::linkToRoute('Dashboard test', 'fa fa-home', 'app_chart');
+        // necessary to implement easyadmin in app_select_rule_group
         yield MenuItem::linkToRoute('select', 'fa fa-home', 'app_select_rule_group')
         ->setCssClass("d-none");
         yield MenuItem::linkToCrud('Rule group', 'fas fa-list', RuleGroup::class);
         yield MenuItem::linkToCrud('Campaign', 'fas fa-bullhorn', Campaign::class);
         yield MenuItem::linkToCrud('Leads', 'fas fa-user', Leads::class);
+        yield MenuItem::linkToCrud('Supplier', 'fas fa-building', Supplier::class);
+        yield MenuItem::linkToCrud('Forwader', 'fas fa-fire', Forwarder::class);
     }
 }
 

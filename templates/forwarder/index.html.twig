@@ -1,0 +1,34 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}The Title of the Page{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-primary" href="...">Some Action</a>
+{% endblock %}
+
+{% block main %}
+<section>
+{% for forwarder in forwarderList %}
+
+    <div>{{forwarder.type}}</div>
+
+    
+{% endfor %}
+    {{ form(form) }}
+</section>
+
+{# <form  class="mt-5" method="post" action="{{path('app_forwarder')}}">
+    <label for="type">Type:</label>
+    <input type="text" name="type" id="type"> 
+    <label for="input">Input:</label>
+     <input type="text" name="input" id="input">
+     <label for="output">Ouput:</label>   
+      <input type="text" name="output" id="output">
+     
+        
+        
+    <input type="hidden" name="forwarderId" value={{forwarderId}}>
+    <input type="hidden" name="refer" value={{refer}}>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form> #}
+
+{% endblock %}

@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\SupplierRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SupplierRepository::class)]
@@ -26,6 +28,14 @@ class Supplier
 
     #[ORM\Column(type: 'string', length: 255)]
     private $companyName;
+
+    #[ORM\OneToMany(mappedBy: 'supplier', targetEntity: Leads::class)]
+    private Collection $fk_leadId;
+
+    public function __construct()
+    {
+        $this->fk_leadId = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -76,6 +86,36 @@ class Supplier
     public function setCompanyName(string $companyName): self
     {
         $this->companyName = $companyName;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Leads>
+     */
+    public function getFkLeadId(): Collection
+    {
+        return $this->fk_leadId;
+    }
+
+    public function addFkLeadId(Leads $fkLeadId): self
+    {
+        if (!$this->fk_leadId->contains($fkLeadId)) {
+            $this->fk_leadId->add($fkLeadId);
+            $fkLeadId->setSupplier($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFkLeadId(Leads $fkLeadId): self
+    {
+        if ($this->fk_leadId->removeElement($fkLeadId)) {
+            // set the owning side to null (unless already changed)
+            if ($fkLeadId->getSupplier() === $this) {
+                $fkLeadId->setSupplier(null);
+            }
+        }
 
         return $this;
     }

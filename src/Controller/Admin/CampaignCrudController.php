@@ -22,7 +22,7 @@ class CampaignCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
 
-        $detailTest= Action::new('viewDetails','Add new rule group')
+        $detail= Action::new('viewDetails','Add new rule group')
             ->linkToRoute('app_select_rule_group', function (Campaign $campaign): array {
                 return [
                     'campaignId' => $campaign->getId(),
@@ -30,7 +30,7 @@ class CampaignCrudController extends AbstractCrudController
             });;
         return $actions
         ->add(Crud::PAGE_INDEX, Action::DETAIL)
-        ->add(Crud::PAGE_DETAIL, $detailTest);
+        ->add(Crud::PAGE_DETAIL, $detail);
 
     }
 

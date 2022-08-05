@@ -44,11 +44,15 @@ class Campaign
     #[ORM\OneToMany(mappedBy: 'campaignId', targetEntity: CampaignLeads::class)]
     private $fkLeads;
 
+    #[ORM\OneToMany(mappedBy: 'fkCampaign', targetEntity: Forwarder::class)]
+    private Collection $forwarders;
+
     public function __construct()
     {
         $this->idLead = new ArrayCollection();
         $this->ruleGroups = new ArrayCollection();
         $this->fkLeads = new ArrayCollection();
+        $this->forwarders = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -191,6 +195,36 @@ class Campaign
             // set the owning side to null (unless already changed)
             if ($fkLead->getCampaignId() === $this) {
                 $fkLead->setCampaignId(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Forwarder>
+     */
+    public function getForwarders(): Collection
+    {
+        return $this->forwarders;
+    }
+
+    public function addForwarder(Forwarder $forwarder): self
+    {
+        if (!$this->forwarders->contains($forwarder)) {
+            $this->forwarders->add($forwarder);
+            $forwarder->setFkCampaign($this);
+        }
+
+        return $this;
+    }
+
+    public function removeForwarder(Forwarder $forwarder): self
+    {
+        if ($this->forwarders->removeElement($forwarder)) {
+            // set the owning side to null (unless already changed)
+            if ($forwarder->getFkCampaign() === $this) {
+                $forwarder->setFkCampaign(null);
             }
         }
 

@@ -2,11 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\BodyForwarder;
 use App\Entity\Campaign;
 use App\Entity\CampaignLeads;
+use App\Entity\Forwarder;
 use App\Entity\Leads;
+use App\Repository\BodyForwarderRepository;
 use App\Repository\CampaignLeadsRepository;
 use App\Repository\CampaignRepository;
+use App\Repository\ForwarderRepository;
 use App\Repository\RuleGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -38,11 +42,11 @@ class LeadPersist extends AbstractController
         var_dump("I'm in RegisterController");
         $dataId=$data->getEmail();
         var_dump($dataId);
-        rulesFunction($ruleGroupRepository, $data, $entityManagerInterface, $campaignRepository);
+        // rulesFunction($ruleGroupRepository, $data, $entityManagerInterface, $campaignRepository);
         var_dump('hey');
         // testRules($data);
 
-        // rulesFunction($ruleGroupRepository, $data, $entityManagerInterface, $campaignRepository);
+        rulesFunction($ruleGroupRepository, $data, $entityManagerInterface, $campaignRepository);
 
         return $data;
     }
@@ -53,7 +57,10 @@ class LeadPersist extends AbstractController
     
     }
 
-    function rulesFunction(RuleGroupRepository $ruleGroupRepository, $data, EntityManagerInterface $entityManagerInterface, CampaignRepository $campaignRepository)
+    function rulesFunction(RuleGroupRepository $ruleGroupRepository, $data, 
+    EntityManagerInterface $entityManagerInterface, 
+    CampaignRepository $campaignRepository,
+    )
     {
         
         var_dump('jjjjjjjjjjjjjjjjjjjjjjjjjjjj');
@@ -115,3 +122,13 @@ function deterRuleField($ruleFieldEntry, $data){
         $entityManagerInterface->persist($campaignLeads);
         $entityManagerInterface->flush();
     }
+
+    // function bodyForwarder($campaignRepository, $campaign, ForwarderRepository $forwarderRepository, $bodyForwarderRepository){
+    //     // $fkCampaign=$campaignRepository->find($campaignId)
+    //     // $forwarders=$forwarderRepository->findAll();
+    //     //  foreach($forwarders as $forwarder){
+    //     //     // 
+            
+            
+    //     //  }
+    // }

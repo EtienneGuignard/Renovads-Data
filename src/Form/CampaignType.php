@@ -6,6 +6,8 @@ use App\Entity\Campaign;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CampaignType extends AbstractType
@@ -22,7 +24,21 @@ class CampaignType extends AbstractType
             ->add('currency')
             ->add('save', SubmitType::class)
         ;
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                /** @var ArrayCollection<SomeInterface> $collection */
+                $collection = $event->getData();
+                foreach ($collection as $collectionItem) {
+                    $collection->removeElement($collectionItem);
+                    $collection->set($collectionItem->getName(), $collectionItem);
+                }
+            },
+            100
+        );
     }
+   
 
     public function configureOptions(OptionsResolver $resolver): void
     {

@@ -37,33 +37,11 @@ class DashboardController extends AbstractDashboardController
     public function index(): Response
     {
 
-        // $url= $this->adminUrlGenerator
-        //         ->setController(CampaignCrudController::class)
-        //         ->generateUrl();
-                
-
-
-        // return $this->redirect($url);
+      
         return $this->render('admin/index.html.twig', [
             'chart' => $this->chart(),
         ]);
 
-        // Option 1. You can make your dashboard redirect to some common page of your backend
-        //
-        // $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
-        
-
-        // Option 2. You can make your dashboard redirect to different pages depending on the user
-        //
-        // if ('jane' === $this->getUser()->getUsername()) {
-        //     return $this->redirect('...');
-        // }
-        
-        // $chart = $chartBuilder->createChart(Chart::TYPE_LINE)
-        // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
-        // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
-        //
-        // return $this->render('some/path/my-dashboard.html.twig');
     }
 
     private function chart(): Chart
@@ -96,7 +74,8 @@ class DashboardController extends AbstractDashboardController
         $hour24=count($this->leadsRepository->selectLeadChartLastHour($timeArr['23:00'], $this->entityManagerInterface ));
         $chart = $this->chartBuilder->createChart(Chart::TYPE_LINE);
         $chart->setData([
-            'labels' => ['00h', '01h', '03h', '04h', '05h', '06h', '07h', '8h', '9h', '10h','11h','12h','13h','14h','15h','16h','17h','18h','19h','20h','21h','22h', '23h', '00h'],
+            'labels' => ['00h', '01h', '02', '03h', '04h', '05h', '06h', '07h', '8h', '9h', '10h','11h','12h','13h','14h','15h','16h','17h','18h','19h','20h','21h','22h', '23h'],
+
             'datasets' => [
                 [
                     'label' => 'New leads',
@@ -130,11 +109,18 @@ class DashboardController extends AbstractDashboardController
         // necessary to implement easyadmin in app_select_rule_group
         yield MenuItem::linkToRoute('select', 'fa fa-home', 'app_select_rule_group')
         ->setCssClass("d-none");
+        
+        yield MenuItem::linkToRoute('select', 'fa fa-home', 'app_report_results')
+        ->setCssClass("d-none");
         yield MenuItem::linkToCrud('Rule group', 'fas fa-list', RuleGroup::class);
         yield MenuItem::linkToCrud('Campaign', 'fas fa-bullhorn', Campaign::class);
         yield MenuItem::linkToCrud('Leads', 'fas fa-user', Leads::class);
         yield MenuItem::linkToCrud('Supplier', 'fas fa-building', Supplier::class);
-        yield MenuItem::linkToCrud('Forwader', 'fas fa-fire', Forwarder::class);
+        yield MenuItem::linkToCrud('Forwader', 'fas fa-exchange', Forwarder::class);
+        MenuItem::subMenu('Report', 'fa fa-bar-chart')->setSubItems([
+        yield MenuItem::linkToRoute('View Lead', 'fa fa-article', 'app_report'),
+        yield MenuItem::linkToRoute('Affiliate report', 'fa fa-article', 'app_report_affiliate')    
+    ]);
     }
 }
 

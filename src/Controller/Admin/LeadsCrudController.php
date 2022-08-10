@@ -3,10 +3,15 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Leads;
+use DateTimeImmutable;
+use Doctrine\DBAL\Types\DateTimeImmutableType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class LeadsCrudController extends AbstractCrudController
 {
@@ -20,14 +25,27 @@ class LeadsCrudController extends AbstractCrudController
         return $actions
         ->add(Crud::PAGE_INDEX, Action::DETAIL);
     }
-    /*
+    
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
-            TextField::new('title'),
-            TextEditorField::new('description'),
+            TextField::new('email'),
+            TextField::new('firstname'),
+            TextField::new('lastname'),
+            DateField::new('dob'),
+            TextField::new('address_1'),
+            TextField::new('address_2'),
+            TextField::new('city'),
+            TextField::new('zip'),
+            TextField::new('job')->onlyOnDetail(),
+            TextField::new('children')->onlyOnDetail(),
+            TextField::new('privacy_policy')->onlyOnDetail(),
+            TextField::new('confirm_privacy'),
+            TextField::new('confirm_partners'),
+            TextField::new('url'),
+            DateTimeField::new('created_at'),
+            DateTimeField::new('last_updated')
         ];
     }
-    */
+    
 }

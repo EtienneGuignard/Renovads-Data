@@ -117,13 +117,10 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Leads', 'fas fa-user', Leads::class);
         yield MenuItem::linkToCrud('Supplier', 'fas fa-building', Supplier::class);
         yield MenuItem::linkToCrud('Forwader', 'fas fa-exchange', Forwarder::class);
-        MenuItem::subMenu('Report', 'fa fa-bar-chart')->setSubItems([
-        yield MenuItem::linkToRoute('View Lead', 'fa fa-article', 'app_report'),
-        yield MenuItem::linkToRoute('Affiliate report', 'fa fa-article', 'app_report_affiliate')    
-    ]);
+        yield MenuItem::linkToRoute('Report', 'fa fa-bar-chart', 'app_report');
+       
     }
 }
-
 
 function hoursRange( $lower = 0, $upper = 86400, $step = 3600, $format = '' ) {
     $times = array();

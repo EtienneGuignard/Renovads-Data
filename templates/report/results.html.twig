@@ -1,0 +1,40 @@
+
+{% extends '@EasyAdmin/page/content.html.twig' %}
+{% block content_title %}Today's Leads{% endblock %}
+{% block page_actions %}
+    <a class="btn btn-primary" href="...">Some Action</a>
+{% endblock %}
+
+{% block main %}
+{{ form(form) }}
+    {% include "report/affiliateResults.html.twig" %}
+    <table class="datagrid">
+        <thead>
+            <tr>
+                <td>Id</td>
+                <td>timestamp</td>
+                <td>email</td>
+                <td>Supplier</td>
+                <td>status</td>
+            </tr>
+        </thead>
+        <tbody>
+        {% for result in results %}
+              <tr>
+                    <td>{{result.id}}</td>
+                    <td>{{result.created_at}}</td>
+                    <td>{{result.email}}</td>
+                    <td>{{result.reference}}</td>
+                    <td>{{result.status}}</td>
+                    
+                </tr>
+        {% endfor %}
+
+              
+
+        </tbody>
+    </table>
+{% endblock %}
+ {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+    {% endblock %}

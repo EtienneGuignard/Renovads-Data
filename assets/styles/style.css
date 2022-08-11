@@ -1,0 +1,13 @@
+html {
+    height: 100%;
+  }
+  body {
+    min-height: 100%;
+  }
+
+@media screen and (min-width: 1000px) {
+    .rowLogin {
+        min-height: 500px;
+    }
+    
+}

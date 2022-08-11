@@ -60,6 +60,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'boolean')]
     private $isVerified = false;
 
+    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    private ?Supplier $fkSupplier = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -258,6 +261,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getFkSupplier(): ?Supplier
+    {
+        return $this->fkSupplier;
+    }
+
+    public function setFkSupplier(?Supplier $fkSupplier): self
+    {
+        $this->fkSupplier = $fkSupplier;
 
         return $this;
     }

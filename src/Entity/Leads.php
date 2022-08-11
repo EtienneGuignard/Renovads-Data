@@ -15,6 +15,7 @@ use App\Controller\LeadPersist;
         'post' => [
             'path' => '/lead/v2',
             'controller' => LeadPersist::class,
+            'serialize'=>true,
             
         ],
     ],
@@ -43,11 +44,11 @@ class Leads
     #[ORM\Column(type: 'string', length: 255)]
     private $firstname;
 
-    #[ORM\Column(type: 'datetime', nullable: true)]
+    #[ORM\Column(type: 'date', nullable: true)]
     private $dob;
 
     #[ORM\OneToMany(mappedBy: 'leadId', targetEntity: CampaignLeads::class, cascade: ['persist'])]
-    private $fkLeads;
+    private $fkCampaigns;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $address_1;
@@ -79,7 +80,7 @@ class Leads
     #[ORM\Column(type: 'string', length: 3, nullable: true)]
     private $children;
 
-    #[ORM\Column(type: 'datetime_immutable',  nullable: true)]
+    #[ORM\Column(type: 'datetime',  nullable: true)]
     private $createdAt;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
@@ -88,10 +89,16 @@ class Leads
     #[ORM\ManyToOne(inversedBy: 'fk_leadId')]
     private ?Supplier $supplier = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $lastname = null;
+
+    #[ORM\Column]
+    private ?int $sid = null;
+
     public function __construct()
     {
         $this->campaigns = new ArrayCollection();
-        $this->fkLeads = new ArrayCollection();
+        $this->fkCampaigns = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -123,6 +130,18 @@ class Leads
         return $this;
     }
 
+    public function getLastname(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(string $lastname): self
+    {
+        $this->lastname = $lastname;
+
+        return $this;
+    }
+
     public function getDob(): ?\DateTimeInterface
     {
         return $this->dob;
@@ -138,27 +157,27 @@ class Leads
     /**
      * @return Collection<int, CampaignLeads>
      */
-    public function getFkLeads(): Collection
+    public function getfkCampaigns(): Collection
     {
-        return $this->fkLeads;
+        return $this->fkCampaigns;
     }
 
-    public function addFkLead(CampaignLeads $fkLead): self
+    public function addfkCampaign(CampaignLeads $fkCampaign): self
     {
-        if (!$this->fkLeads->contains($fkLead)) {
-            $this->fkLeads[] = $fkLead;
-            $fkLead->setLeadId($this);
+        if (!$this->fkCampaigns->contains($fkCampaign)) {
+            $this->fkCampaigns[] = $fkCampaign;
+            $fkCampaign->setLeadId($this);
         }
 
         return $this;
     }
 
-    public function removeFkLead(CampaignLeads $fkLead): self
+    public function removefkCampaign(CampaignLeads $fkCampaign): self
     {
-        if ($this->fkLeads->removeElement($fkLead)) {
+        if ($this->fkCampaigns->removeElement($fkCampaign)) {
             // set the owning side to null (unless already changed)
-            if ($fkLead->getLeadId() === $this) {
-                $fkLead->setLeadId(null);
+            if ($fkCampaign->getLeadId() === $this) {
+                $fkCampaign->setLeadId(null);
             }
         }
 
@@ -281,16 +300,15 @@ class Leads
     public function setChildren(?string $children): self
     {
         $this->children = $children;
-
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -320,4 +338,18 @@ class Leads
 
         return $this;
     }
+
+    public function getSid(): ?int
+    {
+        return $this->sid;
+    }
+
+    public function setSid(int $sid): self
+    {
+        $this->sid = $sid;
+
+        return $this;
+    }
+
+   
 }

@@ -7,19 +7,51 @@
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
 
-    <h1>Register</h1>
-    <div class="container">
+    
+    <div class="container ">
+    <div class="row justify-content-center">
+    <div class="col-xl-4">
+    <h1 class="mt-3">Register</h1>
     {{ form_start(registrationForm) }}
-    <div class="row">
-        {{ form_row(registrationForm.email) }}
-    </div>
+        <label for="registration_form_email" class="form-label mt-2">Email</label>
+        {{ form_row(registrationForm.email, {}) }}
+        <label for="registration_form_plainPassword" class="form-label mt-2">Password</label>
         {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
+            'attr':{'class':'form-control'}
         }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
+  
+        
+        <div class="row">
+        <div class="col-6">
+        <label for="registration_form_firstName" class="form-label mt-2">First name</label>
+        {{ form_row(registrationForm.firstName, {}) }}
+        </div>
+        <div class="col-6">
+        <label for="registration_form_lasName" class="form-label mt-2">Last name</label>
+        {{ form_row(registrationForm.lastName, {}) }}
+        </div>
+        </div>
+        <label for="registration_form_company" class="form-label mt-2">Company</label>
+        {{ form_row(registrationForm.company, {}) }}
 
-        <button type="submit" class="btn">Register</button>
+         <label for="registration_form_companyAddress" class="form-label mt-2">Company address</label>
+        {{ form_row(registrationForm.companyAddress, {}) }}
+   
+        <label for="registration_form_country" class="form-label mt-2">Country</label>
+        {{ form_row(registrationForm.country, {}) }}
+        <label for="registration_form_zipCode" class="form-label mt-2">Zip</label>
+         {{ form_row(registrationForm.zipCode, {}) }}
+         <label for="registration_form_vatNumber" class="form-label mt-2">V.A.T.</label>
+         {{ form_row(registrationForm.vatNumber, {}) }}
+        {{ form_widget(registrationForm.agreeTerms, {
+            
+        }) }} <span class="ml-1">To register you have to agree to the terms and condition of renovads data</span>
+        <div class="row justify-content-center">
+            <button type="submit" class="btn btn-primary mt-3 w-50">Register</button>
+        </div>
     {{ form_end(registrationForm) }}
+    </div>
+    </div>
     </div>
 
 {% endblock %}

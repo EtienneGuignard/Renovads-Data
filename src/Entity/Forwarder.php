@@ -31,7 +31,7 @@ class Forwarder
     #[ORM\ManyToOne(inversedBy: 'forwarders')]
     private ?Campaign $fkCampaign = null;
 
-    #[ORM\OneToMany(mappedBy: 'fkForwarder', targetEntity: BodyForwarder::class)]
+    #[ORM\OneToMany(mappedBy: 'fkForwarder', targetEntity: BodyForwarder::class, cascade:['remove'])]
     private Collection $bodyForwarders;
 
     public function __construct()

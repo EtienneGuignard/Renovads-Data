@@ -66,7 +66,72 @@ class LeadsRepository extends ServiceEntityRepository
                                 ]);
         return $result->fetchAllAssociative();
     }
+    public function selectLeadReport($startDate, $endDate, $campaignId, $supplierId, $status, $entityManagerInterface)
+    {
+        $conn=$entityManagerInterface->getConnection();
+        $rawSql = "SELECT * FROM `leads`
+        LEFT JOIN campaign_leads
+        ON leads.id=campaign_leads.lead_id_id
+        LEFT JOIN supplier
+        ON leads.supplier_id=supplier.id
+	  WHERE created_at BETWEEN :startDate AND :endDate
+        AND  campaign_leads.campaign_id_id=IF(:campaignId IS NULL, campaign_leads.campaign_id_id, :campaignId)
+        AND  leads.supplier_id=IF(:supplierId IS NULL, leads.supplier_id, :supplierId)
+        AND campaign_leads.status=IF(:status IS NULL, campaign_leads.status, :status)";
+        $query=$conn->prepare($rawSql);
+        $result= $query->executeQuery([
+                                    'startDate'=>$startDate,
+                                    'endDate'=>$endDate,
+                                    'campaignId'=>$campaignId,
+                                    'supplierId'=>$supplierId,
+                                    'status'=>$status
+                                ]);
+        return $result->fetchAllAssociative();
+    }
+    public function selectLeadReportGlobal($startDate, $endDate, $campaignId, $supplierId, $status, $entityManagerInterface)
+    {
+        $conn=$entityManagerInterface->getConnection();
+        $rawSql = "SELECT COUNT(leads.id) AS NumberOfLeads FROM `leads`
+        LEFT JOIN campaign_leads
+        ON leads.id=campaign_leads.lead_id_id
+        LEFT JOIN supplier
+        ON leads.supplier_id=supplier.id
+	  WHERE created_at BETWEEN :startDate AND :endDate
+        AND  campaign_leads.campaign_id_id=IF(:campaignId IS NULL, campaign_leads.campaign_id_id, :campaignId)
+        AND  leads.supplier_id=IF(:supplierId IS NULL, leads.supplier_id, :supplierId)
+        AND campaign_leads.status=IF(:status IS NULL, campaign_leads.status, :status)";
+        $query=$conn->prepare($rawSql);
+        $result= $query->executeQuery([
+                                    'startDate'=>$startDate,
+                                    'endDate'=>$endDate,
+                                    'campaignId'=>$campaignId,
+                                    'supplierId'=>$supplierId,
+                                    'status'=>$status
+                                ]);
+        return $result->fetchAllAssociative();
+    }
 
+    public function selectLeadperday($dates, $campaignId, $supplierId, $status, $entityManagerInterface)
+    {
+        $conn=$entityManagerInterface->getConnection();
+        $rawSql = "SELECT leads.id FROM `leads`
+        LEFT JOIN campaign_leads
+        ON leads.id=campaign_leads.lead_id_id
+        LEFT JOIN supplier
+        ON leads.supplier_id=supplier.id
+	  WHERE created_at LIKE :date
+        AND  campaign_leads.campaign_id_id=IF(:campaignId IS NULL, campaign_leads.campaign_id_id, :campaignId)
+        AND  leads.supplier_id=IF(:supplierId IS NULL, leads.supplier_id, :supplierId)
+        AND campaign_leads.status=IF(:status IS NULL, campaign_leads.status, :status)";
+        $query=$conn->prepare($rawSql);
+        $result= $query->executeQuery([
+                                    'date'=>$dates,
+                                    'campaignId'=>$campaignId,
+                                    'supplierId'=>$supplierId,
+                                    'status'=>$status
+                                ]);
+        return $result->fetchAllAssociative();
+    }
 //     /**
 //     * @return Leads[] Returns an array of Leads objects
 //     */

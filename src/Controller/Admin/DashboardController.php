@@ -112,6 +112,9 @@ class DashboardController extends AbstractDashboardController
         
         yield MenuItem::linkToRoute('select', 'fa fa-home', 'app_report_results')
         ->setCssClass("d-none");
+         
+        yield MenuItem::linkToRoute('select', 'fa fa-home', 'app_forwarder_test')
+        ->setCssClass("d-none");
         yield MenuItem::linkToCrud('Rule group', 'fas fa-list', RuleGroup::class);
         yield MenuItem::linkToCrud('Campaign', 'fas fa-bullhorn', Campaign::class);
         yield MenuItem::linkToCrud('Leads', 'fas fa-user', Leads::class);

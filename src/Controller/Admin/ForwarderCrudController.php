@@ -35,11 +35,19 @@ class ForwarderCrudController extends AbstractCrudController
         ->linkToRoute('app_forwarder', function (Forwarder $forwarder): array {
             return [
                 'forwarderId' => $forwarder->getId(),
-            ];
-        });;
+            ]; });
+
+         $test= Action::new('testForwarder','Test Forwarder')
+            ->linkToRoute('app_forwarder_test', function (Forwarder $forwarder): array {
+                return [
+                    'forwarderId' => $forwarder->getId(),
+                ]; });
+
+       
         return $actions
         ->add(Crud::PAGE_INDEX, Action::DETAIL)
-        ->add(Crud::PAGE_DETAIL, $detailAdd);
+        // ->add(Crud::PAGE_DETAIL, $detailAdd)
+        ->add(Crud::PAGE_DETAIL, $test);
         
     }
     

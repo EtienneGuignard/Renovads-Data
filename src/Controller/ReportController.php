@@ -57,12 +57,26 @@ class ReportController extends AbstractDashboardController
     {
         
         $form= $this->createForm(ReportType::class);
-        
-        $startDate=$_POST['startDate'];
-        $endDate=$_POST['endDate'];
-        $campaignId=$_POST['campaign'];
-        $supplierId=$_POST['supplier'];
-        $status=$_POST['status'];
+       if (isset($_POST['search'])) {
+
+            $startDate=$_POST['startDate'];
+            $endDate=$_POST['endDate'];
+            $campaignId=null;
+            $supplierId=null;
+            $status=null;
+
+        if (isset($_POST['campaign'])) {
+            
+            $campaignId=$_POST['campaign'];
+        }
+        if (isset($_POST['supplier'])) {
+            
+            $supplierId=$_POST['supplier'];
+        }
+        if (isset($_POST['status'])) {
+            
+            $status=$_POST['status'];
+        }
         $resultsGlobal=$leadsRepository->selectLeadReportGlobal($startDate, $endDate, $campaignId, $supplierId, $status, $entityManagerInterface);
         $results=$leadsRepository->selectLeadReport($startDate, $endDate, $campaignId, $supplierId, $status, $entityManagerInterface);
 
@@ -75,10 +89,9 @@ class ReportController extends AbstractDashboardController
             $leadPerdayArr=count($leadsRepository->selectLeadperday($dates, $campaignId, $supplierId, $status, $entityManagerInterface));
             $leadPerday[]=$leadPerdayArr;
         }
-        var_dump($leadPerday);
 
        $chart=chartSearch($datesArr, $leadPerday, $chartBuilder);
-
+    }   
         return $this->render('report/results.html.twig', [
             
             'form'=> $form->createView(),

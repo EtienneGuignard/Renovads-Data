@@ -46,7 +46,7 @@ class ForwarderCrudController extends AbstractCrudController
        
         return $actions
         ->add(Crud::PAGE_INDEX, Action::DETAIL)
-        // ->add(Crud::PAGE_DETAIL, $detailAdd)
+        ->add(Crud::PAGE_DETAIL, $detailAdd)
         ->add(Crud::PAGE_DETAIL, $test);
         
     }

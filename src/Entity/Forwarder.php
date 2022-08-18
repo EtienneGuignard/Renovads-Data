@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\ForwarderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ForwarderRepository::class)]
@@ -21,12 +20,6 @@ class Forwarder
 
     #[ORM\Column(type: 'string', length: 1000)]
     private $url;
-
-    #[ORM\Column(nullable: true)]
-    private array $body = [];
-
-    #[ORM\Column(type: Types::ARRAY, nullable: true)]
-    private array $keyArray = [];
 
     #[ORM\ManyToOne(inversedBy: 'forwarders')]
     private ?Campaign $fkCampaign = null;
@@ -68,29 +61,6 @@ class Forwarder
         return $this;
     }
 
-    public function getBody(): array
-    {
-        return $this->body;
-    }
-
-    public function setBody(?array $body): self
-    {
-        $this->body = $body;
-
-        return $this;
-    }
-
-    public function getKeyArray(): array
-    {
-        return $this->keyArray;
-    }
-
-    public function setKeyArray(?array $keyArray): self
-    {
-        $this->keyArray = $keyArray;
-
-        return $this;
-    }
 
     public function getFkCampaign(): ?Campaign
     {

@@ -60,13 +60,8 @@ class LeadPersist extends AbstractController
     $supplierRepository,
     )
     {
+       
         $supplierId=$data->getSid();
-        
-        if (isset($supplierId)) {
-            
-        }else{
-            $supplierId=1; 
-        }
        
         
         $rules=$ruleGroupRepository->findAll();
@@ -147,9 +142,10 @@ function deterRuleField($ruleFieldEntry, $data){
         $campaignLeads->setCampaignId($fkCampaign);
         $campaignLeads->setLeadId($data);
         $campaignLeads->setStatus("Accepted");
+        var_dump('test');
         $entityManagerInterface->persist($campaignLeads);
         $entityManagerInterface->flush();
-        forwarder($forwarderRepository, $data , $bodyForwarderRepository);
+        // forwarder($forwarderRepository, $data , $bodyForwarderRepository);
     }
 
     function forwarder($forwarderRepository, $data , $bodyForwarderRepository){

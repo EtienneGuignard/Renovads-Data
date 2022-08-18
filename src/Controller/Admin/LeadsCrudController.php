@@ -34,7 +34,7 @@ class LeadsCrudController extends AbstractCrudController
             TextField::new('lastname'),
             DateField::new('dob'),
             TextField::new('address_1'),
-            TextField::new('address_2'),
+            TextField::new('address_2')->onlyOnDetail(),
             TextField::new('city'),
             TextField::new('zip'),
             TextField::new('job')->onlyOnDetail(),
@@ -44,7 +44,8 @@ class LeadsCrudController extends AbstractCrudController
             TextField::new('confirm_partners'),
             TextField::new('url'),
             DateTimeField::new('created_at'),
-            DateTimeField::new('last_updated')
+            DateTimeField::new('last_updated'),
+            
         ];
     }
     

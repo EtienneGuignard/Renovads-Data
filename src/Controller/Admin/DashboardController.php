@@ -9,6 +9,7 @@ use App\Entity\Forwarder;
 use App\Entity\Leads;
 use App\Entity\RuleGroup;
 use App\Entity\Supplier;
+use App\Entity\User;
 use App\Repository\LeadsRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -121,6 +122,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Supplier', 'fas fa-building', Supplier::class);
         yield MenuItem::linkToCrud('Forwader', 'fas fa-exchange', Forwarder::class);
         yield MenuItem::linkToRoute('Report', 'fa fa-bar-chart', 'app_report');
+        yield MenuItem::linkToCrud('Users', 'fas fa-address-book', User::class);
        
     }
 }

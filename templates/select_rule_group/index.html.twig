@@ -1,11 +1,29 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
-{% block content_title %}The Title of the Page{% endblock %}
-{% block page_actions %}
-    <a class="btn btn-primary" href="...">Some Action</a>
+{% block stylesheets %}
+    {{ encore_entry_link_tags('app') }}
 {% endblock %}
-
+{% block page_actions %}
+{% endblock %}
 {% block main %}
 
- {% include "select_rule_group/formSelect.html.twig" %}
+<h4 class="">Rules for campain {{campaignId}}</h4>
+
+<div class="row">
+
+{% for rule in ruleGroupList %}
+     <div class="col-3 marginColSelect border rounded" style="margin-left: 12px;">
+        {{rule.name}}
+    </div>
+    <div class="col-3">
+        <a href="{{path('delete_campaign_rule',  { 'id':campaignId , 'ruleId': rule.id })}}" class='btn btn-danger'>supprimer</a>
+    </div>
+{% endfor %}
+</div>
+<div class="row mt-5">
+    <div class="col-5">
+        {% include "select_rule_group/formSelect.html.twig" %}
+    </div>
+</div>
+ 
 {% endblock %}

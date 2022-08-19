@@ -39,20 +39,24 @@ class RuleGroupRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return RuleGroup[] Returns an array of RuleGroup objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('r')
-//            ->andWhere('r.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('r.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+   /**
+    * @return RuleGroup[] Returns an array of RuleGroup objects
+    */
+   public function ruleList($entityManagerInterface, $campaignId): array
+   {
+       
+    $conn=$entityManagerInterface->getConnection();
+
+    $rawSql = "SELECT * FROM `rule_group`
+    LEFT JOIN rule_group_campaign
+    ON rule_group.id=rule_group_campaign.rule_group_id
+    WHERE rule_group_campaign.campaign_id = :campaignId";
+    $query=$conn->prepare($rawSql);
+    $result= $query->executeQuery([
+                                'campaignId'=>$campaignId,
+                            ]);
+    return $result->fetchAllAssociative();
+   }
 
 //    public function findOneBySomeField($value): ?RuleGroup
 //    {

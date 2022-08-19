@@ -1,14 +1,30 @@
-<form method="post" action="{{path('app_select_rule_group')}}">
+
+<form method="post" action="{{path('app_select_rule_group' ,  { 'campaignId': campaignId })}}">
     <div class="mb-3">
-      <label for="" class="form-label">Disabled select menu</label>
+      <label for="" class="labelSelectForm" style="font-weight: bold;
+    margin-bottom: 5px; margin-left: 3px;">Select rule group</label>
         <select name="ruleId" id="ruleId" class="form-select">
-        {% for rule in rules %}
-    <option value={{ rule.id }}>{{ rule.name }}</option>
+        {% for ruleOpt in rules %}
+        
+          {% if ruleGroupList is empty %}
+              <option value={{ ruleOpt.id }}>{{ ruleOpt.name }}</option>
+           {% else %}
+              
+              
+                 
+                {% if ruleOpt.id in ruleGroupList|column('id') %}
+                
+                  {% else %}
+                    
+                  <option value={{ ruleOpt.id }}>{{ ruleOpt.name }}</option>
+                  {% endif %}
+              
+          {% endif %} 
+
+          
         {% endfor %}
     </select>
     <input type="hidden" name="campaignId" value={{campaignId}}>
-    <input type="hidden" name="refer" value={{refer}}>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </fieldset>
+    <button type="submit" name="submit"  id="submit" class="btn btn-primary">Add rule group</button>
 </form>

@@ -5,20 +5,27 @@ namespace App\Controller\Admin;
 use App\Controller\CampaignController;
 use App\Controller\ChartController;
 use App\Entity\Campaign;
+use App\Entity\CampaignLeads;
 use App\Entity\Forwarder;
 use App\Entity\Leads;
 use App\Entity\RuleGroup;
 use App\Entity\Supplier;
 use App\Entity\User;
+use App\Repository\CampaignLeadsRepository;
+use App\Repository\CampaignRepository;
 use App\Repository\LeadsRepository;
+use App\Repository\SupplierRepository;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
+use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Date;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
 
@@ -30,7 +37,7 @@ class DashboardController extends AbstractDashboardController
         private ChartBuilderInterface $chartBuilder,
         private LeadsRepository $leadsRepository,
         private EntityManagerInterface $entityManagerInterface,
-    )
+        private CampaignRepository $campaignRepository,   )
     {
     
     }
@@ -38,12 +45,21 @@ class DashboardController extends AbstractDashboardController
     public function index(): Response
     {
 
-      
+            $leads=$this->leadsRepository->selectLeadDasboard($this->entityManagerInterface);
+            $campaigns=$this->campaignRepository->findAll();
+            
+       
         return $this->render('admin/index.html.twig', [
             'chart' => $this->chart(),
+            'Leads' =>$leads,
+            'campaigns'=>$campaigns,
         ]);
 
     }
+
+
+   
+
 
     private function chart(): Chart
     {
@@ -98,6 +114,7 @@ class DashboardController extends AbstractDashboardController
         return $chart;
     }
 
+  
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()
@@ -113,9 +130,6 @@ class DashboardController extends AbstractDashboardController
         
         yield MenuItem::linkToRoute('select', 'fa fa-home', 'app_report_results')
         ->setCssClass("d-none");
-         
-        yield MenuItem::linkToRoute('select', 'fa fa-home', 'app_forwarder_test')
-        ->setCssClass("d-none");
         yield MenuItem::linkToCrud('Rule group', 'fas fa-list', RuleGroup::class);
         yield MenuItem::linkToCrud('Campaign', 'fas fa-bullhorn', Campaign::class);
         yield MenuItem::linkToCrud('Leads', 'fas fa-user', Leads::class);
@@ -126,6 +140,9 @@ class DashboardController extends AbstractDashboardController
        
     }
 }
+
+ 
+
 
 function hoursRange( $lower = 0, $upper = 86400, $step = 3600, $format = '' ) {
     $times = array();

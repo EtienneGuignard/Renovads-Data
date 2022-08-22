@@ -12,6 +12,7 @@ use App\Repository\CampaignRepository;
 use App\Repository\LeadsRepository;
 use App\Repository\SupplierRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -41,20 +42,20 @@ class ReportController extends AbstractDashboardController
     public function reportAffiliate(CampaignRepository $campaignRepository, SupplierRepository $supplierRepository, Request $request): Response
     {
         
-        $campaigns=$campaignRepository->findAll();
-        $suppliers=$supplierRepository->findAll();
+       
 
         return $this->render('report/form.html.twig', [
-            
-            'suppliers'=>$suppliers,
-            'campaigns'=>$campaigns
+        
         ]);
     }
 
     #[Route('/report/result', name: 'app_report_results')]
-    public function searchresult(EntityManagerInterface $entityManagerInterface, LeadsRepository $leadsRepository, ChartBuilderInterface $chartBuilder ): Response
+    public function searchresult(EntityManagerInterface $entityManagerInterface, 
+    LeadsRepository $leadsRepository,
+     ChartBuilderInterface $chartBuilder ): Response
     {
         
+
         $form= $this->createForm(ReportType::class);
        if (isset($_POST['search'])) {
 
@@ -63,7 +64,7 @@ class ReportController extends AbstractDashboardController
             $campaignId=null;
             $supplierId=null;
             $status=null;
-
+        
         if (isset($_POST['campaign'])) {
             
             $campaignId=$_POST['campaign'];
@@ -78,7 +79,8 @@ class ReportController extends AbstractDashboardController
         }
         $resultsGlobal=$leadsRepository->selectLeadReportGlobal($startDate, $endDate, $campaignId, $supplierId, $status, $entityManagerInterface);
         $results=$leadsRepository->selectLeadReport($startDate, $endDate, $campaignId, $supplierId, $status, $entityManagerInterface);
-
+        
+ 
         $datesArr = getBetweenDates($startDate, $endDate);
         $dates =[];
         $leadPerday=[];
@@ -96,7 +98,8 @@ class ReportController extends AbstractDashboardController
             'form'=> $form->createView(),
             'results'=>$results,
             'resultGlobal'=>$resultsGlobal,
-            'chart'=>$chart
+            'chart'=>$chart,
+
         ]);
     }
 
@@ -116,6 +119,7 @@ class ReportController extends AbstractDashboardController
         $status=$_POST['status'];
        
         $results=$leadsRepository->selectLeadReportGlobal($startDate, $endDate, $campaignId, $supplierId, $status, $entityManagerInterface);
+        
         return $this->render('report/affiliateResults.html.twig', [
             
             'form'=> $form->createView(),
@@ -143,6 +147,13 @@ class ReportController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Forwader', 'fas fa-exchange', Forwarder::class);
         yield MenuItem::linkToRoute('Report', 'fa fa-bar-chart', 'app_report');
     }
+
+    public function configureAssets(): Assets
+    {
+        return parent::configureAssets()
+            ->addWebpackEncoreEntry('admin');
+    }
+
 }
  function getBetweenDates($startDate, $endDate)
     {

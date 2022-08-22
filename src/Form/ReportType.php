@@ -20,15 +20,18 @@ class ReportType extends AbstractType
         $builder
             ->add('campaign', EntityType::class,[
                 'class' =>Campaign::class ,
+                'attr' => ['class' => 'form-control'],
                 'choice_label' => 'name',
                 'placeholder' => 'Campaign',
             ])
             ->add('supplier', EntityType::class,[
                 'class' =>Supplier::class ,
+                'attr' => ['class' => 'form-control'],
                 'choice_label' => 'reference',
                 'placeholder' => 'Supplier',
             ])
             ->add('status', ChoiceType::class,[
+                'attr' => ['class' => 'form-control'],
                 'choices'=> [
                     'All'=>'all',
                     'Accepted'=>'accepted',
@@ -36,18 +39,22 @@ class ReportType extends AbstractType
                     ]
             ])
             ->add('startDate', DateTimeType::class, [
+                'attr' => ['class' => 'form-control'],
                 'widget' => 'single_text',
                 'label'  => 'Start Date',
                 'required'=> true,
             ])
 
             ->add('endDate', DateTimeType::class, [
+                'attr' => ['class' => 'form-control'],
                 'widget' => 'single_text',
                 'label'  => 'End Date',
                 'required'=> true,
             ])
             
-            ->add('search', SubmitType::class)
+            ->add('search', SubmitType::class, [
+                'attr' => ['class' => 'btn btn-primary'],
+            ])
         ;
     }
 

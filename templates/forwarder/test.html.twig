@@ -1,41 +1,39 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
-{% block content_title %}The Title of the Page{% endblock %}
-{% block page_actions %}
-    <a class="btn btn-primary" href="...">Some Action</a>
+{% block stylesheets %}
+  <link rel="stylesheet" href="{{ asset('build/admin.css') }}">
 {% endblock %}
+{% block content_title %}Test the forwarder{% endblock %}
 
 {% block main %}
 <section>
 <form action="{{path('app_forwarder_test')}}" method="post">
+ <div class="row">
 {% for body in bodies %}
 
     {% set i = i + 1 %}
 
-    <label for="">{{body.input}}</label>
-  <input type="text" name={{i}}>
+    <div class="col-xs-6 col-sm-3">
+      <label for="">{{body.input}}</label>
+      <input class="form-control" type="text" name={{i}}>
+    </div>
   
 {% endfor %}
-
+</div>
 <input type="hidden" name="url" id='url' value={{url}}>
 <input type="hidden" name="forwarderId" id='forwarderId' value={{forwarderId}}>
 <input type="hidden" name="fwUrl" id='fwUrl' value={{fwUrl}}>
-<input type="submit" name="submit" value="submit">
+<input type="submit" class="btn btn-primary mt-3" name="submit" value="submit">
 {% if  app.request.query.get("statusCode") is defined   %}
-     <div>
-     {{ app.request.query.get("statusCode") }} 
-     </div>
-      <div>
-     {{ app.request.query.get("contentType") }} 
-     </div>
-      <div>
-     {{ app.request.query.get("content") }} 
-     </div>
-       <div>
-     {{ app.request.query.get("response") }} 
-     </div>
+<div class="row mt-5">
+  <div class="col testBox">
+     <p class="mt-2"><span class="labelSelectForm ">Status code: </span>{{ app.request.query.get("statusCode") }}</p>
+     <p><span class="labelSelectForm">Content Type: </span>{{ app.request.query.get("contentType") }}</p>
+     <p><span class="labelSelectForm">Content: </span>{{ app.request.query.get("content") }}<p>
+     <p><span class="labelSelectForm">Response: </span>{{ app.request.query.get("response") }}</p> 
+  </div>
 {% endif %}
-
+</div> 
 </section>
 </form>
 

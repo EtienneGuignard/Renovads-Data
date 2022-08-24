@@ -10,10 +10,9 @@
 import './styles/app.scss';
 
 // start the Stimulus application
-// import './bootstrap';
+import './bootstrap';
 
 // activates collapse functionality
-import { Collapse } from 'bootstrap';
 
 const $ = require('jquery');
 // this "modifies" the jquery module: adding behavior to it

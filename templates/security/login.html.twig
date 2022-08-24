@@ -3,7 +3,7 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-<section class="container-fluid" style="background-image: url(' {{ asset("../image/backgroundLogin.jpg") }} ');
+<section class="container-fluid" style="background-image: url(' {{ asset("../images/backgroundLogin.jpg") }} ');
         height: 94vh">
 <div class="row justify-content-center align-items-center rowLogin">
     <div class="col-lg-4">
@@ -17,9 +17,6 @@
                     You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
                 </div>
             {% endif %}
-
-
-            
             <h1 class="h3 mb-3 font-weight-normal mt-5 text-white">Please sign in</h1>
            
                 

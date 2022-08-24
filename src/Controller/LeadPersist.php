@@ -2,27 +2,19 @@
 
 namespace App\Controller;
 
-use App\Entity\BodyForwarder;
-use App\Entity\Campaign;
 use App\Entity\CampaignLeads;
-use App\Entity\Forwarder;
 use App\Entity\Leads;
-use App\Entity\Supplier;
 use App\Repository\BodyForwarderRepository;
-use App\Repository\CampaignLeadsRepository;
 use App\Repository\CampaignRepository;
 use App\Repository\ForwarderRepository;
 use App\Repository\RuleGroupRepository;
 use App\Repository\SupplierRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use PhpParser\Node\Expr\New_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\Routing\Annotation\Route;
+
 
 #[AsController]
 class LeadPersist extends AbstractController
@@ -198,6 +190,12 @@ function deterRuleField($ruleFieldEntry, $data){
                                      break;
                                 case 'created_at':
                                         $finalArray[$bodyForwarderOutput]=$data->getCreatedAt();
+                                        break;
+                                case 'ip':
+                                        $finalArray[$bodyForwarderOutput]=$data->getIp();
+                                        break;
+                                case 'region':
+                                        $finalArray[$bodyForwarderOutput]=$data->getRegion();
                                         break;
                                 default:
                                     break;

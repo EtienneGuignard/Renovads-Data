@@ -45,14 +45,13 @@ class HomeController extends AbstractController
         $user = $this->getUser();
         $userId=$user->getId();
         $supplierId=$user->getFkSupplier()->getId();
-       
+
        
        if (isset($_POST['search'])) {
 
-        var_dump('test');
             $startDate=$_POST['startDate'];
             $endDate=$_POST['endDate'];
-            $campaignId= 2;
+            $campaignId= 1;
            
             $status='accepted';
 
@@ -69,7 +68,7 @@ class HomeController extends AbstractController
             $leadPerday[]=$leadPerdayArr;
 
         }
-        var_dump($leadPerday);
+
         $chart=chartSearchAffiliates($datesArr, $leadPerday, $chartBuilder);
        $resultsGlobal=$leadsRepository->selectLeadReportGlobal($startDate, $endDate, $campaignId, $supplierId, $status, $entityManagerInterface);
        $results=$leadsRepository->selectLeadReport($startDate, $endDate, $campaignId, $supplierId, $status, $entityManagerInterface);
@@ -109,10 +108,12 @@ function getBetweenDatesAffiliates($startDate, $endDate)
             'labels' => $datesArr,
             'datasets' => [
                 [
-                    'label' => 'New leads',
+                    'label' => 'leads',
                     'backgroundColor' => 'rgb(255, 99, 132)',
                     'borderColor' => 'rgb(255, 99, 132)',
+                    
                     'data' => $leadPerday,
+                    'responsive'=> true,
                 ],
             ],
         ]);
@@ -124,6 +125,7 @@ function getBetweenDatesAffiliates($startDate, $endDate)
                     'suggestedMax' => 100,
                 ],
             ],
+            'maintainAspectRatio'=> false,
         ]);
         return $chart;
     }

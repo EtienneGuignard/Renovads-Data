@@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -30,21 +31,25 @@ class LeadsCrudController extends AbstractCrudController
     {
         return [
             TextField::new('email'),
+            AssociationField::new('supplier'),
+            TextField::new('ip')->onlyOnDetail()->onlyOnForms(),
             TextField::new('firstname'),
             TextField::new('lastname'),
             DateField::new('dob'),
             TextField::new('address_1'),
-            TextField::new('address_2'),
-            TextField::new('city'),
+            TextField::new('address_2')->onlyOnDetail()->onlyOnForms(),
+            TextField::new('city')->onlyOnDetail()->onlyOnForms(),
+            TextField::new('region')->onlyOnDetail()->onlyOnForms(),
             TextField::new('zip'),
-            TextField::new('job')->onlyOnDetail(),
-            TextField::new('children')->onlyOnDetail(),
+            TextField::new('job')->onlyOnDetail()->onlyOnForms(),
+            TextField::new('children')->onlyOnDetail()->onlyOnForms(),
             TextField::new('privacy_policy')->onlyOnDetail(),
-            TextField::new('confirm_privacy'),
+            TextField::new('confirm_privacy')->onlyOnDetail(),
             TextField::new('confirm_partners'),
             TextField::new('url'),
             DateTimeField::new('created_at'),
-            DateTimeField::new('last_updated')
+            DateTimeField::new('last_updated')->onlyOnDetail(),
+            
         ];
     }
     

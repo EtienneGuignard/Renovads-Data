@@ -95,6 +95,12 @@ class Leads
     #[ORM\Column]
     private ?int $sid = null;
 
+    #[ORM\Column(length: 45)]
+    private ?string $ip = null;
+
+    #[ORM\Column(length: 3, nullable: true)]
+    private ?string $region = null;
+
     public function __construct()
     {
         $this->campaigns = new ArrayCollection();
@@ -347,6 +353,30 @@ class Leads
     public function setSid(int $sid): self
     {
         $this->sid = $sid;
+
+        return $this;
+    }
+
+    public function getIp(): ?string
+    {
+        return $this->ip;
+    }
+
+    public function setIp(string $ip): self
+    {
+        $this->ip = $ip;
+
+        return $this;
+    }
+
+    public function getRegion(): ?string
+    {
+        return $this->region;
+    }
+
+    public function setRegion(?string $region): self
+    {
+        $this->region = $region;
 
         return $this;
     }

@@ -1,6 +1,7 @@
 {
-  "build/app.css": "/build/app.css",
-  "build/app.js": "/build/app.js",
-  "build/runtime.js": "/build/runtime.js",
-  "build/vendors-node_modules_symfony_stimulus-bridge_dist_index_js-node_modules_bootstrap_dist_js_boo-4cb729.js": "/build/vendors-node_modules_symfony_stimulus-bridge_dist_index_js-node_modules_bootstrap_dist_js_boo-4cb729.js"
+  "build/app.css": "/build/app.a942a921.css",
+  "build/app.js": "/build/app.e086cb71.js",
+  "build/admin.css": "/build/admin.9d0278ac.css",
+  "build/runtime.js": "/build/runtime.9a71ee5d.js",
+  "build/505.41b69999.js": "/build/505.41b69999.js"
 }

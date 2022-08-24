@@ -7,6 +7,7 @@ use App\Entity\Leads;
 use App\Form\LeadsType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
@@ -27,6 +28,13 @@ class ForwarderCrudController extends AbstractCrudController
 
 
     }
+    
+    public function configureAssets(Assets $assets): Assets
+    {
+        return $assets
+
+        ->addCssFile('build/admin.css');
+    }
 
     public function configureActions(Actions $actions): Actions
     
@@ -46,7 +54,7 @@ class ForwarderCrudController extends AbstractCrudController
        
         return $actions
         ->add(Crud::PAGE_INDEX, Action::DETAIL)
-        // ->add(Crud::PAGE_DETAIL, $detailAdd)
+        ->add(Crud::PAGE_DETAIL, $detailAdd)
         ->add(Crud::PAGE_DETAIL, $test);
         
     }

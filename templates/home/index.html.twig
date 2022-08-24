@@ -1,22 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}  
-{% block body %}
-<div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-    Dropdown button
-  </button>
-  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-    <li><a class="dropdown-item" href="#">Action</a></li>
-    <li><a class="dropdown-item" href="#">Another action</a></li>
-    <li><a class="dropdown-item" href="#">Something else here</a></li>
-  </ul>
-</div>
-  <div class="container"> 
-    <div class="row">
-      <div class="col">
-        {# {{ form(form) }} #}
-      </div>
+{% block main %}
+  
+{% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <div class="justify-content-center w-100 text-center">
+        <h2 class="h2 my-5">Weclome on your Dashboard</h2>
+        <p>select the dates for which you want your report:</p>
+        <div class="mt-1">
+        {% include "home/reportForm.html.twig" %}
+        </div>
     </div>
-  </div>
+{% else %}
+{% include "home/login.html.twig" %}
+{% endif %}
+{% endblock %}
+
+{% block footer %}
+     {% include "footer.html.twig" %}
 {% endblock %}

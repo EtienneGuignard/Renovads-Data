@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block content_title %}Report{% endblock %}
+{% block main %}
+ <div class=" container justify-content-center mt-5 w-100 text-center">
+{% include "home/reportForm.html.twig" %}
+
+    <div class="row justify-content-center">
+    <div class="col-12" style="height: 40vh">
+    {{ render_chart(chart) }}
+    </div>
+    </div>
+    
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">timestamp</th>
+                    <th scope="col">email</th>
+                    <th scope="col">Supplier</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for result in results %}
+                <tr>
+                        <th scope="row">{{result.lead_id_id}}</th>
+                        <td>{{result.created_at}}</td>
+                        <td>{{result.email}}</td>
+                        <td>{{result.reference}}</td>
+
+                        
+                    </tr>
+            {% endfor %}
+
+                
+
+            </tbody>
+        </table>
+
+</div>
+{% endblock %}
+ {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+    {% endblock %}

@@ -1,50 +1,48 @@
-{% extends '@EasyAdmin/page/content.html.twig' %}
-
-{% block content_title %}Affiliate Report{% endblock %}
-{% block page_actions %}
-    <a class="btn btn-primary" href="...">Some Action</a>
-{% endblock %}
 
 {% block main %}
-<form action="{{path('app_report_results_affiliate')}}" method="post">
-    <select name="campaign" id="campaign">
-    <option value="" disabled selected>Campaign</option>
-        {% for campaign in campaigns %}
-            <option value={{campaign.id}}>{{campaign.name}}</option>
-        {% endfor %}
-    </select>
-    <select name="supplier" id="supplier">
-    <option value="" disabled selected>supplier</option>
-         {% for supplier in suppliers %}
-            <option value={{supplier.id}}>{{supplier.reference}}</option>
-        {% endfor %}
-    </select>
 
-    <select name="status" id="status" placeholder="status">
-        <option value="" disabled selected>Status</option>
-        <option value="accepted">Accepted</option>
-        <option value="rejected">Rejected</option>
-    </select>
-    <input type="datetime-local" name="startDate" id="startDate">
-    <input type="datetime-local" name="endDate" id="enDate">
-    <input type="submit" value="Search">
+<form action="{{path('app_report_results')}}" method="post">
+<div class="row">
+    <div class="col mt-2">
+ 
+        <select class="form-control" name="campaign" id="campaign">
+        <option value="" disabled selected>Campaign</option>
+            {% for campaign in campaigns %}
+                <option value={{campaign.id}}>{{campaign.name}}</option>
+            {% endfor %}
+        </select>
+    </div>
+  
+ <div class="col mt-2">
+
+        <select class="form-control" name="supplier" id="supplier">
+        <option value="" disabled selected>supplier</option>
+            {% for supplier in suppliers %}
+                <option value={{supplier.id}}>{{supplier.reference}}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col mt-2">
+        <select class="form-control" name="status" id="status" placeholder="status">
+            <option value="" disabled selected>Status</option>
+            <option value="accepted">Accepted</option>
+            <option value="rejected">Rejected</option>
+        </select>
+    </div>
+</div>
+    <div class="row mt-2">
+    <div class="col">
+    <input class="form-control" type="datetime-local" name="startDate" id="startDate">
+    </div>
+    <div class="col">
+    <input class="form-control" type="datetime-local" name="endDate" id="enDate">
+    </div>
+    <div class="col">
+        <input  class="btn btn-primary" type="submit"  name="search" id="search" value="Search">
+    </div>
+</div>
 
 </form>
 
-    <table class="datagrid">
-        <thead>
-            <tr>
-                <td>Some Column</td>
-                <td>Another Column</td>
-            </tr>
-        </thead>
-        <tbody>
-
-                <tr>
-                    <td>test</td>
-                    <td>test</td>
-                </tr>
-
-        </tbody>
-    </table>
 {% endblock %}

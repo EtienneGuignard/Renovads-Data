@@ -119,7 +119,7 @@ class LeadsRepository extends ServiceEntityRepository
         ON leads.id=campaign_leads.lead_id_id
         LEFT JOIN supplier
         ON leads.supplier_id=supplier.id
-	  WHERE created_at LIKE :date
+	    WHERE created_at LIKE :date
         AND  campaign_leads.campaign_id_id=IF(:campaignId IS NULL, campaign_leads.campaign_id_id, :campaignId)
         AND  leads.supplier_id=IF(:supplierId IS NULL, leads.supplier_id, :supplierId)
         AND campaign_leads.status=IF(:status IS NULL, campaign_leads.status, :status)";
@@ -132,6 +132,23 @@ class LeadsRepository extends ServiceEntityRepository
                                 ]);
         return $result->fetchAllAssociative();
     }
+
+    public function selectLeadDasboard($entityManagerInterface)
+    {
+        $conn=$entityManagerInterface->getConnection();
+        $rawSql = "SELECT supplier.reference, COUNT(*) AS NumberOfLeads FROM `leads`
+        LEFT JOIN campaign_leads
+        ON leads.id=campaign_leads.lead_id_id
+        LEFT JOIN supplier
+        ON leads.supplier_id=supplier.id
+	    WHERE campaign_leads.status='Accepted' GROUP BY supplier.id";
+        $query=$conn->prepare($rawSql);
+        $result= $query->executeQuery([
+                                ]);
+        return $result->fetchAllAssociative();
+    }
+
+
 //     /**
 //     * @return Leads[] Returns an array of Leads objects
 //     */

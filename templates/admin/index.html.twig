@@ -1,26 +1,55 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
 {% block content_title %}Today's Leads{% endblock %}
-{% block page_actions %}
-    <a class="btn btn-primary" href="...">Some Action</a>
-{% endblock %}
-
 {% block main %}
-{% include "admin/chart.html.twig" %}
-    <table class="datagrid">
-        <thead>
-            <tr>
-                <td>Some Column</td>
-                <td>Another Column</td>
-            </tr>
-        </thead>
-        <tbody>
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-lg-6">
+        {% include "admin/chart.html.twig" %}
+        </div>
+        <div class="col-12 col-lg-6">
+            <table class="datagrid">
+                <thead>
+                    <tr>
+                        <td>Supplier</td>
+                        <td>lead Number</td>
+                    </tr>
+                </thead>
+                <tbody>
+                        {% for lead in Leads %}
+                            
+                        
+                         <tr>
+                            <td>{{lead.reference}}</td>
+                            <td>{{lead.NumberOfLeads}}</td>
+                        </tr>
+                            
+                        {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+     <div class="row mt-5">
+        <h2>Campaigns</h2>
+     <div>
 
-                <tr>
-                    <td>test</td>
-                    <td>test</td>
-                </tr>
+    <div class="row mt-2">
+        {% for campaign in campaigns %}
+           {% set url = ea_url()
+                    .setController('App\\Controller\\Admin\\CampaignCrudController')
+                    .setAction('detail')
+                    .setEntityId(campaign.id) %}
 
-        </tbody>
-    </table>
+            <div class="col-3 border d-flex justify-content-center align-items-center p-1">
+            <a href="{{ url }}"> {{campaign.name}}</a>
+            </div>
+            <div class="col-3 border d-flex justify-content-center align-items-center p-1">
+             {{campaign.client}}
+            </div>
+
+        {% endfor %}
+    
+    </div>
+</div>
+    
 {% endblock %}

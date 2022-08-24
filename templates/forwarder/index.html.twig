@@ -1,34 +1,64 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
-{% block content_title %}The Title of the Page{% endblock %}
-{% block page_actions %}
-    <a class="btn btn-primary" href="...">Some Action</a>
-{% endblock %}
-
+{% block content_title %}Details body forwarder {{forwarderId}}{% endblock %}
 {% block main %}
 <section>
-{% for forwarder in forwarderList %}
-
-    <div>{{forwarder.type}}</div>
-
+      <table class="datagrid">
+                <thead>
+                    <tr>
+                        <td>Type</td>
+                        <td>input</td>
+                        <td>Output</td>
     
-{% endfor %}
-    {{ form(form) }}
+                    </tr>
+                </thead>
+                <tbody>
+                        
+                    {% for forwarder in forwarderList %}        
+                        
+                         <tr>
+                            <td>{{forwarder.type}}</td>
+                            <td>{{forwarder.input}}</td>
+                            <td>{{forwarder.outpout}}</td> 
+                        </tr>
+                            
+                        {% endfor %}
+                </tbody>
+            </table>
 </section>
+<div class="row mt-5">
+<h3> Input Available for the field type</h3>
+    <table class="datagrid">
+                <tbody>
+                         <tr>
+                            <td>email</td>
+                            <td>firstname</td>
+                            <td>lastname</td> 
+                            <td>address_1</td> 
+                        </tr>
+                        <tr>
+                            <td>dob</td>
+                            <td>sex</td>
+                            <td>zip</td> 
+                            <td>job</td> 
+                        </tr>
+                         <tr>
+                            <td>Created At</td>
+                            <td>ip</td>
+                            <td>family</td> 
+                        </tr>
 
-{# <form  class="mt-5" method="post" action="{{path('app_forwarder')}}">
-    <label for="type">Type:</label>
-    <input type="text" name="type" id="type"> 
-    <label for="input">Input:</label>
-     <input type="text" name="input" id="input">
-     <label for="output">Ouput:</label>   
-      <input type="text" name="output" id="output">
-     
-        
-        
-    <input type="hidden" name="forwarderId" value={{forwarderId}}>
-    <input type="hidden" name="refer" value={{refer}}>
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form> #}
+                </tbody>
+            </table>
+<div class="row justify-content-center mt-5">
+
+        <div class="col col-sm-5">
+            <h3>Add a new field to the body</h3>
+
+            {{ form(form) }}
+        </div>
+</div>
+
+
 
 {% endblock %}

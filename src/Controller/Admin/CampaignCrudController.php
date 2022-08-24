@@ -34,6 +34,7 @@ class CampaignCrudController extends AbstractCrudController
     public function configureActions(Actions $actions): Actions
     {
 
+        //custom action created to link to the page to add delete rule group
         $detail= Action::new('viewDetails','Rule groups add/delete')
             ->linkToRoute('app_select_rule_group', function (Campaign $campaign): array {
                 return [

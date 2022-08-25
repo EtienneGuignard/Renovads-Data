@@ -33,7 +33,7 @@ class HomeController extends AbstractController
         $campaigns= $campaignRepository->findAll();
         foreach ($campaigns as $campaign){
             $campaignId=$campaign->getId();
-            echo $campaignId;
+            var_dump($campaignId);
         };
 
         if ($form->isSubmitted() && $form->isValid()) { 

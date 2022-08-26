@@ -1,0 +1,10 @@
+
+{% block body %}
+
+<div class="example-wrapper">
+        {{ render_chart(chart) }}
+</div>
+{% endblock %}
+    {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+    {% endblock %}

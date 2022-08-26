@@ -1,0 +1,11 @@
+{% block main %}
+
+
+    <form action="{{path('app_profile_result')}}" method="post">
+    
+        <input class="rounded" type="datetime-local" name="startDate" id="startDate">
+        <input class="rounded" type="datetime-local" name="endDate" id="enDate">
+        <input  class="btn btn-primary" type="submit" name="search" id="search" value="Search">
+
+    </form>
+{% endblock %}

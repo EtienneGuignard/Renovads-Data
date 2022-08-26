@@ -26,8 +26,8 @@ class RegistrationFormType extends AbstractType
                 )
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
-                'label'=> false,
-                'attr'=>['class' => 'agreeTerms'],
+                'label'=> 'To register you have to agree to the terms and condition of renovads data',
+                'attr'=>['class' => 'mt-4'],
                 'constraints' => [
                     new IsTrue([
                         'message' => 'You should agree to our terms.',

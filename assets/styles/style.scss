@@ -22,12 +22,13 @@ html {
   .marginColSelect{
     margin-left: 15px;
   }
-  .text-terms{
-    margin-left: 1.5rem;
-  }
-
+  
+.form-check label{
+  margin-top: 1rem;
+}
   .agreeTerms{
-    margin-top: 1.8rem;
+    margin-top: 1rem;
+    z-index: 10;
   }
 
 @media screen and (min-width: 1000px) {

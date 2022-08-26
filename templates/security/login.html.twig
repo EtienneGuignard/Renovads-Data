@@ -2,8 +2,8 @@
 
 {% block title %}Log in!{% endblock %}
 
-{% block body %}
-<section class="container-fluid" style="background-image: url(' {{ asset("../images/backgroundLogin.jpg") }} ');
+{% block main %}
+<section class="container-fluid" style="background-image: url(' {{ asset("../assets/images/backgroundLogin.jpg") }} ');
         height: 94vh">
 <div class="row justify-content-center align-items-center rowLogin">
     <div class="col-lg-4">
@@ -49,3 +49,7 @@
     </section>
 </form>
 {% endblock %}
+{% block footer %}
+     {% include "footer.html.twig" %}
+{% endblock %}
+

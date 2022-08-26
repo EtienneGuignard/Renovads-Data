@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
@@ -15,9 +16,13 @@ use Symfony\UX\Chartjs\Model\Chart;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(AuthenticationUtils $authenticationUtils,
+    public function index(AuthenticationUtils $authenticationUtils, Security $security
     ): Response
     {
+  
+    //    if () {
+    //         return $this->redirectToRoute('app_login');
+    //    } 
   
         
         // get the login error if there is one

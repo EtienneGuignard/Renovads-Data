@@ -65,11 +65,11 @@ class Leads
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $privacyPolicy;
 
-    #[ORM\Column(type: 'string', length: 45)]
-    private $confirmPrivacy;
+    #[ORM\Column]
+    private ?bool $confirmPrivacy = null;
 
-    #[ORM\Column(type: 'string', length: 45, nullable: true)]
-    private $confirmPartners;
+    #[ORM\Column(nullable: true)]
+    private ?bool $confirmPartners = null;
 
     #[ORM\Column(type: 'string', length: 1000, nullable: true)]
     private $url;
@@ -100,6 +100,12 @@ class Leads
 
     #[ORM\Column(length: 3, nullable: true)]
     private ?string $region = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $paramInfo1 = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $paramInfo2 = null;
 
     public function __construct()
     {
@@ -250,7 +256,7 @@ class Leads
         return $this;
     }
 
-    public function getConfirmPrivacy(): ?string
+    public function getConfirmPrivacy(): ?bool
     {
         return $this->confirmPrivacy;
     }
@@ -262,7 +268,7 @@ class Leads
         return $this;
     }
 
-    public function getConfirmPartners(): ?string
+    public function getConfirmPartners(): ?bool
     {
         return $this->confirmPartners;
     }
@@ -377,6 +383,30 @@ class Leads
     public function setRegion(?string $region): self
     {
         $this->region = $region;
+
+        return $this;
+    }
+
+    public function getParamInfo1(): ?string
+    {
+        return $this->paramInfo1;
+    }
+
+    public function setParamInfo1(?string $paramInfo1): self
+    {
+        $this->paramInfo1 = $paramInfo1;
+
+        return $this;
+    }
+
+    public function getParamInfo2(): ?string
+    {
+        return $this->paramInfo2;
+    }
+
+    public function setParamInfo2(?string $paramInfo2): self
+    {
+        $this->paramInfo2 = $paramInfo2;
 
         return $this;
     }

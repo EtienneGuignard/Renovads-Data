@@ -7,7 +7,15 @@
         "/build/app.7cf3d62c.js"
       ],
       "css": [
-        "/build/app.7eca7577.css"
+        "/build/app.dedaa49d.css"
+      ]
+    },
+    "admin": {
+      "js": [
+        "/build/runtime.9a71ee5d.js"
+      ],
+      "css": [
+        "/build/admin.9d0278ac.css"
       ]
     }
   }

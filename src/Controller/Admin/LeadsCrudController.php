@@ -10,6 +10,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
@@ -44,8 +45,8 @@ class LeadsCrudController extends AbstractCrudController
             TextField::new('job')->onlyOnDetail()->onlyOnForms(),
             TextField::new('children')->onlyOnDetail()->onlyOnForms(),
             TextField::new('privacy_policy')->onlyOnDetail(),
-            TextField::new('confirm_privacy')->onlyOnDetail(),
-            TextField::new('confirm_partners'),
+            BooleanField::new('confirm_privacy')->onlyOnDetail(),
+            BooleanField::new('confirm_partners'),
             TextField::new('url'),
             DateTimeField::new('created_at'),
             DateTimeField::new('last_updated')->onlyOnDetail(),

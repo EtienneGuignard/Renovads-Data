@@ -23,21 +23,23 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
 
     public function supports(Request $request): ?bool
     {
+        //check if it's a request for the api
         return str_starts_with($request->getPathInfo(),'/api/');
     }
 
     public function authenticate(Request $request): Passport
     {
+        //getting the token
         $apiToken= $request->headers->get('x-api-token');
 
         if (null=== $apiToken) {
             throw new CustomUserMessageAuthenticationException('No api token provided');
         }
+        //get the user via the token and anthenticate him
         return new SelfValidatingPassport(
             new UserBadge($apiToken, function($apiToken){
                 $user=$this->userRepository->findByApiToken($apiToken);
-
-
+                
                 if (!$user) {
                    throw new UserNotFoundException();
                 }
@@ -45,7 +47,6 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
                 return $user;
             })
         );
-
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
@@ -55,6 +56,7 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
+        //error message
        $data=[
         'message'=> strtr($exception->getMessageKey(), $exception->getMessageData())
        ];

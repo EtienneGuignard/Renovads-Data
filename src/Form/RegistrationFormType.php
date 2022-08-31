@@ -74,7 +74,7 @@ class RegistrationFormType extends AbstractType
                 'label' => false,
                 'attr' => ['class' => 'form-control']
             ])
-            ->add('country', TextType::class, [
+            ->add('country', Country::class, [
                 'label' => false,
                 'attr' => ['class' => 'form-control']
             ])

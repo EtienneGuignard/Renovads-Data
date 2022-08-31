@@ -41,7 +41,7 @@ class LeadsRepository extends ServiceEntityRepository
         }
     }
 
-    
+    // method for the chart in dashboard select all the lead created between tow datetime
     public function selectLeadChart($date1, $date2, EntityManagerInterface $entityManagerInterface)
     {
         $conn=$entityManagerInterface->getConnection();
@@ -54,7 +54,7 @@ class LeadsRepository extends ServiceEntityRepository
                                 ]);
         return $result->fetchAllAssociative();
     }
-
+  // method for the chart in dashboard select all the lead after 23h for day n 
     public function selectLeadChartLastHour($time, EntityManagerInterface $entityManagerInterface)
     {
         $conn=$entityManagerInterface->getConnection();
@@ -77,7 +77,7 @@ class LeadsRepository extends ServiceEntityRepository
 	  WHERE created_at BETWEEN :startDate AND :endDate
         AND  campaign_leads.campaign_id_id=IF(:campaignId IS NULL, campaign_leads.campaign_id_id, :campaignId)
         AND  leads.supplier_id=IF(:supplierId IS NULL, leads.supplier_id, :supplierId)
-        AND campaign_leads.status=IF(:status IS NULL, campaign_leads.status, :status)";
+        AND campaign_leads.status=IF(:status IS NULL, campaign_leads.status, :status) ORDER BY leads.created_at DESC LIMIT 20";
         $query=$conn->prepare($rawSql);
         $result= $query->executeQuery([
                                     'startDate'=>$startDate,
@@ -88,6 +88,7 @@ class LeadsRepository extends ServiceEntityRepository
                                 ]);
         return $result->fetchAllAssociative();
     }
+    // for the chart in report
     public function selectLeadReportGlobal($startDate, $endDate, $campaignId, $supplierId, $status, $entityManagerInterface)
     {
         $conn=$entityManagerInterface->getConnection();

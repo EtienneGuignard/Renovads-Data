@@ -28,9 +28,9 @@ class LeadPersist extends AbstractController
     )
     {
        
-    }   
+    }
+    //methode __invoke et Leads $data nécéssaire au bon fonctionnement d'api platform   
     public function __invoke(Leads $data, 
-    RuleGroupRepository $ruleGroupRepository,
      EntityManagerInterface $entityManagerInterface,
       CampaignRepository $campaignRepository,
       ForwarderRepository $forwarderRepository, 
@@ -38,36 +38,42 @@ class LeadPersist extends AbstractController
       SupplierRepository $supplierRepository,
       ): Leads
     {
-        dataProcessing($ruleGroupRepository, $data, $entityManagerInterface, $campaignRepository, $forwarderRepository, $bodyForwarderRepository, $supplierRepository);
+        dataProcessing($data, $entityManagerInterface, $campaignRepository, $forwarderRepository, $bodyForwarderRepository, $supplierRepository);
 
         return $data;
     }
 }
 
-    function dataProcessing(RuleGroupRepository $ruleGroupRepository, $data, 
-    EntityManagerInterface $entityManagerInterface, 
-    CampaignRepository $campaignRepository,
+    function dataProcessing($data, 
+    $entityManagerInterface, 
+    $campaignRepository,
     $forwarderRepository,
     $bodyForwarderRepository,
     $supplierRepository,
     )
     {
-       
+        //sid indentical for all the campaign 
         $supplierId=$data->getSid();
-       
+        $campaigns=$campaignRepository->findAll();
+
+        //getting all the rules for all the campaigns
+        foreach($campaigns as $campaign){
         
-        $rules=$ruleGroupRepository->findAll();
-        foreach($rules as $rule){
+            $CampaignRules=$campaign->getRuleGroups();
+
+        foreach($CampaignRules as $rule){
 
             $ruleFieldEntry=$rule->getField();
             $ruleValue=$rule->getValue();
             $ruleValueDate=$rule->getValueDate();
-            $ruleFkCampaign=$rule->getFkCampaign();
             $ruleOperator=$rule->getOperator();
+            // select the right field on wich the value of the rule must be compared 
             $ruleFieldDeter=deterRuleField($ruleFieldEntry, $data);
-            foreach($ruleFkCampaign as $campaign){
-                $campaignId=$campaign->getId();
+            
+            $campaignId=$campaign->getId();
+            // determine if the value is of type date or string
                 if (isset($ruleValueDate)) {
+                    //function to select the right operator
                     dateValueRules($ruleFieldDeter, $ruleOperator, $ruleValueDate, $campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository, $supplierRepository, $supplierId);
                 }else{
                     textValueRules($ruleFieldDeter, $ruleOperator, $ruleValue, $campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository, $supplierRepository, $supplierId);
@@ -112,7 +118,7 @@ function deterRuleField($ruleFieldEntry, $data){
             break;
     }
     }
-
+ //add status rejected
     function addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId){
         $campaignLeads= New CampaignLeads;
         $fksupplier=$supplierRepository->find($supplierId);
@@ -125,7 +131,7 @@ function deterRuleField($ruleFieldEntry, $data){
         $entityManagerInterface->flush();
     }
 
-    
+    //add the accepted status and forward the leads
     function addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository, $supplierRepository, $supplierId){
         $campaignLeads= New CampaignLeads;
         $fkCampaign=$campaignRepository->find($campaignId);
@@ -134,18 +140,17 @@ function deterRuleField($ruleFieldEntry, $data){
         $campaignLeads->setCampaignId($fkCampaign);
         $campaignLeads->setLeadId($data);
         $campaignLeads->setStatus("Accepted");
-        var_dump('test');
         $entityManagerInterface->persist($campaignLeads);
         $entityManagerInterface->flush();
-        // forwarder($forwarderRepository, $data , $bodyForwarderRepository);
+        forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepository);
     }
 
-    function forwarder($forwarderRepository, $data , $bodyForwarderRepository){
-        $forwarders=$forwarderRepository->findAll();
+    function forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepository){
+        $forwarders=$forwarderRepository->findBy(['fkCampaign' =>$campaignId]);
          foreach($forwarders as $forwarder){
-    
             $url=$forwarder->getUrl();
             $forwarderId=$forwarder->getId();
+            $headerArray=[];
             $finalArray=[];
             $bodyForwarders= $bodyForwarderRepository->findBy(['fkForwarder'=>$forwarderId]);
              
@@ -202,11 +207,13 @@ function deterRuleField($ruleFieldEntry, $data){
                             }
                     }
                     if ($bodyForwarderType=="static") {
-                        var_dump('test');
                         $finalArray[$bodyForwarderInput]= $bodyForwarderOutput;
                     }     
+                    if ($bodyForwarderType=="header") {
+                        // $headerArray[$bodyForwarderInput]= $bodyForwarderOutput;
+                    }     
             }
-            postData($finalArray, $url);
+            postData($finalArray,$headerArray, $url);
          }  
     }
 
@@ -298,9 +305,11 @@ function textValueRules($ruleFieldDeter, $ruleOperator, $ruleValue, $campaignRep
     }
     
 }
-function postData($finalArray, $url){
+function postData($finalArray,$headerArray, $url){
     $client= HttpClient::create();
+    
         $client->request('POST', $url, [
+        'headers'=> $headerArray,   
         'body' => $finalArray
     ]);
 }

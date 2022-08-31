@@ -11,6 +11,7 @@ use App\Controller\LeadPersist;
 
 #[ORM\Entity(repositoryClass: LeadsRepository::class)]
 #[ApiResource(
+    // cutsom operation api platform Post that goes trough a custom controller
     collectionOperations: [
         'post' => [
             'path' => '/lead/v2',

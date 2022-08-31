@@ -10,6 +10,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -23,12 +25,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
+     /**
+     * @Assert\NotBlank
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not an email address"
+     * )
+     */
     private $email;
 
     #[ORM\Column(type: 'json')]
     private $roles = [];
 
     #[ORM\Column(type: 'string')]
+       /**
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *      min = 8,
+     *      max = 50,
+     *      minMessage = "the password must at minimun {{ limit }} characters",
+     *      maxMessage = "the password can contain a maximum of {{ limit }} characters"
+     * )
+     */
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -41,12 +58,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $company;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    /**
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *      min = 5,
+     *      minMessage = "Address too short"
+     * )    
+     */ 
     private $companyAddress;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+        /**
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *      min = 5,
+     *      minMessage = "Address too short"
+     * )    
+     */ 
     private $country;
 
     #[ORM\Column(type: 'string', length: 8, nullable: true)]
+
+    /**
+     * @Assert\NotBlank
+     * @Assert\Country(
+     *      message = "this is not a valid country code"
+     * )
+     */
+    
     private $zipCode;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]

@@ -12,23 +12,9 @@ use App\Entity\Supplier;
 use App\Repository\CampaignRepository;
 use App\Repository\RuleGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
-use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
-use EasyCorp\Bundle\EasyAdminBundle\Contracts\Controller\DashboardControllerInterface;
-use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CountryField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CurrencyField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -72,6 +58,8 @@ class SelectRuleGroupController extends AbstractDashboardController
         }  
         
         $ruleGroupList=$ruleGroupRepository->ruleList($entityManagerInterface, $campaignId);
+        // check if form is submitted and persist+flush the selected rulegroup
+
         if(isset($_POST['submit'])){
 
             $ruleGroupId=$_POST['ruleId'];
@@ -96,7 +84,7 @@ class SelectRuleGroupController extends AbstractDashboardController
     }
 
     #[Route('/select/rule/group/add/{campaignId}', name: 'app_select_rule_group_add')]
-    public function indexTest(RuleGroupRepository $ruleGroupRepository, EntityManagerInterface $entityManagerInterface, 
+    public function AddRule(RuleGroupRepository $ruleGroupRepository, EntityManagerInterface $entityManagerInterface, 
     CampaignRepository $campaignRepository, 
     int $campaignId
     ): Response
@@ -127,9 +115,6 @@ class SelectRuleGroupController extends AbstractDashboardController
     int $ruleId
     ): Response 
 {  
- 
-
-        
             $campaign=$campaignRepository->find($id);
             $ruleGroup=$ruleGroupRepository->find($ruleId);
             $campaign->removeRuleGroup($ruleGroup);

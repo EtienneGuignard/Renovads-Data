@@ -4,24 +4,19 @@
       <label for="" class="labelSelectForm" style="font-weight: bold;
     margin-bottom: 5px; margin-left: 3px;">Select rule group</label>
         <select name="ruleId" id="ruleId" class="form-select">
+
         {% for ruleOpt in rules %}
-        
+        {# check if there is already rules linked to this campaign and if there is only shows the one not included #}
           {% if ruleGroupList is empty %}
               <option value={{ ruleOpt.id }}>{{ ruleOpt.name }}</option>
-           {% else %}
-              
-              
-                 
+           {% else %}    
                 {% if ruleOpt.id in ruleGroupList|column('id') %}
-                
-                  {% else %}
-                    
+                  {% else %} 
                   <option value={{ ruleOpt.id }}>{{ ruleOpt.name }}</option>
                   {% endif %}
               
           {% endif %} 
 
-          
         {% endfor %}
     </select>
     <input type="hidden" name="campaignId" value={{campaignId}}>

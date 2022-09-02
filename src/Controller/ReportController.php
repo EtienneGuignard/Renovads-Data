@@ -142,9 +142,11 @@ class ReportController extends AbstractDashboardController
         
         $datas=$leadsRepository->selectLeadCsvExport($startDate, $endDate, $campaignId, $supplierId, $status, $entityManagerInterface);
         
-        $rows = array('id,created_at,' );
+        $rows = array('id,created_at,url,company,sid,status,firstname,lastname,dob,address_1,zip,job,chidlren,confirm' );
         foreach ($datas as $data) {
-            $data = [$data['id'], $data['created_at'],$data['url'],$data['reference'],$data['sid'], $data['status'],$data['firstname'], $data['lastname'], $data['dob'], $data['address_1'], $data['zip'], $data['job'], $data['children'], $data['confirm_partners'],] ;
+            $data = [$data['lead_id_id'], $data['created_at'],$data['url'],$data['reference'],$data['sid'], $data['status'],
+            $data['firstname'], $data['lastname'], $data['dob'], $data['address_1'], $data['zip'],
+             $data['job'], $data['children'], $data['confirm_partners'],] ;
 
     
             $rows[] = implode(',', $data);
@@ -154,11 +156,6 @@ class ReportController extends AbstractDashboardController
     $response->headers->set('Content-Type', 'text/csv');
 
     return $response;
-    
-        $content = implode("\n", $rows);
-     
-   
-
      
     }   
     }

@@ -135,6 +135,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Rule group', 'fas fa-list', RuleGroup::class);
         yield MenuItem::linkToCrud('Campaign', 'fas fa-bullhorn', Campaign::class);
         yield MenuItem::linkToCrud('Leads', 'fas fa-user', Leads::class);
+        yield MenuItem::linkToCrud('Leads and status', 'fas fa-id-badge', CampaignLeads::class);
         yield MenuItem::linkToCrud('Supplier', 'fas fa-building', Supplier::class);
         yield MenuItem::linkToCrud('Forwader', 'fas fa-exchange', Forwarder::class);
         yield MenuItem::linkToRoute('Report', 'fa fa-bar-chart', 'app_report');

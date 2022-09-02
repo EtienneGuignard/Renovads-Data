@@ -20,7 +20,9 @@ class ApiTokenCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-            IdField::new('id'),
+            IdField::new('id')
+            ->onlyOnDetail()
+            ->onlyOnIndex(),
             TextField::new('token'),
             AssociationField::new('user')
         ];

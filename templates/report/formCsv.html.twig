@@ -1,11 +1,11 @@
 
 {% block main %}
 
-<form action="{{path('app_report_results')}}" method="post">
+<form action="{{path('app_results_csv')}}" method="post">
 <div class="row">
     <div class="col mt-2">
  
-        <select class="form-control" name="campaign" id="campaign">
+        <select class="form-control" name="campaign" id="campaign" required>
         <option value="" disabled selected>Campaign</option>
             {% for campaign in campaigns %}
                 <option value={{campaign.id}}>{{campaign.name}}</option>
@@ -39,7 +39,7 @@
     <input class="form-control" type="datetime-local" name="endDate" id="enDate" required>
     </div>
     <div class="col">
-        <input  class="btn btn-primary" type="submit"  name="search" id="search" value="Search">
+        <input  class="btn btn-primary" type="submit"  name="export" id="search" value="Export">
     </div>
 </div>
 

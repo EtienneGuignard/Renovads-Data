@@ -9,6 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
@@ -41,6 +42,7 @@ class UserCrudController extends AbstractCrudController
             TextField::new('email'),
             TextField::new('firstname'),
             TextField::new('lastname'),
+            TextField::new('password')->onlyOnForms(),
             TextField::new('company'),
             TextField::new('country'),
             TextField::new('zipCode'),
@@ -50,6 +52,7 @@ class UserCrudController extends AbstractCrudController
             TextField::new('registrationNumber'),
             TextField::new('city'),
             BooleanField::new('isVerified'),
+            ArrayField::new('roles')
            
            
             

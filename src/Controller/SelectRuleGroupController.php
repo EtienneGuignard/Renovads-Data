@@ -4,11 +4,13 @@ namespace App\Controller;
 
 use App\Controller\Admin\CampaignCrudController;
 use App\Controller\Admin\LeadsCrudController;
+use App\Entity\ApiToken;
 use App\Entity\Campaign;
 use App\Entity\Forwarder;
 use App\Entity\Leads;
 use App\Entity\RuleGroup;
 use App\Entity\Supplier;
+use App\Entity\User;
 use App\Repository\CampaignRepository;
 use App\Repository\RuleGroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -135,6 +137,7 @@ public function configureMenuItems(): iterable
     // necessary to implement easyadmin in app_select_rule_group
     yield MenuItem::linkToRoute('select', 'fa fa-home', 'app_select_rule_group')
     ->setCssClass("d-none");
+    
     yield MenuItem::linkToRoute('select', 'fa fa-home', 'app_report_results')
     ->setCssClass("d-none");
     yield MenuItem::linkToCrud('Rule group', 'fas fa-list', RuleGroup::class);
@@ -143,5 +146,7 @@ public function configureMenuItems(): iterable
     yield MenuItem::linkToCrud('Supplier', 'fas fa-building', Supplier::class);
     yield MenuItem::linkToCrud('Forwader', 'fas fa-exchange', Forwarder::class);
     yield MenuItem::linkToRoute('Report', 'fa fa-bar-chart', 'app_report');
+    yield MenuItem::linkToCrud('Users', 'fas fa-address-book', User::class);
+    yield MenuItem::linkToCrud('Token', 'fas fa-certificate', ApiToken::class);
 }
 }

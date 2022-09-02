@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\CampaignController;
 use App\Controller\ChartController;
+use App\Entity\ApiToken;
 use App\Entity\Campaign;
 use App\Entity\CampaignLeads;
 use App\Entity\Forwarder;
@@ -138,6 +139,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Forwader', 'fas fa-exchange', Forwarder::class);
         yield MenuItem::linkToRoute('Report', 'fa fa-bar-chart', 'app_report');
         yield MenuItem::linkToCrud('Users', 'fas fa-address-book', User::class);
+        yield MenuItem::linkToCrud('Token', 'fas fa-certificate', ApiToken::class);
        
     }
     public function configureAssets(): Assets

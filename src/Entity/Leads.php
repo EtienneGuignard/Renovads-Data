@@ -5,11 +5,13 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\LeadsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\LeadPersist;
 
 #[ORM\Entity(repositoryClass: LeadsRepository::class)]
+// #[UniqueEntity(fields: ['email'], message: 'duplicate')]
 #[ApiResource(
     // cutsom operation api platform Post that goes trough a custom controller
     collectionOperations: [

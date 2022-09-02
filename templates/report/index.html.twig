@@ -2,6 +2,8 @@
 
 {% block content_title %}Report{% endblock %}
 {% block main %}
+<h2>Quick report</h2>
 {% include "report/form.html.twig" %}
-
+<h2>export csv</h2>
+{% include "report/formCsv.html.twig" %}
 {% endblock %}

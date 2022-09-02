@@ -4,33 +4,7 @@
 
 {% block main %}
 <div class="row">
-{{ form_start(form) }}
-   {{ form_errors(form) }}
-    <div class="row">
-        <div class="col">
-            {{ form_row(form.campaign) }}
-        </div>
-        <div class="col">
-            {{ form_row(form.supplier) }}
-        </div>
-        <div class="col" >
-            {{ form_row(form.status) }}
-        </div>
-    </div>
-     <div class="row">
-        <div class="col">
-            {{ form_row(form.startDate) }}
-        </div>
-        <div class="col" >
-            {{ form_row(form.endDate) }}
-        </div>
-        <div class="col mt-1" >
-            {{ form_row(form.search) }}
-        </div>
-    </div>
-
-{{ form_end(form) }}
-
+{% include "report/form.html.twig" %}
 <div class="row mt-5">
 {% for global in resultGlobal %}
     <p><span class="labelSelectForm">Number of selected lead: </span> {{global.NumberOfLeads}}</p>

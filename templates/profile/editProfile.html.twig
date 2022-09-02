@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+<div class="container justify-content-center w-100 text-center">
+    <div class="row justify-content-center">
+     
+<div class="col-12 col-lg-5">
+    <h2 class="mt-5 text-white">Register</h2>
+    {{ form_start(form) }}
+        <label for="form_email" class="mt-2">Email</label>
+        {{ form_row(form.email, {}) }}
+        {{ form_row(form.plainPassword)}}
+  
+        
+        <div class="row">
+            <div class="col-6">
+            <label for="form_firstName" class="mt-2">First name</label>
+            {{ form_row(form.firstName, {}) }}
+            </div>
+            <div class="col-6">
+            <label for="form_lasName" class="mt-2">Last name</label>
+            {{ form_row(form.lastName, {}) }}
+            </div>
+        </div>
+            <label for="form_company" class="mt-2">Company</label>
+            {{ form_row(form.company, {}) }}
+
+            <label for="form_companyAddress" class="mt-2">Company address</label>
+            {{ form_row(form.companyAddress, {}) }}
+            
+        <div class="row">
+            <div class="col-6">
+            <label for="form_country" class="mt-2">Country</label>
+            {{ form_row(form.country, {}) }}
+            </div>
+            <div class="col-6">
+             <label for="form_region" class="mt-2">Region</label>
+            {{ form_row(form.region, {}) }}
+            </div>
+         </div>
+            
+        <div class="row">
+            <div class="col-6">
+            <label for="form_zipCode" class="mt-2">Zip</label>
+            {{ form_row(form.zipCode, {}) }}
+            </div>
+            <div class="col-6">
+            <label for="form_city" class="mt-2">City</label>
+            {{ form_row(form.city, {}) }}
+            </div>
+         </div>
+            <label for="form_vatNumber" class="mt-2">V.A.T.</label>
+            {{ form_row(form.vatNumber, {}) }}
+            <label for="form_vatNumber" class="mt-2">Registration Number</label>
+            {{ form_row(form.RegistrationNumber, {}) }}
+            <div class="row justify-content-center">
+                <button type="submit" class="btn btn-primary mt-3 w-50">Save edit</button>
+            </div>
+        {{ form_end(form) }}
+        </div>
+    </div>
+ </div>
+{% endblock %}

@@ -19,6 +19,9 @@ class HomeController extends AbstractController
     ): Response
     {
   
+        if($this->isGranted('ROLE_ADMIN')){
+            return $this->redirectToRoute('admin');
+        }
         
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -41,23 +44,18 @@ class HomeController extends AbstractController
     ChartBuilderInterface $chartBuilder,
     ): Response
     {
-  
+        // Get current user
         $user = $this->getUser();
         $userId=$user->getId();
         $supplierId=$user->getFkSupplier()->getId();
-
        
        if (isset($_POST['search'])) {
 
             $startDate=$_POST['startDate'];
             $endDate=$_POST['endDate'];
+            //id of the main campaign
             $campaignId= 1;
-           
-            $status='accepted';
-
-      
-       
-
+            $status='Accepted';
         $datesArr = getBetweenDatesAffiliates($startDate, $endDate);
         $dates =[];
         $leadPerday=[];

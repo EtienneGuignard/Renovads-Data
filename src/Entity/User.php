@@ -37,15 +37,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $roles = [];
 
     #[ORM\Column(type: 'string')]
-       /**
-     * @Assert\NotBlank
-     * @Assert\Length(
-     *      min = 8,
-     *      max = 50,
-     *      minMessage = "the password must at minimun {{ limit }} characters",
-     *      maxMessage = "the password can contain a maximum of {{ limit }} characters"
-     * )
-     */
     private $password;
 
     #[ORM\Column(type: 'string', length: 255)]
@@ -68,21 +59,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $companyAddress;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
-        /**
-     * @Assert\NotBlank
-     * @Assert\Length(
-     *      min = 5,
-     *      minMessage = "Address too short"
-     * )    
-     */ 
-    private $country;
-
-    #[ORM\Column(type: 'string', length: 8, nullable: true)]
-
     /**
      * @Assert\NotBlank
      * @Assert\Country(
      *      message = "this is not a valid country code"
+     * )
+     */ 
+    private $country;
+
+    #[ORM\Column(type: 'string', length: 8, nullable: true)]
+    /**
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *      min = 5,
+     *      max = 5,
+     *      exactMessage = "Le Code Postal doit comporter 5 chiffres"
      * )
      */
     
@@ -106,7 +97,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?Supplier $fkSupplier = null;
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: ApiToken::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: ApiToken::class, orphanRemoval: true,)]
     private Collection $apiTokens;
 
     public function __construct()

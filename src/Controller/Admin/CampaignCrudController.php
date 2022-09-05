@@ -48,7 +48,7 @@ class CampaignCrudController extends AbstractCrudController
             IdField::new('id')->hideOnForm(),
             TextField::new('name'),
             TextField::new('client'),
-            ImageField::new('image')->setUploadDir("../../public/assets/images"),
+            // ImageField::new('image')->setUploadDir("../../public/assets/images"),
             CountryField::new('country'),
             CurrencyField::new('currency'),
             TextField::new('revenuePerLead'),

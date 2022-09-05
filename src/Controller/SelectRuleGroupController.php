@@ -45,7 +45,6 @@ class SelectRuleGroupController extends AbstractDashboardController
                 $referUrl='http://127.0.0.1:8000' . $_GET['referrer'];
                 $ruleGroupList = $ruleGroupRepository->ruleList($entityManagerInterface, $campaignId);
 
-
             }
             if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') {  
                 $url = "https://";   
@@ -65,7 +64,6 @@ class SelectRuleGroupController extends AbstractDashboardController
         if(isset($_POST['submit'])){
 
             $ruleGroupId=$_POST['ruleId'];
-           
             $ruleGroup=$ruleGroupRepository->find($ruleGroupId);
             $campaign=$campaignRepository->find($campaignId);
             $campaign->getRuleGroups()->add($ruleGroup);

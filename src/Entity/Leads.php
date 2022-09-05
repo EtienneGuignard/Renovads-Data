@@ -110,6 +110,12 @@ class Leads
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $paramInfo2 = null;
 
+    #[ORM\Column(length: 15, nullable: true)]
+    private ?string $phone = null;
+
+    #[ORM\Column(length: 45, nullable: true)]
+    private ?string $sex = null;
+
     public function __construct()
     {
         $this->campaigns = new ArrayCollection();
@@ -416,6 +422,30 @@ class Leads
     public function __toString(){
         return $this->email; 
       }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getSex(): ?string
+    {
+        return $this->sex;
+    }
+
+    public function setSex(?string $sex): self
+    {
+        $this->sex = $sex;
+
+        return $this;
+    }
 
    
 }

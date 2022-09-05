@@ -25,33 +25,8 @@ class BodyForwarderType extends AbstractType
                     'Static' => 'static',
                     'Header' => 'header',
                     'Field' => 'field',
-                    'Lastname' => 'lastname',
-                    'Sex' => 'sex',
-                    'Adresse' => 'address_1',
-                    'Zip' => 'zip',
-                    'Job' => 'job',
-                    'Created at' => 'created_at',
-                    'Family' => 'family',
                 ]
             ])
-            // ->add('input', ChoiceType::class, [
-
-            //     'attr' => ['class' => 'form-control'],
-            //     'placeholder' => 'choose input',
-            //     'choices' => [
-                    
-            //         'Email' => 'email',
-            //         'Date of birth' => 'dob',
-            //         'Firstname' => 'firstname',
-            //         'Lastname' => 'lastname',
-            //         'Sex' => 'sex',
-            //         'Adresse' => 'address_1',
-            //         'Zip' => 'zip',
-            //         'Job' => 'job',
-            //         'Created at' => 'created_at',
-            //         'Family' => 'family',
-            //     ]
-            // ] )
             ->add('input', TextType::class, [
 
                 'attr' => ['class' => 'form-control'],

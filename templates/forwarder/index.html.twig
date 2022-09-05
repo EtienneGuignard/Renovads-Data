@@ -14,12 +14,12 @@
                 </thead>
                 <tbody>
                         
-                    {% for forwarder in forwarderList %}        
-                        
-                         <tr>
-                            <td>{{forwarder.type}}</td>
-                            <td>{{forwarder.input}}</td>
-                            <td>{{forwarder.outpout}}</td> 
+                    {% for forwarderField in forwarderList %}        
+                        <tr>
+                            <td>{{forwarderField.type}}</td>
+                            <td>{{forwarderField.input}}</td>
+                            <td>{{forwarderField.outpout}}</td> 
+                            <td><a href="{{path('delete_body_forwarder',  { 'id':forwarderId , 'bodyForwarderId': forwarderField.id })}}" class='btn btn-danger'>Delete</a></td>
                         </tr>
                             
                         {% endfor %}
@@ -30,7 +30,7 @@
 <h3> Input Available for the field type</h3>
     <table class="datagrid">
                 <tbody>
-                         <tr>
+                        <tr>
                             <td>email</td>
                             <td>firstname</td>
                             <td>lastname</td> 
@@ -42,10 +42,11 @@
                             <td>zip</td> 
                             <td>job</td> 
                         </tr>
-                         <tr>
+                        <tr>
                             <td>Created At</td>
                             <td>ip</td>
-                            <td>family</td> 
+                            <td>children</td> 
+                            <td>phone</td>
                         </tr>
 
                 </tbody>

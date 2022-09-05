@@ -233,5 +233,5 @@ class Campaign
 
     public function __toString(){
         return $this->name; 
-      }
+    }
 }

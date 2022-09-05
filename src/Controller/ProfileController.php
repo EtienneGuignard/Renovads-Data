@@ -59,10 +59,6 @@ class ProfileController extends AbstractController
                             $form->get('plainPassword')->getData()
                         )
                     );
-            $this->addFlash(
-            'success',
-            'Your profile as been updated successfully');
-
             $this->updateUser($entityManagerInterface, $user);
             return $userAuthenticator->authenticateUser(
                 $user,

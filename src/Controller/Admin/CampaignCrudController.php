@@ -42,22 +42,22 @@ class CampaignCrudController extends AbstractCrudController
 
     }
 
-    public function configureFields(string $pageName): iterable
-    {
-        return [
-            IdField::new('id')->hideOnForm(),
-            TextField::new('name'),
-            TextField::new('client'),
-            ImageField::new('image')->setUploadDir("public\assets\images"),
-            CountryField::new('country'),
-            CurrencyField::new('currency'),
-            TextField::new('revenuePerLead'),
-            TextEditorField::new('description'),
-            AssociationField::new('ruleGroups')
-            ->autocomplete()
-            ->onlyOnDetail(),
-        ];
-    }
+    // public function configureFields(string $pageName): iterable
+    // {
+    //     return [
+    //         IdField::new('id')->hideOnForm(),
+    //         TextField::new('name'),
+    //         TextField::new('client'),
+    //         ImageField::new('image')->setUploadDir("public\assets\images"),
+    //         CountryField::new('country'),
+    //         CurrencyField::new('currency'),
+    //         TextField::new('revenuePerLead'),
+    //         TextEditorField::new('description'),
+    //         AssociationField::new('ruleGroups')
+    //         ->autocomplete()
+    //         ->onlyOnDetail(),
+    //     ];
+    // }
     
     
 }

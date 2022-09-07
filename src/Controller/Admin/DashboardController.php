@@ -66,7 +66,8 @@ class DashboardController extends AbstractDashboardController
     private function chart(): Chart
     {
         $timeArr=hoursRange();
-
+         // count the lead per hour 
+         // todo optimize it with a foreach
         $hour01=count($this->leadsRepository->selectLeadChart($timeArr['00:00'],$timeArr['01:00'], $this->entityManagerInterface ));
         $hour02=count($this->leadsRepository->selectLeadChart($timeArr['01:00'],$timeArr['02:00'], $this->entityManagerInterface ));
         $hour03=count($this->leadsRepository->selectLeadChart($timeArr['02:00'],$timeArr['03:00'], $this->entityManagerInterface ));
@@ -129,7 +130,6 @@ class DashboardController extends AbstractDashboardController
         // necessary to implement easyadmin in app_select_rule_group
         yield MenuItem::linkToRoute('select', 'fa fa-home', 'app_select_rule_group')
         ->setCssClass("d-none");
-        
         yield MenuItem::linkToRoute('select', 'fa fa-home', 'app_report_results')
         ->setCssClass("d-none");
         yield MenuItem::linkToCrud('Rule group', 'fas fa-list', RuleGroup::class);
@@ -162,7 +162,9 @@ function hoursRange( $lower = 0, $upper = 86400, $step = 3600, $format = '' ) {
     }
 
     foreach ( range( $lower, $upper, $step ) as $increment ) {
+        //get today's date
         $now=date_create('now');
+        // increment hour per hour and create an array
         $increment = date( 'H:i', $increment );
         list( $hour, $minutes ) = explode( ':', $increment );
         $date = new DateTime( $hour . ':' . $minutes );

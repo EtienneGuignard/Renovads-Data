@@ -7,7 +7,7 @@
 
 {% block main %}
 <section>
-<form action="{{path('app_forwarder_test')}}" method="post">
+<form action="{{path('app_forwarder_test',  { 'forwarderId': forwarderId })}}" method="post">
  <div class="row">
 {% for body in bodies %}
 

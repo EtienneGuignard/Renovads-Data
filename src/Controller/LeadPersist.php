@@ -40,6 +40,7 @@ class LeadPersist extends AbstractController
       LeadsRepository $leadRepository
       ): Leads
     {
+       
         dataProcessing($data, $entityManagerInterface, $campaignRepository, $forwarderRepository,
         $bodyForwarderRepository, $supplierRepository, $leadRepository);
 
@@ -55,16 +56,17 @@ function dataProcessing($data,
     $supplierRepository,$leadRepository
     )
     {
+
         //sid indentical for all the campaign 
         $supplierId=$data->getSid();
         $emailUser= $data->getEmail();
 
-        
+    
         $campaigns=$campaignRepository->findAll();
 
         //getting all the rules for all the campaigns
         foreach($campaigns as $campaign){
-        
+
             $CampaignRules=$campaign->getRuleGroups();
 
         foreach($CampaignRules as $rule){
@@ -80,13 +82,16 @@ function dataProcessing($data,
             //if email is already in db then status is automaticly rejected
             if(isEmailExist($emailUser, $leadRepository) != false){
                 addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId);
+                exit;
             };
             // determine if the value is of type date or string
                 if (isset($ruleValueDate)) {
             //function to select the right operator
                     dateValueRules($ruleFieldDeter, $ruleOperator, $ruleValueDate, $campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository, $supplierRepository, $supplierId);
-                }else{
+                }elseif(isset($ruleValue)){
                     textValueRules($ruleFieldDeter, $ruleOperator, $ruleValue, $campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository, $supplierRepository, $supplierId);
+                }else{
+                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository, $supplierRepository, $supplierId);
                 }
                 
             }
@@ -326,7 +331,7 @@ function postData($finalArray,$headerArray, $url, $campaignLeads, $entityManager
     $statusCode = $response->getStatusCode();
     $contentType = $response->getHeaders()['content-type'][0];
     $content = $response->getContent();
-    if ($statusCode =='201'|| $statusCode == '200' ) {
+    if ($statusCode !='201'|| $statusCode !='200' ) {
         $campaignLeads->setStatus("Client rejected");
         $campaignLeads->entityManagerInterface->flush();
     }

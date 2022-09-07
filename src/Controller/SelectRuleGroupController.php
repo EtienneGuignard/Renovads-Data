@@ -98,8 +98,6 @@ class SelectRuleGroupController extends AbstractDashboardController
             $ruleGroup->getFkCampaign()->add($campaign);
             $entityManagerInterface->persist($campaign);
             $entityManagerInterface->flush();
-
-            
         }
         return $this->redirectToRoute('app_select_rule_group', ['campaignId'=>$campaignId]);
     }

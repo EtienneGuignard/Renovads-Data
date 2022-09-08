@@ -60,15 +60,18 @@ function dataProcessing($data,
         //sid indentical for all the campaign 
         $supplierId=$data->getSid();
         $emailUser= $data->getEmail();
-
-    
+        $campaignId=1;
+        if(isEmailExist($emailUser, $leadRepository) != false){
+            addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId);
+            exit;
+        };
         $campaigns=$campaignRepository->findAll();
 
         //getting all the rules for all the campaigns
         foreach($campaigns as $campaign){
 
             $CampaignRules=$campaign->getRuleGroups();
-
+            $campaignId=$campaign->getId();
         foreach($CampaignRules as $rule){
 
             $ruleFieldEntry=$rule->getField();
@@ -77,13 +80,7 @@ function dataProcessing($data,
             $ruleOperator=$rule->getOperator();
             // select the right field on wich the value of the rule must be compared 
             $ruleFieldDeter=deterRuleField($ruleFieldEntry, $data);
-            
-            $campaignId=$campaign->getId();
             //if email is already in db then status is automaticly rejected
-            if(isEmailExist($emailUser, $leadRepository) != false){
-                addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId);
-                exit;
-            };
             // determine if the value is of type date or string
                 if (isset($ruleValueDate)) {
             //function to select the right operator
@@ -228,7 +225,7 @@ function forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepos
                         $headerArray[$bodyForwarderInput]= $bodyForwarderOutput;
                     }     
             }
-            postData($finalArray,$headerArray, $url,$campaignLeads, $campaignLeads);
+            postData($finalArray,$headerArray, $url, $campaignLeads, $entityManagerInterface);
         }  
     }
 //switch for the different operators Date
@@ -331,9 +328,9 @@ function postData($finalArray,$headerArray, $url, $campaignLeads, $entityManager
     $statusCode = $response->getStatusCode();
     $contentType = $response->getHeaders()['content-type'][0];
     $content = $response->getContent();
-    if ($statusCode !='201'|| $statusCode !='200' ) {
+    if ($statusCode != 201 && $statusCode != 200 ) {
         $campaignLeads->setStatus("Client rejected");
-        $campaignLeads->entityManagerInterface->flush();
+        $entityManagerInterface->flush();
     }
 }
 

@@ -8,6 +8,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class ForwarderCrudController extends AbstractCrudController
@@ -54,7 +55,8 @@ class ForwarderCrudController extends AbstractCrudController
     
         return [
             TextField::new('name'),
-            TextField::new('url')
+            TextField::new('url'),
+            AssociationField::new('fkCampaign')
         ];
     }
     

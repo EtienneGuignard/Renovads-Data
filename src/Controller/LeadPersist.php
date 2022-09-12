@@ -166,6 +166,8 @@ function forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepos
             $headerArray=[];
             $finalArray=[];
             $bodyForwarders= $bodyForwarderRepository->findBy(['fkForwarder'=>$forwarderId]);
+
+            // foreach forwarder i get the data corresponding to the field registered in the forwarder
             foreach ($bodyForwarders as $bodyForwarder) {
                 $bodyForwarderInput=$bodyForwarder->getInput();
                 $bodyForwarderOutput=$bodyForwarder->getOutpout();
@@ -213,6 +215,12 @@ function forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepos
                                         break;
                                 case 'region':
                                         $finalArray[$bodyForwarderOutput]=$data->getRegion();
+                                        break;
+                                case 'sex':
+                                    $finalArray[$bodyForwarderOutput]=$data->getSex();
+                                        break;
+                                case 'phone':
+                                    $finalArray[$bodyForwarderOutput]=$data->getPhone();
                                         break;
                                 default:
                                     break;
@@ -312,6 +320,14 @@ function textValueRules($ruleFieldDeter, $ruleOperator, $ruleValue, $campaignRep
                     addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId);
                 }
                 break;
+            case 'contains':
+                    if (str_contains($ruleFieldDeter, $ruleValue)) {
+                        addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId);
+                    }else {
+                        
+                        addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId);
+                    }
+                    break;
         default:
             break;
     }

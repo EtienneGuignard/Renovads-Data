@@ -58,7 +58,6 @@ class RuleGroupCrudController extends AbstractCrudController
                 'Not empty' => 'notempty',
                 'True' => 'true',
                 'False' => 'false',
-                'city' => 'city',
             ]),
             TextField::new('value'),
             DateTimeField::new('valueDate'),

@@ -297,7 +297,7 @@ function textValueRules($ruleFieldDeter, $ruleOperator, $ruleValue, $campaignRep
                     addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository,$supplierId);     
                 }
                 break;
-            case 'notempty':
+            case 'notem':
                 if (!empty($ruleFieldDeter)) {
                     addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId);
                 }else {
@@ -320,7 +320,7 @@ function textValueRules($ruleFieldDeter, $ruleOperator, $ruleValue, $campaignRep
                     addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId);
                 }
                 break;
-            case 'contains':
+            case 'conta':
                     if (str_contains($ruleFieldDeter, $ruleValue)) {
                         addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId);
                     }else {

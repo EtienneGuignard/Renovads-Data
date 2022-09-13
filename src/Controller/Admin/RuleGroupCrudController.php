@@ -61,7 +61,7 @@ class RuleGroupCrudController extends AbstractCrudController
                 'city' => 'city',
             ]),
             TextField::new('value'),
-            DateTimeField::new('dateValue'),
+            DateTimeField::new('Valuedate'),
             TextareaField::new('description'),
         ];
     }

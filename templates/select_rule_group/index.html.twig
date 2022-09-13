@@ -12,10 +12,10 @@
 <div class="row">
 
 {% for rule in ruleGroupList %}
-     <div class="col-3 marginColSelect border rounded" style="margin-left: 12px;">
+<div class="col-2 marginColSelect border rounded" style="margin-left: 12px;">
         {{rule.name}}
     </div>
-    <div class="col-3">
+    <div class="col-2">
         <a href="{{path('delete_campaign_rule',  { 'id':campaignId , 'ruleId': rule.id })}}" class='btn btn-danger'>Delete</a>
     </div>
 {% endfor %}
@@ -25,5 +25,5 @@
         {% include "select_rule_group/formSelect.html.twig" %}
     </div>
 </div>
- 
+
 {% endblock %}

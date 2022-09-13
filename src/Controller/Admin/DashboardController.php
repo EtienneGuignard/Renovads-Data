@@ -54,13 +54,7 @@ class DashboardController extends AbstractDashboardController
             'Leads' =>$leads,
             'campaigns'=>$campaigns,
         ]);
-
     }
-
-
-   
-
-
     private function chart(): Chart
     {
         $timeArr=hoursRange();

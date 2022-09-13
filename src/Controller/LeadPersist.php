@@ -292,9 +292,9 @@ function textValueRules($ruleFieldDeter, $ruleOperator, $ruleValue, $campaignRep
             break;
             case '!=':
                 if ($ruleFieldDeter != $ruleValue) {
-                    addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId);            
+                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId);        
                 }else {
-                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId); 
+                    addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository,$supplierId);     
                 }
                 break;
             case 'notempty':

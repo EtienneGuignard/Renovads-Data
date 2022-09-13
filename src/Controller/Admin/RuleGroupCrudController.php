@@ -53,7 +53,7 @@ class RuleGroupCrudController extends AbstractCrudController
                 'Equal(==)' => '==',
                 'Greater than(>, strlenght for txt)' => '>',
                 'Lesser than (<, strlenght for txt)' => '<',
-                'Contains(only str)' => 'contains',
+                'Contains' => 'contains',
                 'Different(!=)' => '!=',
                 'Not empty' => 'notempty',
                 'True' => 'true',

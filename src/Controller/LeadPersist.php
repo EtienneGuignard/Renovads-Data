@@ -69,9 +69,9 @@ function dataProcessing($data,
 
         //getting all the rules for all the campaigns
         foreach($campaigns as $campaign){
-
             $CampaignRules=$campaign->getRuleGroups();
             $campaignId=$campaign->getId();
+            
         foreach($CampaignRules as $rule){
 
             $ruleFieldEntry=$rule->getField();

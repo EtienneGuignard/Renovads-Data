@@ -60,11 +60,7 @@ class RuleGroupCrudController extends AbstractCrudController
                 'False' => 'false',
             ]),
             TextField::new('value'),
-<<<<<<< HEAD
-            DateTimeField::new('Valuedate'),
-=======
             DateTimeField::new('valueDate'),
->>>>>>> 1fe16dc1f81e001cad6f1674f0a3777794f0a655
             TextareaField::new('description'),
         ];
     }

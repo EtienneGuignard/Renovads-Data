@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
+        <meta name="description" content="platform managing the data">
+        <meta author="Etienne Guignard">
         <title>{% block title %}Renovads Data{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
@@ -13,19 +15,12 @@
         {% endblock %}
     </head>
     <body>
-  
-   
     <div class="d-flex">
         {% block header %}
             {% include "header.html.twig" %}
         {% endblock %} 
     {% block body %}
-
-
-
-
-    {% endblock %}
-        
+    {% endblock %} 
     </div>
         
     {% block footer %}

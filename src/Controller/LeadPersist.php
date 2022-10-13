@@ -5,13 +5,16 @@ namespace App\Controller;
 use App\Entity\CampaignLeads;
 use App\Entity\Leads;
 use App\Repository\BodyForwarderRepository;
+use App\Repository\CampaignLeadsRepository;
 use App\Repository\CampaignRepository;
+use App\Repository\DataAcrossHeaderRepository;
 use App\Repository\ForwarderRepository;
 use App\Repository\LeadsRepository;
 use App\Repository\RuleGroupRepository;
 use App\Repository\SupplierRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -37,12 +40,16 @@ class LeadPersist extends AbstractController
       ForwarderRepository $forwarderRepository, 
       BodyForwarderRepository $bodyForwarderRepository,
       SupplierRepository $supplierRepository,
-      LeadsRepository $leadRepository
+      LeadsRepository $leadRepository,
+      CampaignLeadsRepository $campaignLeadsRepository,
+      DataAcrossHeaderRepository $dataAcrossHeaderRepository,
+
       ): Leads
     {
-       
-        dataProcessing($data, $entityManagerInterface, $campaignRepository, $forwarderRepository,
-        $bodyForwarderRepository, $supplierRepository, $leadRepository);
+
+            dataProcessing($data, $entityManagerInterface, $campaignRepository, $forwarderRepository,
+            $bodyForwarderRepository, $supplierRepository, $leadRepository, $campaignLeadsRepository, $dataAcrossHeaderRepository);
+
 
         return $data;
     }
@@ -53,44 +60,72 @@ function dataProcessing($data,
     $campaignRepository,
     $forwarderRepository,
     $bodyForwarderRepository,
-    $supplierRepository,$leadRepository
+    $supplierRepository,
+    $leadRepository,
+    $campaignLeadsRepository,
+    $dataAcrossHeaderRepository
     )
     {
-
         //sid indentical for all the campaign 
         $supplierId=$data->getSid();
         $emailUser= $data->getEmail();
+       
+        $campaignLeads='';
         $campaignId=1;
         if(isEmailExist($emailUser, $leadRepository) != false){
-            addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId);
+            addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId , $campaignLeads, $campaignLeadsRepository);
             exit;
         };
         $campaigns=$campaignRepository->findAll();
-
         //getting all the rules for all the campaigns
         foreach($campaigns as $campaign){
 
             $CampaignRules=$campaign->getRuleGroups();
-            $campaignId=$campaign->getId();
-        foreach($CampaignRules as $rule){
-
-            $ruleFieldEntry=$rule->getField();
-            $ruleValue=$rule->getValue();
-            $ruleValueDate=$rule->getValueDate();
-            $ruleOperator=$rule->getOperator();
-            // select the right field on wich the value of the rule must be compared 
-            $ruleFieldDeter=deterRuleField($ruleFieldEntry, $data);
-            //if email is already in db then status is automaticly rejected
-            // determine if the value is of type date or string
-                if (isset($ruleValueDate)) {
-            //function to select the right operator
-                    dateValueRules($ruleFieldDeter, $ruleOperator, $ruleValueDate, $campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository, $supplierRepository, $supplierId);
-                }elseif(isset($ruleValue)){
-                    textValueRules($ruleFieldDeter, $ruleOperator, $ruleValue, $campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository, $supplierRepository, $supplierId);
-                }else{
-                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository, $supplierRepository, $supplierId);
-                }
+            $campaignId=$campaign->getId();   
+            $client=$campaign->getClient();
+            var_dump($client);
+            if ($client=="across") {
+                $dataAcrossHeader=$dataAcrossHeaderRepository->findOneBy(['campaignId' => $campaignId]);
+                if ($dataAcrossHeader) {
+                    postDataAcross($data, $dataAcrossHeader);
+                }      
+            }         
+            if ($client!="across") {
+            
+                foreach($CampaignRules as $rule){
+                    $lead=$campaignLeadsRepository->campaignLeadExistPerEmail($emailUser, $campaignId, $entityManagerInterface);
                 
+                    if (!empty($lead)) {
+                        $leadId=$lead->getId();   
+                        $campaignLeads= $campaignLeadsRepository->campaignLeadExist($leadId, $campaignId, $entityManagerInterface);
+                    }
+                    $ruleFieldEntry=$rule->getField();
+                    $ruleValue=$rule->getValue();
+                    $ruleValueDate=$rule->getValueDate();
+                    $ruleOperator=$rule->getOperator();
+                    // select the right field on wich the value of the rule must be compared 
+                    $ruleFieldDeter=deterRuleField($ruleFieldEntry, $data);
+                    //if email is already in db then status is automaticly rejected
+                    // determine if the value is of type date or string
+                        if (isset($ruleValueDate)) {
+                    //function to select the right operator
+                            dateValueRules($ruleFieldDeter, $ruleOperator, 
+                            $ruleValueDate, $campaignRepository, $campaignId,
+                            $data, $entityManagerInterface, $forwarderRepository,
+                            $bodyForwarderRepository, $supplierRepository, $supplierId , $campaignLeads, $campaignLeadsRepository);
+                        }elseif(isset($ruleValue)){
+                            textValueRules($ruleFieldDeter, $ruleOperator, $ruleValue, 
+                            $campaignRepository, $campaignId, $data, $entityManagerInterface, 
+                            $forwarderRepository, $bodyForwarderRepository, 
+                            $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
+                        }else{
+                            addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface,
+                            $forwarderRepository, $bodyForwarderRepository, $supplierRepository, $supplierId);
+                        }
+                    }
+                    // if ($campaignLeads['status']=='Accepted') {
+                        forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepository,$campaignLeads, $entityManagerInterface);
+                    // }
             }
         }
     }
@@ -131,21 +166,33 @@ function deterRuleField($ruleFieldEntry, $data){
     }
     }
  //add status rejected
-    function addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId){
+    function addStatusRejected($campaignRepository, $campaignId, $data, 
+    $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository){
         //create the new campaign and get the proper campaign and supllier via the ids in the data
-        $campaignLeads= New CampaignLeads;
-        $fksupplier=$supplierRepository->find($supplierId);
-        $fkCampaign=$campaignRepository->find($campaignId);
-        $data->setSupplier($fksupplier);
-        $campaignLeads->setCampaignId($fkCampaign);
-        $campaignLeads->setLeadId($data);
-        $campaignLeads->setStatus("Rejected");
-        $entityManagerInterface->persist($campaignLeads);
-        $entityManagerInterface->flush();
+       
+        if (!empty($campaignLeads)) {
+            $campaignLeadsExisting=$campaignLeadsRepository->find($campaignLeads['id']);
+            $campaignLeadsExisting->setStatus("Rejected");
+            $entityManagerInterface->flush();
+        }else {
+            $campaignLeads= New CampaignLeads;
+            $fksupplier=$supplierRepository->find($supplierId);
+            $fkCampaign=$campaignRepository->find($campaignId);
+            $data->setSupplier($fksupplier);
+            $campaignLeads->setCampaignId($fkCampaign);
+            $campaignLeads->setLeadId($data);
+            $campaignLeads->setStatus("Rejected");
+            $entityManagerInterface->persist($campaignLeads);
+            $entityManagerInterface->flush();
+        }
+       
     }
 
     //add the accepted status and forward the leads
-function addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository, $supplierRepository, $supplierId){
+function addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId){
+    // if (!empty($campaignLeads)) {
+    // }else {
+        var_dump('testA');
         $campaignLeads= New CampaignLeads;
         $fkCampaign=$campaignRepository->find($campaignId);
         $fksupplier=$supplierRepository->find($supplierId);
@@ -155,7 +202,9 @@ function addStatusAccepted($campaignRepository, $campaignId, $data, $entityManag
         $campaignLeads->setStatus("Accepted");
         $entityManagerInterface->persist($campaignLeads);
         $entityManagerInterface->flush();
-        forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepository,$campaignLeads, $entityManagerInterface);
+    // }
+       
+       
     }
 
 function forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepository,$campaignLeads,$entityManagerInterface){
@@ -237,27 +286,30 @@ function forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepos
         }  
     }
 //switch for the different operators Date
-function dateValueRules($ruleFieldDeter, $ruleOperator, $ruleValueDate, $campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository, $supplierRepository, $supplierId){
+function dateValueRules($ruleFieldDeter, $ruleOperator, 
+$ruleValueDate, $campaignRepository, $campaignId, 
+$data, $entityManagerInterface, $forwarderRepository, 
+$bodyForwarderRepository, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository){
     switch ($ruleOperator) {
         case '>':
             if ($ruleFieldDeter > $ruleValueDate) {
                 addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository, $supplierRepository, $supplierId);  
             }else {
-                addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId);
+                addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
             }
             break;
         case '<':
             if ($ruleFieldDeter < $ruleValueDate) {
                 addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository, $supplierRepository, $supplierId);
             }else {
-                addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId);
+                addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
             }
             break;
         case '==':
             if ($ruleFieldDeter === $ruleValueDate) {
                 addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository, $supplierRepository, $supplierId); 
             }else {
-                addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId);
+                addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
             }
             break;
         
@@ -267,32 +319,34 @@ function dateValueRules($ruleFieldDeter, $ruleOperator, $ruleValueDate, $campaig
     
 }
 //switch for the different operators Text
-function textValueRules($ruleFieldDeter, $ruleOperator, $ruleValue, $campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId){
+function textValueRules($ruleFieldDeter, $ruleOperator, $ruleValue, $campaignRepository, 
+$campaignId, $data, $entityManagerInterface, $forwarderRepository, 
+$bodyForwarderRepository,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository){
     switch ($ruleOperator) {
         case '>':
             if (strlen($ruleFieldDeter) > strlen($ruleValue)) {
                 addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId);
             }else {
-                addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId);
+                addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
             }
             break;
         case '<':
             if (strlen($ruleFieldDeter) < strlen($ruleValue)) {
                 addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId);
             }else {
-                addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId);
+                addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
             }
             break;
         case '==':
             if ($ruleFieldDeter === $ruleValue) {
                 addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId);  
             }else {
-                addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId);
+                addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
             }
             break;
             case '!=':
                 if ($ruleFieldDeter != $ruleValue) {
-                    addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId);            
+                    addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);            
                 }else {
                     addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId); 
                 }
@@ -301,7 +355,7 @@ function textValueRules($ruleFieldDeter, $ruleOperator, $ruleValue, $campaignRep
                 if (!empty($ruleFieldDeter)) {
                     addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId);
                 }else {
-                    addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId);
+                    addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
                 }
                 break;
             case 'true':
@@ -309,7 +363,7 @@ function textValueRules($ruleFieldDeter, $ruleOperator, $ruleValue, $campaignRep
                     addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId);
                     
                 }else {
-                    addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId);
+                    addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
                 }
                 break;
             case 'false':
@@ -317,7 +371,7 @@ function textValueRules($ruleFieldDeter, $ruleOperator, $ruleValue, $campaignRep
                     addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId);
                 }else {
                     
-                    addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId);
+                    addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
                 }
                 break;
             case 'contains':
@@ -325,7 +379,7 @@ function textValueRules($ruleFieldDeter, $ruleOperator, $ruleValue, $campaignRep
                         addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId);
                     }else {
                         
-                        addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId);
+                        addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
                     }
                     break;
         default:
@@ -350,6 +404,77 @@ function postData($finalArray,$headerArray, $url, $campaignLeads, $entityManager
     }
 }
 
+
+function postDataAcross( $data, $dataAcrossHeader,){
+
+    $email=$data->getEmail();
+    $firstname=$data->getFirstname();
+    $lastname=$data->getLastname();
+    $phone=$data->getPhone();
+    $sex=$data->getSex();
+    $ip=$data->getIp();
+    $zip=$data->getZip();
+    $landing=$data->getUrl();
+    $dob=$data->getDob();
+    $dobFormat=date_format($dob,'d-m-Y');
+    $timestampWrongFormat=$data->getCreatedAt();
+    $timestamp=date_format($timestampWrongFormat, 'Y-m-d H:i:s');
+    $idProgramma=$dataAcrossHeader->getIdProgramma();
+    $url=$dataAcrossHeader->getUrl();
+    $token= $data->getParamInfo1();
+    var_dump($url);
+
+    $encoding = 'sha256';
+    $identifier = 'ZTN';
+    $secret = $dataAcrossHeader->getSecret();
+    $method = 'POST';
+    $uri = $dataAcrossHeader->getUri();
+    $body = [
+        "id_programma" => $idProgramma,
+        "nome" => $firstname,
+        "cognome" => $lastname,
+        "telefono" => $phone,
+        "ip" => $ip,
+        "email" => $email,
+        "sesso" => $sex,
+        "cap" => $zip,
+        "landing" => $landing,
+        "timestamp" => $timestamp,
+        "token" => $token,
+        "data_nascita"=>$dobFormat,
+    ];
+
+        $time = time();
+        $signature = $time . $method . $uri . md5(json_encode($body, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+        $digest = hash_hmac($encoding, $signature, $secret);
+        $auth = "$identifier $time:$digest";
+
+       $request=[$auth,$body];
+       var_dump($request);
+        $client= HttpClient::create();
+    
+    $response=$client->request('POST', $url, [
+        'headers'=> [
+            'Authorization'=>$auth,
+            'Accept'=>'application/json',
+            'Content-Type'=> 'application/json'
+
+        ],   
+        'json' => [$body]
+    ]);
+   
+    // get infos of the response to see if the datas where sent properly
+    var_dump($response->toArray());
+    var_dump($response->getStatusCode());
+    var_dump($response->getHeaders()['Authorization'][]);
+    var_dump($response->getContent());
+
+    // if ($statusCode != 201 && $statusCode != 200 ) {
+    //     $campaignLeads->setStatus("Client rejected");
+    //     $entityManagerInterface->flush();
+    // }
+}
+
 function isEmailExist(string $emailUser, $leadRepository): bool
 {
     // search for an existing email in db
@@ -360,3 +485,5 @@ function isEmailExist(string $emailUser, $leadRepository): bool
     }
     return false;
 }
+
+

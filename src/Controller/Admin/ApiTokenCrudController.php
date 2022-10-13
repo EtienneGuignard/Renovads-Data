@@ -23,8 +23,7 @@ class ApiTokenCrudController extends AbstractCrudController
         return $actions
         ->add(Crud::PAGE_INDEX, Action::DETAIL);
     }
-
-    
+  
     public function configureFields(string $pageName): iterable
     {
         return [

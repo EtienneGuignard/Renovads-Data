@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CampaignLeadsRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CampaignLeadsRepository::class)]
@@ -23,6 +24,9 @@ class CampaignLeads
 
     #[ORM\Column(type: 'string', length: 255)]
     private $Status;
+
+    #[ORM\Column(type: 'string', length: 2000, nullable: true)]
+    private $responseForwarding;
 
     public function getId(): ?int
     {
@@ -61,6 +65,18 @@ class CampaignLeads
     public function setStatus(string $Status): self
     {
         $this->Status = $Status;
+
+        return $this;
+    }
+
+    public function getResponseForwarding(): array
+    {
+        return $this->responseForwarding;
+    }
+
+    public function setResponseForwarding(?array $responseForwarding): self
+    {
+        $this->responseForwarding = $responseForwarding;
 
         return $this;
     }

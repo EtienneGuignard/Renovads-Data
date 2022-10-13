@@ -1,10 +1,8 @@
 
 {% block main %}
-
 <form action="{{path('app_results_csv')}}" method="post">
 <div class="row">
     <div class="col mt-2">
- 
         <select class="form-control" name="campaign" id="campaign" required>
         <option value="" disabled selected>Campaign</option>
             {% for campaign in campaigns %}
@@ -12,9 +10,7 @@
             {% endfor %}
         </select>
     </div>
-  
  <div class="col mt-2">
-
         <select class="form-control" name="supplier" id="supplier">
         <option value="" disabled selected>supplier</option>
             {% for supplier in suppliers %}
@@ -22,7 +18,6 @@
             {% endfor %}
         </select>
     </div>
-
     <div class="col mt-2">
         <select class="form-control" name="status" id="status" placeholder="status">
             <option value="" disabled selected>Status</option>
@@ -42,7 +37,5 @@
         <input  class="btn btn-primary" type="submit"  name="export" id="search" value="Export">
     </div>
 </div>
-
 </form>
-
 {% endblock %}

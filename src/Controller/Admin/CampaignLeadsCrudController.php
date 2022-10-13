@@ -16,8 +16,6 @@ class CampaignLeadsCrudController extends AbstractCrudController
     {
         return CampaignLeads::class;
     }
-
-
     public function configureFields(string $pageName): iterable
     {
         return [

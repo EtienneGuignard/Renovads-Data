@@ -7,6 +7,7 @@ use App\Controller\ChartController;
 use App\Entity\ApiToken;
 use App\Entity\Campaign;
 use App\Entity\CampaignLeads;
+use App\Entity\DataAcrossHeader;
 use App\Entity\Forwarder;
 use App\Entity\Leads;
 use App\Entity\RuleGroup;
@@ -141,6 +142,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToRoute('Report', 'fa fa-bar-chart', 'app_report');
         yield MenuItem::linkToCrud('Users', 'fas fa-address-book', User::class);
         yield MenuItem::linkToCrud('Token', 'fas fa-certificate', ApiToken::class);
+        yield MenuItem::linkToCrud('Across header', 'fas fa-bullseye', DataAcrossHeader::class);
        
     }
     public function configureAssets(): Assets

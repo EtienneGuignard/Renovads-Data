@@ -39,6 +39,37 @@ class CampaignLeadsRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+
+    public function campaignLeadExist($leadId, $campaignId, $entityManagerInterface)
+    {
+        $conn=$entityManagerInterface->getConnection();
+        $rawSql = "SELECT campaign_leads.id, campaign_leads.lead_id_id, campaign_leads.campaign_id_id, leads.email   FROM `campaign_leads`
+        LEFT JOIN leads
+        ON campaign_leads.lead_id_id=leads.id
+	    WHERE campaign_leads.lead_id_id =:leadId  AND campaign_leads.campaign_id_id=:campaignId";
+
+        $query=$conn->prepare($rawSql);
+        $result= $query->executeQuery([
+                                    'leadId'=>$leadId,
+                                    'campaignId'=>$campaignId,
+                                ]);
+        return $result->fetchAllAssociative();
+    }
+    public function campaignLeadExistPerEmail($emailUser, $campaignId, $entityManagerInterface)
+    {
+        $conn=$entityManagerInterface->getConnection();
+        $rawSql = "SELECT campaign_leads.id, campaign_leads.lead_id_id, campaign_leads.campaign_id_id, leads.email   FROM `campaign_leads`
+        LEFT JOIN leads
+        ON campaign_leads.lead_id_id=leads.id
+	    WHERE leads.email =:emailUser  AND campaign_leads.campaign_id_id=:campaignId";
+        $query=$conn->prepare($rawSql);
+        $result= $query->executeQuery([
+                                    'emailUser'=>$emailUser,
+                                    'campaignId'=>$campaignId,
+                                ]);
+        return $result->fetchAllAssociative();
+    }
 //    /**
 //     * @return CampaignLeads[] Returns an array of CampaignLeads objects
 //     */

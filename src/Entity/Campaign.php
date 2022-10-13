@@ -47,12 +47,16 @@ class Campaign
     #[ORM\OneToMany(mappedBy: 'fkCampaign', targetEntity: Forwarder::class)]
     private Collection $forwarders;
 
+    #[ORM\OneToMany(mappedBy: 'campaignId', targetEntity: DataAcrossHeader::class)]
+    private Collection $dataAcrossHeaders;
+
     public function __construct()
     {
         $this->idLead = new ArrayCollection();
         $this->ruleGroups = new ArrayCollection();
         $this->fkLeads = new ArrayCollection();
         $this->forwarders = new ArrayCollection();
+        $this->dataAcrossHeaders = new ArrayCollection();
     }
 
     public function getId(): ?int

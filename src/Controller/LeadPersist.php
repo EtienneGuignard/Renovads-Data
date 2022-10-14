@@ -94,9 +94,12 @@ function dataProcessing($data,
             
                 foreach($CampaignRules as $rule){
                     $lead=$campaignLeadsRepository->campaignLeadExistPerEmail($emailUser, $campaignId, $entityManagerInterface);
-                
+                    var_dump($lead);
                     if (!empty($lead)) {
-                        $leadId=$lead->getId();   
+                        
+                        $leadId=$lead[0]['id'];  
+                        var_dump($leadId);
+                        
                         $campaignLeads= $campaignLeadsRepository->campaignLeadExist($leadId, $campaignId, $entityManagerInterface);
                     }
                     $ruleFieldEntry=$rule->getField();
@@ -129,7 +132,6 @@ function dataProcessing($data,
             }
         }
     }
-
 function deterRuleField($ruleFieldEntry, $data){
 
     switch ($ruleFieldEntry) {

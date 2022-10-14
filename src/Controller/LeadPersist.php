@@ -94,9 +94,10 @@ function dataProcessing($data,
             
                 foreach($CampaignRules as $rule){
                     $lead=$campaignLeadsRepository->campaignLeadExistPerEmail($emailUser, $campaignId, $entityManagerInterface);
-                
                     if (!empty($lead)) {
-                        $leadId=$lead->getId();   
+                        
+                        $leadId=$lead[0]['id'];  
+                        
                         $campaignLeads= $campaignLeadsRepository->campaignLeadExist($leadId, $campaignId, $entityManagerInterface);
                     }
                     $ruleFieldEntry=$rule->getField();
@@ -129,7 +130,6 @@ function dataProcessing($data,
             }
         }
     }
-
 function deterRuleField($ruleFieldEntry, $data){
 
     switch ($ruleFieldEntry) {
@@ -448,31 +448,26 @@ function postDataAcross( $data, $dataAcrossHeader,){
         $signature = $time . $method . $uri . md5(json_encode($body, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
         $digest = hash_hmac($encoding, $signature, $secret);
         $auth = "$identifier $time:$digest";
-
-       $request=[$auth,$body];
-       var_dump($request);
+        $request=[$auth,$body];
+        var_dump($request);
         $client= HttpClient::create();
-    
-    $response=$client->request('POST', $url, [
-        'headers'=> [
-            'Authorization'=>$auth,
-            'Accept'=>'application/json',
-            'Content-Type'=> 'application/json'
-
-        ],   
-        'json' => [$body]
-    ]);
-   
-    // get infos of the response to see if the datas where sent properly
-    var_dump($response->toArray());
-    var_dump($response->getStatusCode());
-    var_dump($response->getHeaders()['Authorization'][]);
-    var_dump($response->getContent());
-
-    // if ($statusCode != 201 && $statusCode != 200 ) {
-    //     $campaignLeads->setStatus("Client rejected");
-    //     $entityManagerInterface->flush();
-    // }
+        $response=$client->request('POST', $url, [
+            'headers'=> [
+                'Authorization'=>$auth,
+                'Accept'=>'application/json',
+                'Content-Type'=> 'application/json'
+            ],   
+            'json' => [$body]
+        ]);
+        // get infos of the response to see if the datas where sent properly
+            var_dump($response->toArray());
+            var_dump($response->getStatusCode());
+            var_dump($response->getHeaders()['Authorization'][]);
+            var_dump($response->getContent());
+        // if ($statusCode != 201 && $statusCode != 200 ) {
+        //     $campaignLeads->setStatus("Client rejected");
+        //     $entityManagerInterface->flush();
+        // }
 }
 
 function isEmailExist(string $emailUser, $leadRepository): bool

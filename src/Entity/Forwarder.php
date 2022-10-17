@@ -27,6 +27,9 @@ class Forwarder
     #[ORM\OneToMany(mappedBy: 'fkForwarder', targetEntity: BodyForwarder::class, cascade:['remove'])]
     private Collection $bodyForwarders;
 
+    #[ORM\Column(length: 5)]
+    private ?string $method = null;
+
     public function __construct()
     {
         $this->bodyForwarders = new ArrayCollection();
@@ -100,6 +103,18 @@ class Forwarder
                 $bodyForwarder->setFkForwarder(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getMethod(): ?string
+    {
+        return $this->method;
+    }
+
+    public function setMethod(string $method): self
+    {
+        $this->method = $method;
 
         return $this;
     }

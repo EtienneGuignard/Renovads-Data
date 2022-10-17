@@ -86,7 +86,7 @@ function dataProcessing($data,
             if ($client=="across") {
                 $dataAcrossHeader=$dataAcrossHeaderRepository->findOneBy(['campaignId' => $campaignId]);
                 if ($dataAcrossHeader) {
-                    postDataAcross($data, $dataAcrossHeader);
+                    postDataAcrossDating($data, $dataAcrossHeader, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface);
                 }      
             }         
             // if ($client!="across") {
@@ -410,8 +410,7 @@ function postData($finalArray,$headerArray, $url, $campaignLeads, $entityManager
     }
 }
 
-
-function postDataAcross( $data, $dataAcrossHeader,){
+function postDataAcrossDating( $data, $dataAcrossHeader, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface){
     
     $email=$data->getEmail();
     $firstname=$data->getFirstname();
@@ -428,6 +427,7 @@ function postDataAcross( $data, $dataAcrossHeader,){
     $idProgramma=$dataAcrossHeader->getIdProgramma();
     $url=$dataAcrossHeader->getUrl();
     $token= $data->getParamInfo1();
+    $age=$data->getParamInfo2();
 
     $encoding = 'sha256';
     $identifier = 'ZTN';
@@ -446,15 +446,13 @@ function postDataAcross( $data, $dataAcrossHeader,){
         "cap" => $zip,
         "landing" => $landing,
         "timestamp" =>  $timestamp,
-        "token" => "H4QtbzVrOH431fvU824",
+        "token" => $token,
         "data_nascita"=> $dobFormat,
-        "eta"=> 36,
+        "eta"=> $age,
     ];
     
-   
     $body=json_encode($bodyArr);
     echo $body;
-    
     $time = time();
     $signature = $time . $method . $uri . md5(json_encode($bodyArr, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     $digest = hash_hmac($encoding, $signature, $secret);
@@ -472,7 +470,7 @@ function postDataAcross( $data, $dataAcrossHeader,){
       CURLOPT_TIMEOUT => 0,
       CURLOPT_FOLLOWLOCATION => true,
       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-      CURLOPT_CUSTOMREQUEST => 'POST',
+      CURLOPT_CUSTOMREQUEST => $method,
       CURLOPT_POSTFIELDS => $body,
       CURLOPT_HTTPHEADER => $header,
     ));
@@ -483,83 +481,30 @@ function postDataAcross( $data, $dataAcrossHeader,){
     echo $response;
     if (!str_contains($response, '"status":"OK"')) {
         echo 'error';
+        setCampaignleadAccepted($data, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface,$timestampWrongFormat, $response);
     }
     if (str_contains($response, '"status":"OK"')) {
-        echo 'Ok bien jouer';
+        setCampaignleadRejectedAcross($data, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface, $timestampWrongFormat, $response);
     }
     
 }
+function setCampaignleadAccepted($data, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface, $timestampWrongFormat, $response){
+    $campaignLeads= New CampaignLeads;
+    $fkCampaign=$campaignRepository->find($campaignId);
+    $fksupplier=$supplierRepository->find($supplierId);
+    $data->setSupplier($fksupplier);
+    $campaignLeads->setCampaignId($fkCampaign);
+    $campaignLeads->setLeadId($data);
+    $campaignLeads->setStatus("Accepted");
+    $campaignLeads->setTimestamp($timestampWrongFormat);
+    $campaignLeads->setResponseForwarding($response);
+    $entityManagerInterface->persist($campaignLeads);
+    $entityManagerInterface->flush();
 
-function postDataAcross2( $data, $dataAcrossHeader,){
-
-    $email=$data->getEmail();
-    $firstname=$data->getFirstname();
-    $lastname=$data->getLastname();
-    $phone=$data->getPhone();
-    $sex=$data->getSex();
-    $ip=$data->getIp();
-    $zip=$data->getZip();
-    $landing=$data->getUrl();
-    $dob=$data->getDob();
-    $dobFormat=date_format($dob,'d-m-Y');
-    $timestampWrongFormat=$data->getCreatedAt();
-    $timestamp=date_format($timestampWrongFormat, 'Y-m-d H:i:s');
-    $idProgramma=$dataAcrossHeader->getIdProgramma();
-    $url=$dataAcrossHeader->getUrl();
-    $token= $data->getParamInfo1();
-    var_dump($url);
-
-    $encoding = 'sha256';
-    $identifier = 'ZTN';
-    $secret = $dataAcrossHeader->getSecret();
-    $method = 'POST';
-    $uri = $dataAcrossHeader->getUri();
-    $body = [
-        "id_programma" => "7940",
-        "nome" => "franka",
-        "cognome" => "Pera",
-        "telefono" => "3935152635",
-        "ip" => "104.28.106.99",
-        "email" => "stellagio@libero.it",
-        "sesso" => "f",
-        "cap" => "06127",
-        "landing" => "https://officinapremi.com",
-        "timestamp" => "2022-10-14 16:34:56",
-        "token" => "H4QtbzVrOH431fvU824",
-        "data_nascita"=> "08-08-1986",
-        "eta"=> 36,
-    ];
-
-        $time = time();
-        $signature = $time . $method . $uri . md5(json_encode($body, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
-        $digest = hash_hmac($encoding, $signature, $secret);
-        $auth = "$identifier $time:$digest";
-        $request=[$auth,$body];
-        var_dump($request);
-        $client= HttpClient::create();
-        $response=$client->request('POST', $url, [
-            'on_progress' => function (int $dlNow, int $dlSize, array $info): void {
-                // $dlNow is the number of bytes downloaded so far
-                // $dlSize is the total size to be downloaded or -1 if it is unknown
-            },
-            'headers'=> [
-                'Authorization'=> $auth,
-                'Accept'=>'application/json',
-                'Content-Type'=> 'application/json'
-            ],   
-            'json' => [$body]
-        ]);
-        // get infos of the response to see if the datas where sent properly
-            var_dump($response->toArray());
-            var_dump($response->getStatusCode());
-            var_dump($response->getHeaders()['Authorization'][]);
-            var_dump($response->getContent());
-        // if ($statusCode != 201 && $statusCode != 200 ) {
-        //     $campaignLeads->setStatus("Client rejected");
-        //     $entityManagerInterface->flush();
-        // }
 }
+function setCampaignleadRejectedAcross($data, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface, $timestamp, $response){
 
+}
 function isEmailExist(string $emailUser, $leadRepository): bool
 {
     // search for an existing email in db

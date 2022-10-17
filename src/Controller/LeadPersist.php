@@ -502,8 +502,18 @@ function setCampaignleadAccepted($data, $campaignId, $supplierId, $supplierRepos
     $entityManagerInterface->flush();
 
 }
-function setCampaignleadRejectedAcross($data, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface, $timestamp, $response){
-
+function setCampaignleadRejectedAcross($data, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface, $timestampWrongFormat, $response){
+    $campaignLeads= New CampaignLeads;
+    $fkCampaign=$campaignRepository->find($campaignId);
+    $fksupplier=$supplierRepository->find($supplierId);
+    $data->setSupplier($fksupplier);
+    $campaignLeads->setCampaignId($fkCampaign);
+    $campaignLeads->setLeadId($data);
+    $campaignLeads->setStatus("Rejected Across");
+    $campaignLeads->setTimestamp($timestampWrongFormat);
+    $campaignLeads->setResponseForwarding($response);
+    $entityManagerInterface->persist($campaignLeads);
+    $entityManagerInterface->flush();
 }
 function isEmailExist(string $emailUser, $leadRepository): bool
 {

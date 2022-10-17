@@ -14,7 +14,6 @@ use App\Repository\RuleGroupRepository;
 use App\Repository\SupplierRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
-use phpDocumentor\Reflection\DocBlock\Tags\Var_;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -90,44 +89,44 @@ function dataProcessing($data,
                     postDataAcross($data, $dataAcrossHeader);
                 }      
             }         
-            if ($client!="across") {
+            // if ($client!="across") {
             
-                foreach($CampaignRules as $rule){
-                    $lead=$campaignLeadsRepository->campaignLeadExistPerEmail($emailUser, $campaignId, $entityManagerInterface);
-                    if (!empty($lead)) {
+            //     foreach($CampaignRules as $rule){
+            //         $lead=$campaignLeadsRepository->campaignLeadExistPerEmail($emailUser, $campaignId, $entityManagerInterface);
+            //         if (!empty($lead)) {
                         
-                        $leadId=$lead[0]['id'];  
+            //             $leadId=$lead[0]['id'];  
                         
-                        $campaignLeads= $campaignLeadsRepository->campaignLeadExist($leadId, $campaignId, $entityManagerInterface);
-                    }
-                    $ruleFieldEntry=$rule->getField();
-                    $ruleValue=$rule->getValue();
-                    $ruleValueDate=$rule->getValueDate();
-                    $ruleOperator=$rule->getOperator();
-                    // select the right field on wich the value of the rule must be compared 
-                    $ruleFieldDeter=deterRuleField($ruleFieldEntry, $data);
-                    //if email is already in db then status is automaticly rejected
-                    // determine if the value is of type date or string
-                        if (isset($ruleValueDate)) {
-                    //function to select the right operator
-                            dateValueRules($ruleFieldDeter, $ruleOperator, 
-                            $ruleValueDate, $campaignRepository, $campaignId,
-                            $data, $entityManagerInterface, $forwarderRepository,
-                            $bodyForwarderRepository, $supplierRepository, $supplierId , $campaignLeads, $campaignLeadsRepository);
-                        }elseif(isset($ruleValue)){
-                            textValueRules($ruleFieldDeter, $ruleOperator, $ruleValue, 
-                            $campaignRepository, $campaignId, $data, $entityManagerInterface, 
-                            $forwarderRepository, $bodyForwarderRepository, 
-                            $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
-                        }else{
-                            addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface,
-                            $forwarderRepository, $bodyForwarderRepository, $supplierRepository, $supplierId);
-                        }
-                    }
-                    // if ($campaignLeads['status']=='Accepted') {
-                        forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepository,$campaignLeads, $entityManagerInterface);
-                    // }
-            }
+            //             $campaignLeads= $campaignLeadsRepository->campaignLeadExist($leadId, $campaignId, $entityManagerInterface);
+            //         }
+            //         $ruleFieldEntry=$rule->getField();
+            //         $ruleValue=$rule->getValue();
+            //         $ruleValueDate=$rule->getValueDate();
+            //         $ruleOperator=$rule->getOperator();
+            //         // select the right field on wich the value of the rule must be compared 
+            //         $ruleFieldDeter=deterRuleField($ruleFieldEntry, $data);
+            //         //if email is already in db then status is automaticly rejected
+            //         // determine if the value is of type date or string
+            //             if (isset($ruleValueDate)) {
+            //         //function to select the right operator
+            //                 dateValueRules($ruleFieldDeter, $ruleOperator, 
+            //                 $ruleValueDate, $campaignRepository, $campaignId,
+            //                 $data, $entityManagerInterface, $forwarderRepository,
+            //                 $bodyForwarderRepository, $supplierRepository, $supplierId , $campaignLeads, $campaignLeadsRepository);
+            //             }elseif(isset($ruleValue)){
+            //                 textValueRules($ruleFieldDeter, $ruleOperator, $ruleValue, 
+            //                 $campaignRepository, $campaignId, $data, $entityManagerInterface, 
+            //                 $forwarderRepository, $bodyForwarderRepository, 
+            //                 $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
+            //             }else{
+            //                 addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface,
+            //                 $forwarderRepository, $supplierRepository, $supplierId);
+            //             }
+            //         }
+            //         // if ($campaignLeads['status']=='Accepted') {
+            //             forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepository,$campaignLeads, $entityManagerInterface);
+            //         // }
+            // }
         }
     }
 function deterRuleField($ruleFieldEntry, $data){
@@ -169,7 +168,7 @@ function deterRuleField($ruleFieldEntry, $data){
     function addStatusRejected($campaignRepository, $campaignId, $data, 
     $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository){
         //create the new campaign and get the proper campaign and supllier via the ids in the data
-       
+        var_dump('testB');
         if (!empty($campaignLeads)) {
             $campaignLeadsExisting=$campaignLeadsRepository->find($campaignLeads['id']);
             $campaignLeadsExisting->setStatus("Rejected");
@@ -186,24 +185,27 @@ function deterRuleField($ruleFieldEntry, $data){
             $entityManagerInterface->flush();
         }
        
+       
     }
 
     //add the accepted status and forward the leads
 function addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId){
-    // if (!empty($campaignLeads)) {
-    // }else {
+    if (!empty($campaignLeads)) {
+    }else {
         var_dump('testA');
         $campaignLeads= New CampaignLeads;
         $fkCampaign=$campaignRepository->find($campaignId);
+        var_dump('testC');
         $fksupplier=$supplierRepository->find($supplierId);
+        
         $data->setSupplier($fksupplier);
         $campaignLeads->setCampaignId($fkCampaign);
         $campaignLeads->setLeadId($data);
         $campaignLeads->setStatus("Accepted");
         $entityManagerInterface->persist($campaignLeads);
         $entityManagerInterface->flush();
-    // }
-       
+    }
+    
        
     }
 
@@ -214,100 +216,104 @@ function forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepos
             $forwarderId=$forwarder->getId();
             $headerArray=[];
             $finalArray=[];
+            
             $bodyForwarders= $bodyForwarderRepository->findBy(['fkForwarder'=>$forwarderId]);
-
+            
+            if (!empty($bodyForwarders)) {
+                # code...
+           
             // foreach forwarder i get the data corresponding to the field registered in the forwarder
-            foreach ($bodyForwarders as $bodyForwarder) {
-                $bodyForwarderInput=$bodyForwarder->getInput();
-                $bodyForwarderOutput=$bodyForwarder->getOutpout();
-                $bodyForwarderType=$bodyForwarder->getType();
-                        if ($bodyForwarderType=='field') {
-                            switch ($bodyForwarderInput) {
-                                case 'email':
-                                    $finalArray[$bodyForwarderOutput]=$data->getEmail();
-                                    break;
-                                case 'firstname':
-                                    $finalArray[$bodyForwarderOutput]=$data->getFirstname();
-                                    break;
-                                case 'lastname':
-                                    $finalArray[$bodyForwarderOutput]=$data->getLastname();
-                                    break;
-                                case 'dob':
-                                    $finalArray[$bodyForwarderOutput]=$data->getDob();
-                                    break;
-                                case 'address_1':
-                                    $finalArray[$bodyForwarderOutput]=$data->geAddress1();
-                                    break;
-                                case 'address_2':
-                                    $finalArray[$bodyForwarderOutput]=$data->getAddress2();
-                                    break;
-                                case 'city':
-                                    $finalArray[$bodyForwarderOutput]=$data->getCity();
-                                    break;
-                                case 'zip':
-                                    $finalArray[$bodyForwarderOutput]=$data->getZip();
-                                    break;
-                                case 'url':
-                                    $finalArray[$bodyForwarderOutput]=$data->getUrl();
-                                    break;
-                                case 'job':
-                                        $finalArray[$bodyForwarderOutput]=$data->getJob();
-                                    break;
-                                case 'family':
-                                        $finalArray[$bodyForwarderOutput]=$data->getChildren();
-                                    break;
-                                case 'created_at':
-                                        $finalArray[$bodyForwarderOutput]=$data->getCreatedAt();
+                foreach ($bodyForwarders as $bodyForwarder) {
+                    $bodyForwarderInput=$bodyForwarder->getInput();
+                    $bodyForwarderOutput=$bodyForwarder->getOutpout();
+                    $bodyForwarderType=$bodyForwarder->getType();
+                            if ($bodyForwarderType=='field') {
+                                switch ($bodyForwarderInput) {
+                                    case 'email':
+                                        $finalArray[$bodyForwarderOutput]=$data->getEmail();
                                         break;
-                                case 'ip':
-                                        $finalArray[$bodyForwarderOutput]=$data->getIp();
+                                    case 'firstname':
+                                        $finalArray[$bodyForwarderOutput]=$data->getFirstname();
                                         break;
-                                case 'region':
-                                        $finalArray[$bodyForwarderOutput]=$data->getRegion();
+                                    case 'lastname':
+                                        $finalArray[$bodyForwarderOutput]=$data->getLastname();
                                         break;
-                                case 'sex':
-                                    $finalArray[$bodyForwarderOutput]=$data->getSex();
+                                    case 'dob':
+                                        $finalArray[$bodyForwarderOutput]=$data->getDob();
                                         break;
-                                case 'phone':
-                                    $finalArray[$bodyForwarderOutput]=$data->getPhone();
+                                    case 'address_1':
+                                        $finalArray[$bodyForwarderOutput]=$data->geAddress1();
                                         break;
-                                default:
-                                    break;
-                            }
-                    }
-                    if ($bodyForwarderType=="static") {
-                        $finalArray[$bodyForwarderInput]= $bodyForwarderOutput;
-                    }     
-                    if ($bodyForwarderType=="header") {
-                        $headerArray[$bodyForwarderInput]= $bodyForwarderOutput;
-                    }     
-            }
-            postData($finalArray,$headerArray, $url, $campaignLeads, $entityManagerInterface);
-        }  
+                                    case 'address_2':
+                                        $finalArray[$bodyForwarderOutput]=$data->getAddress2();
+                                        break;
+                                    case 'city':
+                                        $finalArray[$bodyForwarderOutput]=$data->getCity();
+                                        break;
+                                    case 'zip':
+                                        $finalArray[$bodyForwarderOutput]=$data->getZip();
+                                        break;
+                                    case 'url':
+                                        $finalArray[$bodyForwarderOutput]=$data->getUrl();
+                                        break;
+                                    case 'job':
+                                            $finalArray[$bodyForwarderOutput]=$data->getJob();
+                                        break;
+                                    case 'family':
+                                            $finalArray[$bodyForwarderOutput]=$data->getChildren();
+                                        break;
+                                    case 'created_at':
+                                            $finalArray[$bodyForwarderOutput]=$data->getCreatedAt();
+                                            break;
+                                    case 'ip':
+                                            $finalArray[$bodyForwarderOutput]=$data->getIp();
+                                            break;
+                                    case 'region':
+                                            $finalArray[$bodyForwarderOutput]=$data->getRegion();
+                                            break;
+                                    case 'sex':
+                                        $finalArray[$bodyForwarderOutput]=$data->getSex();
+                                            break;
+                                    case 'phone':
+                                        $finalArray[$bodyForwarderOutput]=$data->getPhone();
+                                            break;
+                                    default:
+                                        break;
+                                }
+                        }
+                        if ($bodyForwarderType=="static") {
+                            $finalArray[$bodyForwarderInput]= $bodyForwarderOutput;
+                        }     
+                        if ($bodyForwarderType=="header") {
+                            $headerArray[$bodyForwarderInput]= $bodyForwarderOutput;
+                        }     
+                }
+                postData($finalArray,$headerArray, $url, $campaignLeads, $entityManagerInterface);
+            }  
+        }
     }
 //switch for the different operators Date
 function dateValueRules($ruleFieldDeter, $ruleOperator, 
 $ruleValueDate, $campaignRepository, $campaignId, 
-$data, $entityManagerInterface, $forwarderRepository, 
-$bodyForwarderRepository, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository){
+$data, $entityManagerInterface, $forwarderRepository, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository){
     switch ($ruleOperator) {
         case '>':
             if ($ruleFieldDeter > $ruleValueDate) {
-                addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository, $supplierRepository, $supplierId);  
+                addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $supplierRepository, $supplierId);  
             }else {
                 addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
             }
             break;
         case '<':
             if ($ruleFieldDeter < $ruleValueDate) {
-                addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository, $supplierRepository, $supplierId);
+                addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $supplierRepository, $supplierId);
             }else {
                 addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
             }
             break;
         case '==':
             if ($ruleFieldDeter === $ruleValueDate) {
-                addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository, $supplierRepository, $supplierId); 
+                addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $supplierRepository, $supplierId); 
             }else {
                 addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
             }
@@ -321,25 +327,25 @@ $bodyForwarderRepository, $supplierRepository, $supplierId, $campaignLeads, $cam
 //switch for the different operators Text
 function textValueRules($ruleFieldDeter, $ruleOperator, $ruleValue, $campaignRepository, 
 $campaignId, $data, $entityManagerInterface, $forwarderRepository, 
-$bodyForwarderRepository,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository){
+$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository){
     switch ($ruleOperator) {
         case '>':
             if (strlen($ruleFieldDeter) > strlen($ruleValue)) {
-                addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId);
+                addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $supplierRepository, $supplierId);
             }else {
                 addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
             }
             break;
         case '<':
             if (strlen($ruleFieldDeter) < strlen($ruleValue)) {
-                addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId);
+                addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $supplierRepository, $supplierId);
             }else {
                 addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
             }
             break;
         case '==':
             if ($ruleFieldDeter === $ruleValue) {
-                addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId);  
+                addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $supplierRepository, $supplierId);  
             }else {
                 addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
             }
@@ -348,19 +354,19 @@ $bodyForwarderRepository,$supplierRepository, $supplierId, $campaignLeads, $camp
                 if ($ruleFieldDeter != $ruleValue) {
                     addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);            
                 }else {
-                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId); 
+                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $supplierRepository, $supplierId); 
                 }
                 break;
             case 'notempty':
                 if (!empty($ruleFieldDeter)) {
-                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId);
+                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $supplierRepository, $supplierId);
                 }else {
                     addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
                 }
                 break;
             case 'true':
                 if ($ruleFieldDeter==true) {
-                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId);
+                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $supplierRepository, $supplierId);
                     
                 }else {
                     addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
@@ -368,7 +374,7 @@ $bodyForwarderRepository,$supplierRepository, $supplierId, $campaignLeads, $camp
                 break;
             case 'false':
                 if ($ruleFieldDeter==false) {
-                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId);
+                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $supplierRepository, $supplierId);
                 }else {
                     
                     addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
@@ -376,7 +382,7 @@ $bodyForwarderRepository,$supplierRepository, $supplierId, $campaignLeads, $camp
                 break;
             case 'contains':
                     if (str_contains($ruleFieldDeter, $ruleValue)) {
-                        addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $bodyForwarderRepository,$supplierRepository, $supplierId);
+                        addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $supplierRepository, $supplierId);
                     }else {
                         
                         addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
@@ -406,6 +412,85 @@ function postData($finalArray,$headerArray, $url, $campaignLeads, $entityManager
 
 
 function postDataAcross( $data, $dataAcrossHeader,){
+    
+    $email=$data->getEmail();
+    $firstname=$data->getFirstname();
+    $lastname=$data->getLastname();
+    $phone=$data->getPhone();
+    $sex=$data->getSex();
+    $ip=$data->getIp();
+    $zip=$data->getZip();
+    $landing=$data->getUrl();
+    $dob=$data->getDob();
+    $dobFormat=date_format($dob,'d-m-Y');
+    $timestampWrongFormat=$data->getCreatedAt();
+    $timestamp=date_format($timestampWrongFormat, 'Y-m-d H:i:s');
+    $idProgramma=$dataAcrossHeader->getIdProgramma();
+    $url=$dataAcrossHeader->getUrl();
+    $token= $data->getParamInfo1();
+
+    $encoding = 'sha256';
+    $identifier = 'ZTN';
+    $secret = $dataAcrossHeader->getSecret();
+    $method = 'POST';
+    $uri = $dataAcrossHeader->getUri();
+
+    $bodyArr = [
+        "id_programma" => $idProgramma,
+        "nome" => $firstname,
+        "cognome" => $lastname,
+        "telefono" => $phone,
+        "ip" => $ip,
+        "email" => $email,
+        "sesso" => $sex,
+        "cap" => $zip,
+        "landing" => $landing,
+        "timestamp" =>  $timestamp,
+        "token" => "H4QtbzVrOH431fvU824",
+        "data_nascita"=> $dobFormat,
+        "eta"=> 36,
+    ];
+    
+   
+    $body=json_encode($bodyArr);
+    echo $body;
+    
+    $time = time();
+    $signature = $time . $method . $uri . md5(json_encode($bodyArr, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+    $digest = hash_hmac($encoding, $signature, $secret);
+    $auth = "Authorization: $identifier $time:$digest";
+
+    $header=[$auth,   'Accept: application/json', 'Content-Type: application/json'  ];
+    var_dump($auth);
+    $curl = curl_init();
+
+    curl_setopt_array($curl, array(
+      CURLOPT_URL => $url,
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_ENCODING => '',
+      CURLOPT_MAXREDIRS => 10,
+      CURLOPT_TIMEOUT => 0,
+      CURLOPT_FOLLOWLOCATION => true,
+      CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+      CURLOPT_CUSTOMREQUEST => 'POST',
+      CURLOPT_POSTFIELDS => $body,
+      CURLOPT_HTTPHEADER => $header,
+    ));
+    
+    $response = curl_exec($curl);
+    
+    curl_close($curl);
+    echo $response;
+    if (!str_contains($response, '"status":"OK"')) {
+        echo 'error';
+    }
+    if (str_contains($response, '"status":"OK"')) {
+        echo 'Ok bien jouer';
+    }
+    
+}
+
+function postDataAcross2( $data, $dataAcrossHeader,){
 
     $email=$data->getEmail();
     $firstname=$data->getFirstname();
@@ -430,18 +515,19 @@ function postDataAcross( $data, $dataAcrossHeader,){
     $method = 'POST';
     $uri = $dataAcrossHeader->getUri();
     $body = [
-        "id_programma" => $idProgramma,
-        "nome" => $firstname,
-        "cognome" => $lastname,
-        "telefono" => $phone,
-        "ip" => $ip,
-        "email" => $email,
-        "sesso" => $sex,
-        "cap" => $zip,
-        "landing" => $landing,
-        "timestamp" => $timestamp,
-        "token" => $token,
-        "data_nascita"=>$dobFormat,
+        "id_programma" => "7940",
+        "nome" => "franka",
+        "cognome" => "Pera",
+        "telefono" => "3935152635",
+        "ip" => "104.28.106.99",
+        "email" => "stellagio@libero.it",
+        "sesso" => "f",
+        "cap" => "06127",
+        "landing" => "https://officinapremi.com",
+        "timestamp" => "2022-10-14 16:34:56",
+        "token" => "H4QtbzVrOH431fvU824",
+        "data_nascita"=> "08-08-1986",
+        "eta"=> 36,
     ];
 
         $time = time();
@@ -452,8 +538,12 @@ function postDataAcross( $data, $dataAcrossHeader,){
         var_dump($request);
         $client= HttpClient::create();
         $response=$client->request('POST', $url, [
+            'on_progress' => function (int $dlNow, int $dlSize, array $info): void {
+                // $dlNow is the number of bytes downloaded so far
+                // $dlSize is the total size to be downloaded or -1 if it is unknown
+            },
             'headers'=> [
-                'Authorization'=>$auth,
+                'Authorization'=> $auth,
                 'Accept'=>'application/json',
                 'Content-Type'=> 'application/json'
             ],   

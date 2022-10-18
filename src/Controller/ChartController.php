@@ -35,7 +35,6 @@ class ChartController extends AbstractController
                 ],
             ],
         ]);
-
         $chart->setOptions([
             'scales' => [
                 'y' => [

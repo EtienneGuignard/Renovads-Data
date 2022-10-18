@@ -19,7 +19,6 @@ class ChartController extends AbstractController
     EntityManagerInterface $entityManagerInterface
     ): Response
     {
-
         $timeArr=hoursRange();
         // var_dump($timeArr);
         echo $timeArr['01:00'];
@@ -56,9 +55,6 @@ class ChartController extends AbstractController
         return $this->render('chart/testChart.html.twig', []);
     }
 }
-
-
-
 function hoursRange( $lower = 0, $upper = 86400, $step = 3600, $format = '' ) {
     $times = array();
 

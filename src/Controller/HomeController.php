@@ -21,15 +21,11 @@ class HomeController extends AbstractController
   
         if($this->isGranted('ROLE_ADMIN')){
             return $this->redirectToRoute('admin');
-        }
-        
+        }    
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
         // last username entered by the user
         $lastUsername = $authenticationUtils->getLastUsername();
-
-       
-
         return $this->render('home/index.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
@@ -64,9 +60,7 @@ class HomeController extends AbstractController
             $dates=$date."%";
             $leadPerdayArr=count($leadsRepository->selectLeadperday($dates, $campaignId, $supplierId, $status, $entityManagerInterface));
             $leadPerday[]=$leadPerdayArr;
-
         }
-
         $chart=chartSearchAffiliates($datesArr, $leadPerday, $chartBuilder);
        $resultsGlobal=$leadsRepository->selectLeadReportGlobal($startDate, $endDate, $campaignId, $supplierId, $status, $entityManagerInterface);
        $results=$leadsRepository->selectLeadReport($startDate, $endDate, $campaignId, $supplierId, $status, $entityManagerInterface);

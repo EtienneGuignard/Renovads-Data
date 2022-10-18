@@ -116,6 +116,9 @@ class Leads
     #[ORM\Column(length: 45, nullable: true)]
     private ?string $sex = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $age = null;
+
     public function __construct()
     {
         $this->campaigns = new ArrayCollection();
@@ -443,6 +446,18 @@ class Leads
     public function setSex(?string $sex): self
     {
         $this->sex = $sex;
+
+        return $this;
+    }
+
+    public function getAge(): ?int
+    {
+        return $this->age;
+    }
+
+    public function setAge(?int $age): self
+    {
+        $this->age = $age;
 
         return $this;
     }

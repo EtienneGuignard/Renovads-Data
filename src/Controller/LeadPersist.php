@@ -175,11 +175,13 @@ function deterRuleField($ruleFieldEntry, $data){
             $entityManagerInterface->flush();
         }else {
             $campaignLeads= New CampaignLeads;
+            $timestampWrongFormat=$data->getCreatedAt();
             $fksupplier=$supplierRepository->find($supplierId);
             $fkCampaign=$campaignRepository->find($campaignId);
             $data->setSupplier($fksupplier);
             $campaignLeads->setCampaignId($fkCampaign);
             $campaignLeads->setLeadId($data);
+            $campaignLeads->setTimestamp($timestampWrongFormat);
             $campaignLeads->setStatus("Rejected");
             $entityManagerInterface->persist($campaignLeads);
             $entityManagerInterface->flush();
@@ -452,14 +454,15 @@ function postDataAcrossDating( $data, $dataAcrossHeader, $campaignId, $supplierI
     ];
     
     $body=json_encode($bodyArr);
-    echo $body;
+    
     $time = time();
     $signature = $time . $method . $uri . md5(json_encode($bodyArr, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     $digest = hash_hmac($encoding, $signature, $secret);
     $auth = "Authorization: $identifier $time:$digest";
 
     $header=[$auth,   'Accept: application/json', 'Content-Type: application/json'  ];
-    var_dump($auth);
+ 
+
     $curl = curl_init();
 
     curl_setopt_array($curl, array(
@@ -476,17 +479,20 @@ function postDataAcrossDating( $data, $dataAcrossHeader, $campaignId, $supplierI
     ));
     
     $response = curl_exec($curl);
-    
     curl_close($curl);
-    echo $response;
+   
+    // var_dump($responseArr);
+
     if (!str_contains($response, '"status":"OK"')) {
-        echo 'error';
-        setCampaignleadAccepted($data, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface,$timestampWrongFormat, $response);
-    }
-    if (str_contains($response, '"status":"OK"')) {
+        // echo 'error';
         setCampaignleadRejectedAcross($data, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface, $timestampWrongFormat, $response);
     }
-    
+    if (str_contains($response, '"status":"OK"')) {
+        echo 'OK';
+        setCampaignleadAccepted($data, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface,$timestampWrongFormat, $response);
+    }  
+    var_dump($responseArr=json_decode($response));
+
 }
 function setCampaignleadAccepted($data, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface, $timestampWrongFormat, $response){
     $campaignLeads= New CampaignLeads;

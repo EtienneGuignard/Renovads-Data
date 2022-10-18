@@ -25,7 +25,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-     /**
+    /**
      * @Assert\NotBlank
      * @Assert\Email(
      *     message = "The email '{{ value }}' is not an email address"

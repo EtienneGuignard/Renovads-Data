@@ -78,7 +78,6 @@ function dataProcessing($data,
         $campaigns=$campaignRepository->findAll();
         //getting all the rules for all the campaigns
         foreach($campaigns as $campaign){
-
             $CampaignRules=$campaign->getRuleGroups();
             $campaignId=$campaign->getId();   
             $client=$campaign->getClient();
@@ -359,7 +358,7 @@ $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository){
                     addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $supplierRepository, $supplierId); 
                 }
                 break;
-            case 'notempty':
+            case 'notem':
                 if (!empty($ruleFieldDeter)) {
                     addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $supplierRepository, $supplierId);
                 }else {
@@ -382,7 +381,7 @@ $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository){
                     addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
                 }
                 break;
-            case 'contains':
+            case 'conta':
                     if (str_contains($ruleFieldDeter, $ruleValue)) {
                         addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $forwarderRepository, $supplierRepository, $supplierId);
                     }else {

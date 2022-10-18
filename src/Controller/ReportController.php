@@ -28,8 +28,7 @@ class ReportController extends AbstractDashboardController
 {
     #[Route('/report', name: 'app_report')]
     public function report(CampaignRepository $campaignRepository, SupplierRepository $supplierRepository, Request $request): Response
-    {
-        
+    {  
         $campaigns=$campaignRepository->findAll();
         $suppliers=$supplierRepository->findAll();
 
@@ -43,9 +42,6 @@ class ReportController extends AbstractDashboardController
     #[Route('/reportAffiliate', name: 'app_report_affiliate')]
     public function reportAffiliate(CampaignRepository $campaignRepository, SupplierRepository $supplierRepository, Request $request): Response
     {
-        
-       
-
         return $this->render('report/form.html.twig', [
         
         ]);
@@ -57,19 +53,17 @@ class ReportController extends AbstractDashboardController
      ChartBuilderInterface $chartBuilder, 
      CampaignRepository $campaignRepository, SupplierRepository $supplierRepository,
      ): Response
-    {
-        
+    {  
         $campaigns=$campaignRepository->findAll();
         $suppliers=$supplierRepository->findAll();
        
        if (isset($_POST['search'])) {
-
             $startDate=$_POST['startDate'];
             $endDate=$_POST['endDate'];
             $campaignId=null;
             $supplierId=null;
             $status=null;
-        
+            
         if (isset($_POST['campaign'])) {
             
             $campaignId=$_POST['campaign'];

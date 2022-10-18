@@ -55,7 +55,6 @@ class ForwarderController extends AbstractDashboardController
             $entityManagerInterface->flush();
             return $this->redirect($url);
         }
-
         return $this->render('forwarder/index.html.twig', [
             'controller_name' => 'ForwarderController',
             'form'=> $form->createView(),

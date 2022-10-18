@@ -53,15 +53,14 @@ class RuleGroupCrudController extends AbstractCrudController
                 'Equal(==)' => '==',
                 'Greater than(>, strlenght for txt)' => '>',
                 'Lesser than (<, strlenght for txt)' => '<',
-                'Contains(only str)' => 'contains',
+                'Contains' => 'conta',
                 'Different(!=)' => '!=',
-                'Not empty' => 'notempty',
+                'Not empty' => 'notem',
                 'True' => 'true',
                 'False' => 'false',
-                'city' => 'city',
             ]),
             TextField::new('value'),
-            DateTimeField::new('Valuedate'),
+            DateTimeField::new('valueDate'),
             TextareaField::new('description'),
         ];
     }

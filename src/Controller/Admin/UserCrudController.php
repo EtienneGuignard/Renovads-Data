@@ -1,10 +1,7 @@
 <?php
 
 namespace App\Controller\Admin;
-
-use App\Entity\Supplier;
 use App\Entity\User;
-use App\Form\SupplierType;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -12,11 +9,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class UserCrudController extends AbstractCrudController
 {
@@ -38,7 +31,7 @@ class UserCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         return [
-           
+        
             TextField::new('email'),
             TextField::new('firstname'),
             TextField::new('lastname'),
@@ -53,8 +46,6 @@ class UserCrudController extends AbstractCrudController
             TextField::new('city'),
             BooleanField::new('isVerified'),
             ArrayField::new('roles')
-           
-           
             
         ];
     }

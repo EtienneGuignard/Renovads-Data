@@ -34,7 +34,6 @@ use Symfony\UX\Chartjs\Model\Chart;
 
 class DashboardController extends AbstractDashboardController
 {
-  
     public function __construct(
         private AdminUrlGenerator $adminUrlGenerator,
         private ChartBuilderInterface $chartBuilder,
@@ -50,20 +49,13 @@ class DashboardController extends AbstractDashboardController
 
             $leads=$this->leadsRepository->selectLeadDasboard($this->entityManagerInterface);
             $campaigns=$this->campaignRepository->findAll();
-            
-       
+
         return $this->render('admin/index.html.twig', [
             'chart' => $this->chart(),
             'Leads' =>$leads,
             'campaigns'=>$campaigns,
         ]);
-
     }
-
-
-   
-
-
     private function chart(): Chart
     {
         $timeArr=hoursRange();

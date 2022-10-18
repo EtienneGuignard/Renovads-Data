@@ -41,7 +41,7 @@ class ApiTokenAuthenticator extends AbstractAuthenticator
                 $user=$this->userRepository->findByApiToken($apiToken);
                 
                 if (!$user) {
-                   throw new UserNotFoundException();
+                throw new UserNotFoundException();
                 }
 
                 return $user;

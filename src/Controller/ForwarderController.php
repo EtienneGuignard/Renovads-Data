@@ -107,6 +107,7 @@ class ForwarderController extends AbstractDashboardController
             $url.= $_SERVER['REQUEST_URI'];  
         }  
         $i=0;
+        
         $bodyArr=[];
         if (isset($_POST['submit'] )) {
             //récupération des données du forwarder et de son body et insertion du paramètre de test dans bodyARR en fonction du type 
@@ -121,6 +122,9 @@ class ForwarderController extends AbstractDashboardController
                 $bodyArr[$output]=$_POST[$i];
             }
             if ($type=='static') {
+                $bodyArr[$input]=$_POST[$i];
+            }
+            if ($type=='header') {
                 $bodyArr[$input]=$_POST[$i];
             }
         };

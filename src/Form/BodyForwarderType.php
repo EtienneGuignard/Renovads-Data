@@ -20,9 +20,9 @@ class BodyForwarderType extends AbstractType
 
                 'attr' => ['class' => 'form-control'],
                 'placeholder' => 'choose Type',
-                'choices' => [
-                    
+                'choices' => [ 
                     'Static' => 'static',
+                    'Data Across' => 'across',
                     'Header' => 'header',
                     'Field' => 'field',
                 ]

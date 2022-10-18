@@ -28,6 +28,9 @@ class CampaignLeads
     #[ORM\Column(type: 'string', length: 2000, nullable: true)]
     private $responseForwarding;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $timestamp = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -69,14 +72,26 @@ class CampaignLeads
         return $this;
     }
 
-    public function getResponseForwarding(): array
+    public function getResponseForwarding(): ?string
     {
         return $this->responseForwarding;
     }
 
-    public function setResponseForwarding(?array $responseForwarding): self
+    public function setResponseForwarding(string $responseForwarding): self
     {
         $this->responseForwarding = $responseForwarding;
+
+        return $this;
+    }
+
+    public function getTimestamp(): ?\DateTimeInterface
+    {
+        return $this->timestamp;
+    }
+
+    public function setTimestamp(?\DateTimeInterface $timestamp): self
+    {
+        $this->timestamp = $timestamp;
 
         return $this;
     }

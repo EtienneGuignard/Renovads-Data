@@ -14,6 +14,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\NumberField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 
 class LeadsCrudController extends AbstractCrudController
@@ -48,6 +49,7 @@ class LeadsCrudController extends AbstractCrudController
             TextField::new('zip'),
             TextField::new('job')->hideOnIndex(),
             TextField::new('children')->hideOnIndex(),
+            NumberField::new('age')->hideOnIndex(),
             TextField::new('privacy_policy')->onlyOnDetail(),
             BooleanField::new('confirm_privacy')->onlyOnDetail(),
             BooleanField::new('confirm_partners'),
@@ -56,6 +58,7 @@ class LeadsCrudController extends AbstractCrudController
             DateTimeField::new('last_updated')->onlyOnDetail(),
             TextField::new('paramInfo1')->hideOnIndex(),
             TextField::new('paramInfo2')->hideOnIndex(),
+           
             
         ];
     }

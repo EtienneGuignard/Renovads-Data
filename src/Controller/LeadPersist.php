@@ -21,7 +21,6 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 
 #[AsController]
 class LeadPersist extends AbstractController
-
 { 
     public function __construct(
         private ManagerRegistry $managerRegistry,
@@ -168,7 +167,7 @@ function deterRuleField($ruleFieldEntry, $data){
     }
  //add status rejected
     function addStatusRejected($campaignRepository, $campaignId, $data, 
-    $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository){
+    $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads){
         //create the new campaign and get the proper campaign and supllier via the ids in the data      
         if (!empty($campaignLeads)) {
             $campaignLeads->setStatus("Rejected");
@@ -193,7 +192,7 @@ function deterRuleField($ruleFieldEntry, $data){
     }
 
     //add the accepted status and forward the leads
-function addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId,  $campaignLeads, $campaignLeadsRepository){
+function addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId,  $campaignLeads){
   
 
     if (!empty($campaignLeads)) {
@@ -337,65 +336,65 @@ $data, $entityManagerInterface, $supplierRepository, $supplierId , $campaignLead
 //switch for the different operators Text
 function textValueRules($ruleFieldDeter, $ruleOperator, $ruleValue, $campaignRepository, 
 $campaignId, $data, $entityManagerInterface, 
-$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository){
+$supplierRepository, $supplierId, $campaignLeads){
     switch ($ruleOperator) {
         case '>':
             if (strlen($ruleFieldDeter) > strlen($ruleValue)) {
-                addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
+                addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads);
             }else {
-                addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
+                addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads);
             }
             break;
         case '<':
             if (strlen($ruleFieldDeter) < strlen($ruleValue)) {
-                addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
+                addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads);
             }else {
-                addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
+                addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads);
             }
             break;
         case '==':
             if ($ruleFieldDeter === $ruleValue) {
-                addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository );  
+                addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads);  
             }else {
-                addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
+                addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads);
             }
             break;
             case '!=':
                 if ($ruleFieldDeter != $ruleValue) {
-                    addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);            
+                    addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads);            
                 }else {
-                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository );
+                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads);
                 }
                 break;
             case 'notem':
                 if (!empty($ruleFieldDeter)) {
-                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository );
+                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads);
                 }else {
-                    addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
+                    addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads);
                 }
                 break;
             case 'true':
                 if ($ruleFieldDeter==true) {
-                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository );
+                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads);
                     
                 }else {
-                    addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
+                    addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads);
                 }
                 break;
             case 'false':
                 if ($ruleFieldDeter==false) {
-                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository );
+                    addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads);
                 }else {
                     
-                    addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
+                    addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads);
                 }
                 break;
             case 'conta':
                     if (str_contains($ruleFieldDeter, $ruleValue)) {
-                        addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository );
+                        addStatusAccepted($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId, $campaignLeads);
                     }else {
                         
-                        addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
+                        addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface,$supplierRepository, $supplierId, $campaignLeads);
                     }
                     break;
         default:

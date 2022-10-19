@@ -80,10 +80,10 @@ function dataProcessing($data,
         var_dump('get campaign');
         //getting all the rules for all the campaigns
         foreach($campaigns as $campaign){
+            var_dump('first loop');
             $CampaignRules=$campaign->getRuleGroups();
             $campaignId=$campaign->getId();   
             $client=$campaign->getClient();
-            var_dump('first loop');
             if ($client=="across") {
                 $dataAcrossHeader=$dataAcrossHeaderRepository->findOneBy(['campaignId' => $campaignId]);
                 if ($dataAcrossHeader) {

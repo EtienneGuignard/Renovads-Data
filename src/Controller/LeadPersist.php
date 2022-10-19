@@ -212,6 +212,7 @@ function addStatusAccepted($campaignRepository, $campaignId, $data, $entityManag
         $campaignLeads->setStatus("Accepted");
         $entityManagerInterface->persist($campaignLeads);
         $entityManagerInterface->flush();
+        var_dump('fin New lead');
     } 
       
     }

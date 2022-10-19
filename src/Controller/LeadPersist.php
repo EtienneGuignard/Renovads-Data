@@ -76,7 +76,6 @@ function dataProcessing($data,
             exit;
         };
         $campaigns=$campaignRepository->findAll();
-        var_dump('get campaign');
         //getting all the rules for all the campaigns
         foreach($campaigns as $campaign){
             var_dump('first loop');
@@ -95,8 +94,7 @@ function dataProcessing($data,
                     if (!empty($lead)) {  
                         $leadId=$lead[0]['id']; 
                         $campaignLeads= $campaignLeadsRepository->find($leadId); 
-                        var_dump('no across');
-         
+
                     }
                     $ruleFieldEntry=$rule->getField();
                     $ruleValue=$rule->getValue();
@@ -108,7 +106,6 @@ function dataProcessing($data,
                     // determine if the value is of type date or string
                         if (isset($ruleValueDate)) {
                     //function to select the right operator
-                    var_dump($supplierId);
                             dateValueRules($ruleFieldDeter, $ruleOperator, 
                             $ruleValueDate, $campaignRepository, $campaignId,
                             $data, $entityManagerInterface, $supplierRepository, $supplierId , $campaignLeads, $campaignLeadsRepository);
@@ -121,8 +118,10 @@ function dataProcessing($data,
                             $forwarderRepository, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
                         }
                     }
-                    // $leadId=$lead[0]['id'];
-                    // $campaignLeads= $campaignLeadsRepository->campaignLeadExist($leadId, $campaignId, $entityManagerInterface);
+                    $lead=$campaignLeadsRepository->campaignLeadExistPerEmail($emailUser, $campaignId, $entityManagerInterface);
+                    $leadId=$lead[0]['id'];
+                    $campaignLeads= $campaignLeadsRepository->find($leadId);
+                 
                     if ($campaignLeads->getStatus()=='Accepted') {
                         forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepository,$campaignLeads, $entityManagerInterface);
                     }
@@ -489,12 +488,11 @@ function postDataAcrossDating( $data, $dataAcrossHeader, $campaignId, $supplierI
     curl_close($curl);
 
     if (!str_contains($response, '"status":"OK"')) {
-        echo 'error <br>';
-        echo $response . '<br>';
+       
+        echo $response;
         setCampaignleadRejectedAcross($data, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface, $timestampWrongFormat, $response);
     }
     if (str_contains($response, '"status":"OK"')) {
-        echo 'OK';
        echo $response;
         setCampaignleadAccepted($data, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface,$timestampWrongFormat, $response);
     } 

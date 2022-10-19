@@ -77,11 +77,13 @@ function dataProcessing($data,
             exit;
         };
         $campaigns=$campaignRepository->findAll();
+        var_dump('get campaign');
         //getting all the rules for all the campaigns
         foreach($campaigns as $campaign){
             $CampaignRules=$campaign->getRuleGroups();
             $campaignId=$campaign->getId();   
             $client=$campaign->getClient();
+            var_dump('first loop');
             if ($client=="across") {
                 $dataAcrossHeader=$dataAcrossHeaderRepository->findOneBy(['campaignId' => $campaignId]);
                 if ($dataAcrossHeader) {
@@ -89,12 +91,12 @@ function dataProcessing($data,
                 }      
             }         
             if ($client!="across") {
-            
                 foreach($CampaignRules as $rule){
                     $lead=$campaignLeadsRepository->campaignLeadExistPerEmail($emailUser, $campaignId, $entityManagerInterface);
                     if (!empty($lead)) {  
                         $leadId=$lead[0]['id']; 
                         $campaignLeads= $campaignLeadsRepository->find($leadId); 
+                        var_dump('no across');
          
                     }
                     $ruleFieldEntry=$rule->getField();

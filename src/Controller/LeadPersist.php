@@ -66,7 +66,6 @@ function dataProcessing($data,
     {
         //sid indentical for all the campaign 
         $supplierId=$data->getSid();
-        var_dump($supplierId);
         $emailUser= $data->getEmail();
        
         $campaignLeads='';
@@ -78,7 +77,7 @@ function dataProcessing($data,
         $campaigns=$campaignRepository->findAll();
         //getting all the rules for all the campaigns
         foreach($campaigns as $campaign){
-            var_dump('first loop');
+
             $CampaignRules=$campaign->getRuleGroups();
             $campaignId=$campaign->getId();   
             $client=$campaign->getClient();
@@ -173,7 +172,6 @@ function deterRuleField($ruleFieldEntry, $data){
             $campaignLeads->setTimestamp($data->getCreatedAt());
             $entityManagerInterface->flush();
         }else {
-            var_dump($campaignLeads);
             $campaignLeads= New CampaignLeads;
             $timestampWrongFormat=$data->getCreatedAt();
             $fksupplier=$supplierRepository->find($supplierId);
@@ -199,7 +197,6 @@ function addStatusAccepted($campaignRepository, $campaignId, $data, $entityManag
             $campaignLeads->setTimestamp($data->getCreatedAt());
             $entityManagerInterface->flush();
     }else {
-        var_dump('New lead');
         $campaignLeads= New CampaignLeads;
         $fkCampaign=$campaignRepository->find($campaignId);
         $fksupplier=$supplierRepository->find($supplierId);
@@ -210,7 +207,6 @@ function addStatusAccepted($campaignRepository, $campaignId, $data, $entityManag
         $campaignLeads->setStatus("Accepted");
         $entityManagerInterface->persist($campaignLeads);
         $entityManagerInterface->flush();
-        var_dump('fin New lead');
     } 
       
     }
@@ -489,11 +485,11 @@ function postDataAcrossDating( $data, $dataAcrossHeader, $campaignId, $supplierI
 
     if (!str_contains($response, '"status":"OK"')) {
        
-        echo $response;
+        echo $response . "\r\n";
         setCampaignleadRejectedAcross($data, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface, $timestampWrongFormat, $response);
     }
     if (str_contains($response, '"status":"OK"')) {
-       echo $response;
+       echo $response . "\r\n";
         setCampaignleadAccepted($data, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface,$timestampWrongFormat, $response);
     } 
 

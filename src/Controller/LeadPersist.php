@@ -121,8 +121,10 @@ function dataProcessing($data,
                             $forwarderRepository, $supplierRepository, $supplierId, $campaignLeads, $campaignLeadsRepository);
                         }
                     }
-                    // $leadId=$lead[0]['id'];
-                    // $campaignLeads= $campaignLeadsRepository->campaignLeadExist($leadId, $campaignId, $entityManagerInterface);
+                    $lead=$campaignLeadsRepository->campaignLeadExistPerEmail($emailUser, $campaignId, $entityManagerInterface);
+                    $leadId=$lead[0]['id'];
+                    $campaignLeads= $campaignLeadsRepository->find($leadId);
+                 
                     if ($campaignLeads->getStatus()=='Accepted') {
                         forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepository,$campaignLeads, $entityManagerInterface);
                     }

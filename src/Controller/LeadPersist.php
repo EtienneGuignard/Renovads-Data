@@ -479,7 +479,14 @@ function postDataAcrossDating( $data, $dataAcrossHeader, $campaignId, $supplierI
       CURLOPT_POSTFIELDS => $body,
       CURLOPT_HTTPHEADER => $header,
     ));
-    var_dump($curl);
+    echo $method . ' ' . $uri . 'HTTP/1.1' . "\r\n";
+    echo "host: $url \r\n";
+    echo "$header[0] \r\n";
+    echo "$header[1] \r\n";
+    echo "$header[1] \r\n";
+    echo "$body \r\n";
+
+  
     $response = curl_exec($curl);
     curl_close($curl);
 

@@ -479,7 +479,7 @@ function postDataAcrossDating( $data, $dataAcrossHeader, $campaignId, $supplierI
       CURLOPT_POSTFIELDS => $body,
       CURLOPT_HTTPHEADER => $header,
     ));
-    
+    var_dump($curl);
     $response = curl_exec($curl);
     curl_close($curl);
 

@@ -58,6 +58,7 @@ class LeadsCrudController extends AbstractCrudController
             DateTimeField::new('last_updated')->onlyOnDetail(),
             TextField::new('paramInfo1')->hideOnIndex(),
             TextField::new('paramInfo2')->hideOnIndex(),
+            NumberField::new('cid'),
            
             
         ];

@@ -5,7 +5,6 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\LeadsRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Controller\LeadPersist;
@@ -118,6 +117,9 @@ class Leads
 
     #[ORM\Column(nullable: true)]
     private ?int $age = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $cid = null;
 
     public function __construct()
     {
@@ -458,6 +460,18 @@ class Leads
     public function setAge(?int $age): self
     {
         $this->age = $age;
+
+        return $this;
+    }
+
+    public function getCid(): ?int
+    {
+        return $this->cid;
+    }
+
+    public function setCid(?int $cid): self
+    {
+        $this->cid = $cid;
 
         return $this;
     }

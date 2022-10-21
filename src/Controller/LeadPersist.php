@@ -74,14 +74,27 @@ function dataProcessing($data,
             addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId , $campaignLeads, $campaignLeadsRepository);
             exit;
         };
-        $campaigns=$campaignRepository->findAll();
+        $cidDB=$data->getCid();
+      
+        if (!empty($cidDB)) {
+            $campaignId=$cidDB;
+            $campaigns=[$campaignRepository->find($campaignId)];
+            
+        }else{
+            $campaigns=$campaignRepository->findAll();
+        }
+   
         //getting all the rules for all the campaigns
+        
         foreach($campaigns as $campaign){
 
+            
             $CampaignRules=$campaign->getRuleGroups();
-            $campaignId=$campaign->getId();   
+            $campaignId=$campaign->getId();  
             $client=$campaign->getClient();
+
             if ($client=="across") {
+                
                 $dataAcrossHeader=$dataAcrossHeaderRepository->findOneBy(['campaignId' => $campaignId]);
                 if ($dataAcrossHeader) {
                     postDataAcrossDating($data, $dataAcrossHeader, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface);
@@ -483,7 +496,7 @@ function postDataAcrossDating( $data, $dataAcrossHeader, $campaignId, $supplierI
     echo "host: $url \r\n";
     echo "$header[0] \r\n";
     echo "$header[1] \r\n";
-    echo "$header[1] \r\n";
+    echo "$header[2] \r\n";
     echo "$body \r\n";
 
   

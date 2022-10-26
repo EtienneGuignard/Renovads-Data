@@ -49,7 +49,7 @@ class Leads
     #[ORM\Column(type: 'date', nullable: true)]
     private $dob;
 
-    #[ORM\OneToMany(mappedBy: 'leadId', targetEntity: CampaignLeads::class, cascade: ['persist'])]
+    #[ORM\OneToMany(mappedBy: 'leadId', targetEntity: CampaignLeads::class, cascade: ['remove'])]
     private $fkCampaigns;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
@@ -88,7 +88,7 @@ class Leads
     #[ORM\Column(type: 'datetime', nullable: true)]
     private $lastUpdated;
 
-    #[ORM\ManyToOne(inversedBy: 'fk_leadId')]
+    #[ORM\ManyToOne(inversedBy: 'fk_leadId', cascade: ['persist'])]
     private ?Supplier $supplier = null;
 
     #[ORM\Column(length: 255)]

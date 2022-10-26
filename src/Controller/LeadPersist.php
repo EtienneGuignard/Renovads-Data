@@ -142,7 +142,7 @@ function dataProcessing($data,
     }
 
 function deterRuleField($ruleFieldEntry, $data){
-
+    
     switch ($ruleFieldEntry) {
         case 'dob':
             $ruleField=$data->getDob();

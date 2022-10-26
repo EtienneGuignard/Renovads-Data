@@ -136,10 +136,10 @@ class ReportController extends AbstractDashboardController
         
         $datas=$leadsRepository->selectLeadCsvExport($startDate, $endDate, $campaignId, $supplierId, $status, $entityManagerInterface);
         
-        $rows = array('id,created_at,url,company,sid,status,firstname,lastname,dob,address_1,zip,job,chidlren,confirm' );
+        $rows = array('id,created_at,url,company,sid,cid,status,ip,firstname,lastname,dob,sex,phone,address_1,zip,region,job,chidlren,confirm' );
         foreach ($datas as $data) {
-            $data = [$data['lead_id_id'], $data['created_at'],$data['url'],$data['reference'],$data['sid'], $data['status'],
-            $data['firstname'], $data['lastname'], $data['dob'], $data['address_1'], $data['zip'],
+            $data = [$data['lead_id_id'], $data['created_at'],$data['url'],$data['reference'],$data['sid'],$data['cid'],$data['ip'], $data['status'],
+            $data['firstname'], $data['lastname'], $data['dob'], $data['sex'], $data['phone'],$data['address_1'], $data['zip'],$data['regione'],
              $data['job'], $data['children'], $data['confirm_partners'],] ;
 
     

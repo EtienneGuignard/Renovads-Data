@@ -46,6 +46,7 @@ class ForwarderCrudController extends AbstractCrudController
         return [
             TextField::new('name'),
             TextField::new('url'),
+            TextField::new('method'),
             AssociationField::new('fkCampaign')
         ];
     }

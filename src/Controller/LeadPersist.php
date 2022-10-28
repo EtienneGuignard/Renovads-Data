@@ -228,7 +228,6 @@ function addStatusAccepted($campaignRepository, $campaignId, $data, $entityManag
 function forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepository, $client,
 $dataAcrossHeader, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface){
 
-    var_dump($campaignId);
         $forwarders=$forwarderRepository->findBy(['fkCampaign' =>$campaignId]);
         foreach($forwarders as $forwarder){
 

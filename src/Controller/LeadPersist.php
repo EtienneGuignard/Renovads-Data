@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Campaign;
 use App\Entity\CampaignLeads;
 use App\Entity\Leads;
 use App\Repository\BodyForwarderRepository;
@@ -97,7 +98,7 @@ function dataProcessing($data,
                 
                 $dataAcrossHeader=$dataAcrossHeaderRepository->findOneBy(['campaignId' => $campaignId]);
                 if ($dataAcrossHeader) {
-                    postDataAcrossDating($data, $dataAcrossHeader, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface);
+                    forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepository, $client, $dataAcrossHeader, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface);
                 }      
             }         
             if ($client!="across") {
@@ -135,7 +136,7 @@ function dataProcessing($data,
                     $campaignLeads= $campaignLeadsRepository->find($leadId);
                  
                     if ($campaignLeads->getStatus()=='Accepted') {
-                        forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepository,$campaignLeads, $entityManagerInterface);
+                        forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepository,$campaignLeads, $entityManagerInterface,$client, $dataAcrossHeader, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface);
                     }
             }
         }
@@ -224,10 +225,13 @@ function addStatusAccepted($campaignRepository, $campaignId, $data, $entityManag
       
     }
 
-function forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepository,$campaignLeads,$entityManagerInterface){
+function forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepository, $client,
+$dataAcrossHeader, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface){
+
+    var_dump($campaignId);
         $forwarders=$forwarderRepository->findBy(['fkCampaign' =>$campaignId]);
         foreach($forwarders as $forwarder){
-            $url=$forwarder->getUrl();
+
             $forwarderId=$forwarder->getId();
             $headerArray=[];
             $finalArray=[];
@@ -235,7 +239,6 @@ function forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepos
             $bodyForwarders= $bodyForwarderRepository->findBy(['fkForwarder'=>$forwarderId]);
             
             if (!empty($bodyForwarders)) {
-                # code...
            
             // foreach forwarder i get the data corresponding to the field registered in the forwarder
                 foreach ($bodyForwarders as $bodyForwarder) {
@@ -254,7 +257,7 @@ function forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepos
                                         $finalArray[$bodyForwarderOutput]=$data->getLastname();
                                         break;
                                     case 'dob':
-                                        $finalArray[$bodyForwarderOutput]=$data->getDob();
+                                        $finalArray[$bodyForwarderOutput]=date_format($data->getDob(), 'Y-m-d');
                                         break;
                                     case 'address_1':
                                         $finalArray[$bodyForwarderOutput]=$data->geAddress1();
@@ -278,7 +281,7 @@ function forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepos
                                             $finalArray[$bodyForwarderOutput]=$data->getChildren();
                                         break;
                                     case 'created_at':
-                                            $finalArray[$bodyForwarderOutput]=$data->getCreatedAt();
+                                            $finalArray[$bodyForwarderOutput]=date_format($data->getCreatedAt(), 'Y-m-d H:i:s');
                                             break;
                                     case 'ip':
                                             $finalArray[$bodyForwarderOutput]=$data->getIp();
@@ -292,6 +295,15 @@ function forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepos
                                     case 'phone':
                                         $finalArray[$bodyForwarderOutput]=$data->getPhone();
                                             break;
+                                    case 'age':
+                                        $finalArray[$bodyForwarderOutput]=$data->getAge();
+                                            break;
+                                    case 'paramInfo1':
+                                        $finalArray[$bodyForwarderOutput]=$data->getParamInfo1();
+                                            break;
+                                    case 'paramInfo2':
+                                        $finalArray[$bodyForwarderOutput]=$data->getParamInfo2();
+                                             break;
                                     default:
                                         break;
                                 }
@@ -300,10 +312,14 @@ function forwarder($forwarderRepository, $campaignId, $data, $bodyForwarderRepos
                             $finalArray[$bodyForwarderInput]= $bodyForwarderOutput;
                         }     
                         if ($bodyForwarderType=="header") {
+
                             $headerArray[$bodyForwarderInput]= $bodyForwarderOutput;
                         }     
                 }
-                postData($finalArray,$headerArray, $url, $campaignLeads, $entityManagerInterface);
+                if ($client=='across') {
+                    postDataAcrossDating( $data, $dataAcrossHeader, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface, $finalArray);
+                }
+                // postData($finalArray,$headerArray, $url, $campaignLeads, $entityManagerInterface);
             }  
         }
     }
@@ -427,51 +443,19 @@ function postData($finalArray,$headerArray, $url, $campaignLeads, $entityManager
     }
 }
 
-function postDataAcrossDating( $data, $dataAcrossHeader, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface){
-    
-    $email=$data->getEmail();
-    $firstname=$data->getFirstname();
-    $lastname=$data->getLastname();
-    $phone=$data->getPhone();
-    $sex=$data->getSex();
-    $ip=$data->getIp();
-    $zip=$data->getZip();
-    $landing=$data->getUrl();
-    $dob=$data->getDob();
-    $dobFormat=date_format($dob,'d-m-Y');
+function postDataAcrossDating( $data, $dataAcrossHeader, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface, $finalArray){
     $timestampWrongFormat=$data->getCreatedAt();
-    $timestamp=date_format($timestampWrongFormat, 'Y-m-d H:i:s');
     $idProgramma=$dataAcrossHeader->getIdProgramma();
     $url=$dataAcrossHeader->getUrl();
-    $token= $data->getParamInfo1();
-    $age=$data->getAge();
-
     $encoding = 'sha256';
     $identifier = 'ZTN';
     $secret = $dataAcrossHeader->getSecret();
     $method = 'POST';
     $uri = $dataAcrossHeader->getUri();
-
-    $bodyArr = [
-        "id_programma" => $idProgramma,
-        "nome" => $firstname,
-        "cognome" => $lastname,
-        "telefono" => $phone,
-        "ip" => $ip,
-        "email" => $email,
-        "sesso" => $sex,
-        "cap" => $zip,
-        "landing" => $landing,
-        "timestamp" =>  $timestamp,
-        "token" => $token,
-        "data_nascita"=> $dobFormat,
-        "eta"=> $age,
-    ];
-    
-    $body=json_encode($bodyArr);
+    $body=json_encode($finalArray);
     
     $time = time();
-    $signature = $time . $method . $uri . md5(json_encode($bodyArr, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+    $signature = $time . $method . $uri . md5(json_encode($finalArray, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     $digest = hash_hmac($encoding, $signature, $secret);
     $auth = "Authorization: $identifier $time:$digest";
 

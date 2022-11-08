@@ -3,11 +3,11 @@
     "app": {
       "js": [
         "/build/runtime.9a71ee5d.js",
-        "/build/505.84901a0e.js",
-        "/build/app.7cf3d62c.js"
+        "/build/960.382a1618.js",
+        "/build/app.d161b627.js"
       ],
       "css": [
-        "/build/app.52fd8a44.css"
+        "/build/app.1e068553.css"
       ]
     },
     "admin": {

@@ -443,12 +443,14 @@ function postData($finalArray,$headerArray, $url, $campaignLeads, $entityManager
 }
 
 function postDataAcrossDating( $data, $dataAcrossHeader, $campaignId, $supplierId, $supplierRepository, $campaignRepository, $entityManagerInterface, $finalArray){
+    var_dump($campaignId);
     $timestampWrongFormat=$data->getCreatedAt();
     $idProgramma=$dataAcrossHeader->getIdProgramma();
     $url=$dataAcrossHeader->getUrl();
     $encoding = 'sha256';
     $identifier = 'ZTN';
     $secret = $dataAcrossHeader->getSecret();
+    var_dump($secret);
     $method = 'POST';
     $uri = $dataAcrossHeader->getUri();
     $body=json_encode($finalArray);

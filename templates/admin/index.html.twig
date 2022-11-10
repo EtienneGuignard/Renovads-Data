@@ -48,7 +48,14 @@
 
         {% endfor %}
     </div>
-       <img src="https://www.dbevt.com/f3e9b2a1-5893-4bcc-bd8f-bdea2cd535bb/conversion.gif" width="1" height="1">
+       {# <img src="https://www.dbevt.com/f3e9b2a1-5893-4bcc-bd8f-bdea2cd535bb/conversion.gif" width="1" height="1"> #}
+<script src="https://cdn.databowlpages.com/js/dbevt-tracking.1.0.25.js"></script>
+<script>
+    var trackingOptions = new DbEvtTracking.OptionsObject("f3e6b843-cb69-4534-80d2-e28add56ade5", "e6799e7a-cf37-4d75-8a1e-3ffe2c19c939");
+    var trackingClient = new DbEvtTracking.TrackingClient(trackingOptions);
+    trackingClient.createRedirectClickEvent();
+</script>
+
    </div>
     
 {% endblock %}

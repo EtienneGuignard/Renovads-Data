@@ -71,10 +71,11 @@ function dataProcessing($data,
        
         $campaignLeads='';
         $campaignId=1;
-        if(isEmailExist($emailUser, $leadRepository) != false){
-            addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId , $campaignLeads, $campaignLeadsRepository);
-            exit;
-        };
+        // if(isEmailExist($emailUser, $leadRepository) != false){
+        //     var_dump('Duplicate');
+        //     addStatusRejected($campaignRepository, $campaignId, $data, $entityManagerInterface, $supplierRepository, $supplierId , $campaignLeads, $campaignLeadsRepository);
+        //     exit;
+        // };
         $cidDB=$data->getCid();
       
         if (!empty($cidDB)) {
